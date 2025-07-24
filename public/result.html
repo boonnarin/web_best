@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="css/spb-indicator.css">
+    <link rel="stylesheet" href="css/tc-indicator.css">
+    <script> src = "https://github.com/parallax/jsPDF.git"</script>
+    <script src='../node_modules/pdfmake/build/pdfmake.min.js'></script>
+    <script src='../node_modules/pdfmake/build/vfs_fonts.js'></script>
+    <!-- <link rel="stylesheet" href="css/stys.css"> -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <title>Results</title>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <style>
+        #form-bk {
+            width: 80%;
+            /* กำหนดความกว้างเป็น 80% ของพื้นที่ส่วนหนึ่ง */
+            max-width: 1200px;
+            /* กำหนดความกว้างสูงสุดเป็น 800px */
+            margin: 0 auto;
+            /* จัดวางให้อยู่กึ่งกลางตามแนวนอน */
+            padding: 20px;
+            /* เพิ่มระยะขอบซ้ายและขวา */
+            background-color: #f0f0f0;
+            /* กำหนดสีพื้นหลัง */
+            border-radius: 10px;
+            /* เพิ่มขอบมนเม็ด */
+        }
+
+        #form1 {
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .content {
+            max-width: 800px;
+
+            margin: 0 auto;
+            /* Center content horizontally */
+            padding: 20px;
+            /* Add padding for better readability */
+
+        }
+
+        .content p {
+            margin-top: 0;
+        }
+
+        .content ul {
+            padding-left: 20px;
+            /* Add left padding for better indentation */
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="images/logo.png" alt="Logo">
+            <img src="images/Logo_su.png" alt="Logo_su" style="width: 60px; height: auto;">
+            <div class="header-text">
+                <div class="header-title">Web Application Enhancing Cardiovascular Disease Risk Assessment
+                </div>
+                <div class="header-subtitle">by Phramongkutklao College of Medicine & Silpakorn University</div>
+            </div>
+        </div>
+        <div class="right-buttons">
+            <div class="dropdown">
+                <div class="dropdown-content">
+                     <a href="/">หน้าหลัก</a>
+                    <a href="aboutMe.html">About Me</a>
+                    
+                </div>
+                <button>&#8942;</button> <!-- Vertical ellipsis icon -->
+            </div>
+
+            <a href="/login" class="login-button" id="loginbutton">Sign In</a>
+        </div>
+
+        <!-- ป๊อบอัพหน้าlogin
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="closeBtn">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="button" class="btn btn-success" id="submit">Success</button>
+
+                </form>
+            </div>
+        </div> -->
+        <script src="js/loginscrip.js"></script>
+
+    </header>
+    <main>
+        <div id="form1">
+            <div id="form-bk">
+                <h2>แสดงผลการประเมินความเสี่ยง</h2>
+                <div id="result">
+                    <script src="js/scriptpdf.js"></script>
+                    <script>
+                        // ฟังก์ชันสำหรับอ่านค่า cookies
+                        function getCookie(name) {
+                            const value = `; ${document.cookie}`;
+                            const parts = value.split(`; ${name}=`);
+                            if (parts.length === 2) return parts.pop().split(';').shift();
+                        }
+
+                        // อ่านค่า cookies
+                        const name = getCookie('name');
+                        const lastname = getCookie('lastname');
+                        const cvsex = getCookie('cvsex');
+                        const cvdm = getCookie('cvdm');
+                        const cvsmk = getCookie('cvsmk');
+                        const cvsbp = getCookie('cvsbp');
+                        const cvtc = getCookie('cvtc');
+                        const age = getCookie('age');
+                        const cvage = getCookie('cvage');
+                        const stataCode = getCookie('stataCode');
+                        const statas = getCookie('statas');
+                        const sbp = getCookie('sbp');
+                        const tc = getCookie('tc');
+                        let name1 = name;
+                        if (name == "") {
+                            name1 = "ไม่ระบุชื่อ";
+                        }
+
+
+                        //เช็ค
+                        //เพศ
+                        let sex = "";
+                        if (cvsex == 1) {
+                            sex = "ชาย";
+                        } else if (cvsex == 0) {
+                            sex = "หญิง";
+                        } else {
+                            sex = "";
+                        }
+
+                        //สูบบุหรี่
+                        let smk = "";
+                        if (cvsmk == 1) {
+                            smk = "สูบบุหรี่";
+                        } else if (cvsmk == 0) {
+                            smk = "ไม่สูบบุหรี่";
+                        } else {
+                            smk = "";
+                        }
+                        //เบาหวาน
+                        let dm = "";
+                        if (cvdm == 1) {
+                            dm = "เป็นโรคเบาหวาน";
+                        } else if (cvdm == 0) {
+                            dm = "ไม่เป็นโรคเบาหวาน";
+                        } else {
+                            dm = "";
+                        }
+                        // สร้างตัวแปร ysmk
+                        let ysmk = "";
+                        let ysmkp = "";
+                        if (cvsmk == 1) {
+                            ysmk = "- <b>เลิกบุหรี่</b> ติดต่อขอคำแนะนำเพิ่มเติมได้ที่สายด่วนเลิกบุหรี่ โทร 1600 ";
+                            ysmkp = "- เลิกบุหรี่ ติดต่อขอคำแนะนำเพิ่มเติมได้ที่สายด่วนเลิกบุหรี่ โทร 1600 ";
+                        } else {
+                            ysmk = "";
+                            ysmkp = "";
+                        }
+
+                        let ydm = "";
+                        let ydmp = "";
+                        if (cvdm == 1) {
+                            ydm = "- <b>ควบคุมระดับน้ำตาลในเลือดให้อยู่ในเกณฑ์ปกติ</b> รับประทานยารักษาโรคเบาหวานตามแพทย์แนะนำและไปตรวจติดตามรักษาตามแพทย์นัดอย่างสม่ำเสมอ";
+                            ydmp = "- ควบคุมระดับน้ำตาลในเลือดให้อยู่ในเกณฑ์ปกติ รับประทานยารักษาโรคเบาหวานตามแพทย์แนะนำและไปตรวจติดตามรักษาตามแพทย์นัดอย่างสม่ำเสมอ";
+                        } else {
+                            ydm = "";
+                            ydmp = "";
+                        }
+
+                        let ysbp = "";
+                        let ysbpp = "";
+                        if (sbp < 120) {
+                            ysbp = "- <b>ระดับความดันโลหิตของท่านอยู่ในระดับเหมาะสม (optimal)</b>";
+                            ysbpp = "ระดับความดันโลหิตของท่านอยู่ในระดับเหมาะสม (optimal)";
+
+                        } else if (sbp >= 120 && sbp < 130) {
+                            ysbp = "- <b>ระดับความดันโลหิตของท่านอยู่ในระดับปกติ (normal)</b>";
+                            ysbpp = "ระดับความดันโลหิตของท่านอยู่ในระดับปกติ (normal)";
+
+                        } else if (sbp >= 130 && sbp <= 140) {
+                            ysbp = "- <b>ระดับความดันโลหิตของท่านเริ่มสูงเล็กน้อย (high normal)</b> ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                            ysbpp = "- ระดับความดันโลหิตของท่านเริ่มสูงเล็กน้อย (high normal) ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ"
+
+                        } else if (sbp >= 140 && sbp < 160) {
+                            ysbp = "- <b>ท่านมีความดันโลหิตสูง ระดับที่ 1 (Grade 1 Hypertension)</b> หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                            ysbpp = "- ท่านมีความดันโลหิตสูง ระดับที่ 1 (Grade 1 Hypertension) หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+
+                        } else if (sbp >= 160 && sbp < 180) {
+                            ysbp = "- <b>ท่านมีความดันโลหิตสูง ระดับที่ 2 (Grade 2 Hypertension)</b> หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                            ysbpp = "- ท่านมีความดันโลหิตสูง ระดับที่ 2 (Grade 2 Hypertension) หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+
+                        } else if (sbp >= 180) {
+                            ysbp = "- <b>ท่านมีความดันโลหิตสูงระดับวิกฤต (Hypertensive crisis)</b> นั่งพักในที่สงบ 5 นาที ทำการวัดความดันโลหิตอีกครั้งหากยังสูงกว่า 180 มิลลิเมตรปรอท ควรพบแพทย์เพื่อตรวจรักษาเพิ่มเติม หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                            ysbpp = "- ท่านมีความดันโลหิตสูงระดับวิกฤต (Hypertensive crisis) นั่งพักในที่สงบ 5 นาที ทำการวัดความดันโลหิตอีกครั้งหากยังสูงกว่า 180 มิลลิเมตรปรอท ควรพบแพทย์เพื่อตรวจรักษาเพิ่มเติม หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                            console.log(ysbp);
+
+                        }
+                        else {
+                            ysbp = "";
+                            ysbpp = "";
+                        }
+
+                        let ytc = "";
+                        let ytcp = "";
+
+                        if (tc < 150) {
+                            ytc = "- <b>ระดับคลอเลสเตอรอลในเลือดของท่านอยู่ในเกณฑ์ปกติ</b> ";
+                            ytcp = "- ระดับคลอเลสเตอรอลในเลือดของท่านอยู่ในเกณฑ์ปกติ";
+
+                            console.log(ytc);
+                        } else if (tc >= 150 && tc < 200) {
+                            ytc = "- <b>ระดับคลอเลสเตอรอลในเลือดของท่านค่อนข้างสูง</b> ควรลดการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด ";
+                            ytcp = "- ระดับคลอเลสเตอรอลในเลือดของท่านค่อนข้างสูง ควรลดการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด ";
+
+                            console.log(ytc);
+                        } else if (tc >= 200) {
+                            ytc = "- <b>ท่านมีภาวะคลอเลสเตอรอลในเลือดสูง</b> ซึ่งเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือด ควรเลี่ยงการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด ";
+                            ytcp = "- ท่านมีภาวะคลอเลสเตอรอลในเลือดสูง ซึ่งเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือด ควรเลี่ยงการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด ";
+
+                            console.log(ytc);
+                        }
+                        else {
+                            ytc = "";
+                            ytcp = "";
+                        }
+
+                        var statascol = "";
+
+                        if (stataCode < 5) {
+                            statascol = "<span style='background-color: #7CFC00; color: white; padding: 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงน้อยมาก</span>";
+                        } else if (stataCode >= 5 && stataCode < 10) {
+                            statascol = "<span style='background-color: #FFFF00; padding: 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงน้อย</span>";
+                        } else if (stataCode >= 10 && stataCode < 20) {
+                             statascol = "<span style='background-color: #FF8C00; padding: 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงปานกลาง</span>";
+                        } else if (stataCode >= 20 && stataCode < 30) {
+                            statascol = "<span style='background-color: #FF0000; 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงสูง</span>";
+                        } else if (stataCode >= 30) {
+                            statascol = "<span style='background-color: #b22222; color: white; padding: 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงสูงมาก</span>";
+                        } else {
+                            statascol = "<span style='background-color: gray; line-height: 1.5; white-space: nowrap;'>ไม่ตรงเงื่อนไข</span>";
+                        }
+
+                        let sAll = "- เพื่อลดความเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือด ควรออกกำลังกายอย่างสม่ำเสมอ อย่างน้อยสัปดาห์ละ 3 วัน วันละ 20-30 นาที ทั้งนี้ หากมีโรคประจำตัวหรืออาการเจ็บป่วย ควรปรึกษาบุคลากรทางการแพทย์ก่อน และไม่ควรหักโหมมากนัก<br>- หากท่านดื่มสุรา ให้ลด หรือ เลิก (สายด่วนเลิกสุรา 1413) หากไม่ได้ดื่มอยู่แล้ว ไม่แนะนำให้ดื่ม";
+                        // แสดงค่าที่ดึงมาในหน้า result.html
+                        const resultDiv = document.getElementById('result');
+
+                        resultDiv.innerHTML = `<br>
+                    <p><strong>ข้อมูลสุขภาพ</strong></p> 
+                    <p>ชื่อ (Name) : <strong>${name1} ${lastname} </strong>  เพศ (Sex) : <strong>${sex}</strong>  อายุ (Age) : <strong>${age}</strong> ปี (years)</p>
+                    <p><strong> ${dm}</strong>  สถานะการสูบบุหรี่ (Smoking status) : <strong>${smk}</strong> </p>
+                    <p>ระดับความดันโลหิตค่าบนเฉลี่ย (Average systolic blood pressure) <strong>${sbp}</strong> มิลลิเมตรปรอท (mmHg)  </p>
+                    <p>ระดับคอลเลสเตอรอล (Total cholesterol) <strong>${tc} </strong> มิลลิกรัมต่อเดซิลิตร (mg/dL)</p>
+                    <br>
+                    <p id ="specialRecommendation"><strong>การประเมินความเสี่ยงโรคหัวใจเเละหลอดเลือด</strong></p>
+                    <p>ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น กล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบในระยะ 10 ปีข้างหน้าของท่าน เท่ากับ <b>${stataCode} % </b></p>
+                    <p>ซึ่งจัดอยู่อยู่ในกลุ่ม : <b>${statascol}</b></p>
+                    <br>
+                    <p><strong>คำแนะนำเพื่อลดความเสี่ยงการเกิดโรคหัวใจและหลอดเลือดในอนาคต สำหรับท่าน</strong></p>
+                    <p>${ysmk}</p>
+                    <p>${ydm}</p>
+                    <br>
+                    <!-- แถบ SBP -->
+                        <div class="sbp-bar">
+                            <div class="sbp-section optimal" id="optimal">
+                                <span>ระดับเหมาะสม<br>(&lt;120)</span>
+                            </div>
+                            <div class="sbp-section normal" id="normal">
+                                <span>ระดับปกติ<br>(120 - 129)</span>
+                            </div>
+                            <div class="sbp-section high-normal" id="high-normal">
+                                <span>เริ่มสูงเล็กน้อย<br>(130 - 140)</span>
+                            </div>
+                            <div class="sbp-section hypertension1" id="hypertension1">
+                                <span>ความดันโลหิตสูง ระดับที่ 1<br>(140 - 159)</span>
+                            </div>
+                            <div class="sbp-section hypertension2" id="hypertension2">
+                                <span>ความดันโลหิตสูง ระดับที่ 2<br>(160 - 179)</span>
+                            </div>
+                            <div class="sbp-section crisis" id="crisis">
+                                <span>ความดันโลหิตสูงระดับวิกฤต<br>(&ge;180)</span>
+                             </div>
+                        </div>
+                    <br>
+                    <p>${ysbp}</p>
+                    <br>
+                    <div class="cholesterol-bar">
+                        <div class="cholesterol-section normal" id="cholesterol-normal">
+                            <span>ปกติ<br>Normal<br>(&lt;150)</span>
+                        </div>
+                        <div class="cholesterol-section borderline-high" id="cholesterol-borderline-high">
+                            <span>ค่อนข้างสูง<br>Borderline High<br>(150 - 199)</span>
+                        </div>
+                        <div class="cholesterol-section high" id="cholesterol-high">
+                            <span>สูง<br>High<br>(&ge;200)</span>
+                        </div>
+                    </div>
+                    <br>
+                    <p>${ytc}</p>
+                    <br>
+                    <p><strong>คำเเนะนำทั่วไป</strong></p>
+                    <p>- เพื่อลดความเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือด ควรออกกำลังกายอย่างสม่ำเสมอ อย่างน้อยสัปดาห์ละ 3 วัน วันละ 20-30 นาที ทั้งนี้ หากมีโรคประจำตัวหรืออาการเจ็บป่วย ควรปรึกษาบุคลากรทางการแพทย์ก่อน และไม่ควรหักโหมมากนัก</p>
+                    <p>- หากท่านดื่มสุรา ให้ลด หรือ เลิก (สายด่วนเลิกสุรา 1413) หากไม่ได้ดื่มอยู่แล้ว ไม่แนะนำให้ดื่ม</p>
+                    <p>- ควรรับการตรวจสุขภาพเพื่อประเมินความเสี่ยงของโรคหัวใจและหลอดเลือด อย่างน้อย ปีละ 1 ครั้ง</p>
+                    <p>- ผลการประเมินเหล่านี้เป็นการประเมินความเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือดเบื้องต้น ควรเข้ารับคำปรึกษาและตรวจเพิ่มเติมตามคำแนะนำของแพทย์</p>`;
+                      // สมมติว่าคุณมีตัวแปร sbp ที่เก็บค่าความดันโลหิตของผู้ใช้
+                        const sbpValue = parseFloat(sbp); // แทนที่ sbp ด้วยตัวแปรที่เก็บค่าจริง
+
+                        const sbpSections = [
+                            { name: 'optimal', max: 120 },
+                            { name: 'normal', max: 130 },
+                            { name: 'high-normal', max: 140 },
+                            { name: 'hypertension1', max: 160 },
+                            { name: 'hypertension2', max: 180 },
+                            { name: 'crisis', max: Infinity }
+                        ];
+
+                        function updateSBPIndicator() {
+                            for (const section of sbpSections) {
+                                const sectionElement = document.getElementById(section.name);
+
+                                if (sectionElement) {
+                                    if (sbpValue < section.max) {
+                                        sectionElement.classList.add('sbp-highlighted');
+                                        break;
+                                    } else {
+                                        sectionElement.classList.remove('sbp-highlighted');
+                                    }
+                                }
+                            }
+                        }
+
+                        // เรียกใช้ฟังก์ชันหลังจากที่ DOM ถูกอัปเดต
+                        updateSBPIndicator();
+
+                        // สมมติว่าคุณมีตัวแปร tc ที่เก็บค่าระดับคลอเลสเตอรอลของผู้ใช้
+                        const tcValue = parseFloat(tc); // แปลงค่าเป็นตัวเลข
+
+                        const cholesterolSections = [
+                            { name: 'cholesterol-normal', max: 150 },
+                            { name: 'cholesterol-borderline-high', max: 200 },
+                            { name: 'cholesterol-high', max: Infinity }
+                        ];
+
+                        function updateCholesterolIndicator() {
+                            for (const section of cholesterolSections) {
+                                const sectionElement = document.getElementById(section.name);
+
+                                if (sectionElement) {
+                                    if (tcValue < section.max) {
+                                        sectionElement.classList.add('cholesterol-highlighted');
+                                        break;
+                                    } else {
+                                        sectionElement.classList.remove('cholesterol-highlighted');
+                                    }
+                                }
+                            }
+                        }
+
+                        // เรียกใช้ฟังก์ชันหลังจากที่ DOM ถูกอัปเดต
+                        updateCholesterolIndicator();
+                    makepdf();
+                    </script>
+
+                </div>
+            </div>
+
+        </div>
+        <div id="form1" style="margin-bottom: 20px;">
+            <form>
+                <button type="button" class="btn btn-success" onclick="goBack()"
+                    style="margin-top: 10px;">ย้อนกลับ</button>
+
+                <button type="button" class="btn btn-success" id="make-pdf" onclick="makepdf()"
+                    style="margin-top: 10px;">PDF</button>
+            </form>
+
+        </div>
+    </main>
+
+
+
+    <footer>
+        <div class="footer-content">
+            <p>ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
+                กล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบในระยะ 10 ปีข้างหน้า
+                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคกล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบมาก่อน โดย
+                การประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts สำหรับ
+                Southeast
+                Asia Countries<sup>1</sup>.</p>
+            <p><sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
+                risk
+                charts: revised models to estimate risk in 21 global regions. The Lancet. Global health, 7(10),
+                e1332–e1345.
+                <a href="https://doi.org/10.1016/S2214-109X(19)30318-3"
+                    target="_blank">https://doi.org/10.1016/S2214-109X(19)30318-3</a>
+            </p>
+        </div>
+    </footer>
+
+
+
+
+</body>
+
+
+</html>
