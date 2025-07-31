@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ดาวน์โหลดข้อมูล</title>
+    <!-- CSS อยู่ในส่วนของ <style> -->
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>รายการข้อมูลที่พร้อมให้ดาวน์โหลด</h1>
+
+    <!-- เพิ่มปุ่ม Logout -->
+    <form action="/logout" method="GET">
+        <button type="submit"
+            style="background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px;">ออกจากระบบ</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ชื่อไฟล์</th>
+                <th>รายละเอียด</th>
+                <th>ขนาด</th>
+                <th>ดาวน์โหลด</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% files.forEach(file=> { %>
+                <tr>
+                    <td>
+                        <%= file.name %>
+                    </td>
+                    <td>
+                        <%= file.description || '-' %>
+                    </td>
+                    <td>
+                        <%= file.size %>
+                    </td>
+                    <td><a href="<%= file.downloadLink %>" download>📥 ดาวน์โหลด</a></td>
+                </tr>
+                <% }); %>
+        </tbody>
+    </table>
+</body>
+
+</html>

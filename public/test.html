@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
+    <style>
+        html {
+            font-size: clamp(14px, 1.5vw, 18px);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            background-color: #fff;
+        }
+
+        header {
+            background-color: transparent;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+
+        header.scrolled {
+            background-color: #242424;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            /* ระยะห่างระหว่างรูปกับข้อความ */
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo img {
+            max-width: 90px;
+            /* ขนาดโลโก้รูปภาพ */
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            white-space: nowrap;
+        }
+
+        .logogo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            /* ระยะห่างระหว่างรูปกับข้อความ */
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logogo img {
+            max-width: 200px;
+            /* ขนาดโลโก้รูปภาพ */
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logogo-text {
+            white-space: nowrap;
+        }
+
+
+        /* Hamburger Icon */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1101;
+        }
+
+        .menu-toggle span {
+            height: 3px;
+            width: 25px;
+            background: white;
+            margin: 4px 0;
+            transition: 0.3s;
+        }
+
+        .overlay-menu {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            background-color: #181717;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 60px 30px;
+            box-sizing: border-box;
+            transition: top 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            z-index: 1100;
+        }
+
+        .overlay-menu.active {
+            top: 0;
+            opacity: 1;
+        }
+
+        .overlay-menu .menu-logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .overlay-menu a {
+            color: white;
+            font-size: 3em;
+            margin: 15px 0;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            /* ทำให้ลิงก์มีขนาดตามตัวอักษร */
+            position: relative;
+            /* เพื่อจัดการกับ ::after */
+            overflow: hidden;
+            /* ป้องกันเส้นวิ่งออกนอกพื้นที่ */
+        }
+
+        .overlay-menu a::after {
+            content: '';
+            /* สร้าง pseudo-element */
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            /* เริ่มต้นที่ด้านซ้ายสุด */
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: left 0.3s ease;
+            /* ความลื่นในการแสดงเส้น */
+        }
+
+        .overlay-menu a:hover::after {
+            left: 0;
+            /* เมื่อ hover, เส้นจะวิ่งไปขวา */
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+
+        .banner {
+            background-image: url('/images/3.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 300px 20px 150px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .banner h1 {
+            font-size: 3em;
+            margin-bottom: 0.3em;
+            font-weight: bold;
+        }
+
+        .banner p {
+            font-size: 1.2em;
+        }
+
+        .content {
+            padding: 20px 20px;
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .vertical-cards {
+            display: flex;
+            flex-direction: column;
+            /* แสดงผลเป็นแนวตั้ง */
+            gap: 10px;
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s;
+            box-sizing: border-box;
+        }
+
+        .vertical-cards h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            flex: 1 1 100%;
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            /* เพิ่ม transition สำหรับ opacity และ transform */
+            box-sizing: border-box;
+            opacity: 0;
+            /* ซ่อน card */
+            transform: translateY(50px);
+            /* เลื่อน card ไปด้านล่าง */
+        }
+
+        .card.visible {
+            opacity: 1;
+            /* ทำให้ card ปรากฏ */
+            transform: translateY(0);
+            /* เลื่อนกลับมาที่ตำแหน่งเดิม */
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 40%;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .card h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .card button {
+            background-color: #A51C30;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .card button:hover {
+            background-color: #821726;
+        }
+
+        footer {
+            background-color: #2B2B2B;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .card {
+                flex: 1 1 calc(50% - 60px);
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            header,
+            .banner,
+            .content {
+                padding: 15px;
+            }
+
+            .banner h1 {
+                font-size: 2em;
+            }
+
+            .card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .card img {
+                width: 100%;
+                margin: 0 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="logo">
+            <img src="/images/lolo.png" alt="Logo" />
+            <span class="logo-text">Research Unit for Military Medicine</span>
+        </div>
+        <!-- Hamburger Button -->
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- Fullscreen Overlay Menu -->
+    <div class="overlay-menu" id="overlay-menu">
+        <div class="logogo">
+            <img src="/images/lolo.png" alt="Logo" />
+        </div>
+        <div class="close-menu" id="close-menu">&times;</div>
+        <a href="#">หน้าแรก</a>
+        <a href="#">เกี่ยวกับเรา</a>
+        <a href="#">บุคลากร</a>
+        <a href="#">ติดต่อ</a>
+    </div>
+
+    <!-- Banner -->
+    <section class="banner">
+        <h1>หน่วยวิจัยเวชศาสตร์ทหาร วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า</h1>
+        <p>storyเล็กน้อย</p>
+    </section>
+
+    <!-- Content -->
+    <section class="content">
+        <div class="vertical-cards">
+            <h1>การวิจัย</h1>
+            <div class="card">
+                <img src="/images/1.jpg" alt="Faculty" />
+                <div>
+                    <h2>• เวชศาสตร์ทหาร</h2>
+                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
+                    <button>อ่านเพิ่มเติม</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="/images/2.jpg" alt="Faculty" />
+                <div>
+                    <h2>• เวชศาสตร์ชุมชน</h2>
+                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
+                    <button>อ่านเพิ่มเติม</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="content">
+        <div class="vertical-cards">
+            <h1>การเผยแพร่ผลงานวิชาการ</h1>
+            <div class="card">
+                <img src="/images/1.jpg" alt="Faculty" />
+                <div>
+                    <h2>• เวชศาสตร์ทหาร</h2>
+                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
+                    <button>อ่านเพิ่มเติม</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="/images/2.jpg" alt="Faculty" />
+                <div>
+                    <h2>• เวชศาสตร์ชุมชน</h2>
+                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
+                    <button>อ่านเพิ่มเติม</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="card">
+            <img src="/images/1.jpg" alt="Faculty" />
+            <div>
+                <h2>HIV ในทหารใหม่</h2>
+                <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
+                <button>อ่านเพิ่มเติม</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 . สงวนลิขสิทธิ์</p>
+    </footer>
+
+    <!-- Script -->
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function () {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Menu toggle logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const overlayMenu = document.getElementById('overlay-menu');
+        const closeMenu = document.getElementById('close-menu');
+
+        menuToggle.addEventListener('click', () => {
+            overlayMenu.classList.add('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            overlayMenu.classList.remove('active');
+        });
+
+        // ✅ ปิดเมนูเมื่อคลิกลิงก์ใน overlay-menu
+        const overlayLinks = overlayMenu.querySelectorAll('a');
+        overlayLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                overlayMenu.classList.remove('active');
+            });
+        });
+
+        // สร้าง observer เพื่อสังเกตเมื่อ element เข้ามาใน viewport
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // เพิ่ม class 'visible' เมื่อ card เข้ามาใน viewport
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // หยุดสังเกตเมื่อ card ปรากฏแล้ว
+                }
+            });
+        }, {
+            threshold: 0.5 // เมื่อ 50% ของ card ปรากฏใน viewport
+        });
+
+        // เลือกทุกๆ .card และเริ่มการสังเกต
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ดาวน์โหลดข้อมูล</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>รายการข้อมูลที่พร้อมให้ดาวน์โหลด</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ชื่อไฟล์</th>
+                <th>รายละเอียด</th>
+                <th>ขนาด</th>
+                <th>ดาวน์โหลด</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>.xlsx</td>
+                <td>-</td>
+                <td>1.2 MB</td>
+                <td><a href="/.pdf" download>📥 ดาวน์โหลด</a></td>
+            </tr>
+            <tr>
+                <td>.xlsx</td>
+                <td>-</td>
+                <td>500 KB</td>
+                <td><a href="/.xlsx" download>📥 ดาวน์โหลด</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
