@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
@@ -214,15 +215,29 @@
             </div>
 
             <div class="form-group">
-                <label for="province">จังหวัดที่อยู่ (Province) <span class="required">*</span></label>
-                <input type="text" id="province" name="province" placeholder="จังหวัด">
+                <label for="province">จังหวัดที่อยู่ (Province) <span class="required"></span></label>
+                <select type="text" id="province" name="province" placeholder="จังหวัด">
+                    <option value="">-- กรุณาเลือกจังหวัด --</option>
+                </select>
                 <!-- <div class="note">มิลลิกรัมต่อเดซิลิตร (mg/dL)</div> -->
             </div>
+
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <select id="country" name="country" required>
+                    <option value="">-- กรุณาเลือกประเทศ --</option>
+                </select>
+            </div>
+
 
             <script src="js/script_lab_n.js"></script>
             <div>
                 <button type="button" class="btn btn-success" id="callab" onclick="generateStataCode()"
                     style="float: right;">แสดงผลการประเมินความเสี่ยง</button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-success" id="callab" onclick="savedata()"
+                    style="float: right;  margin-right: 20px;" style="float: right;">เก็บข้อมูลที่ประเมิน</button>
             </div>
 
 
@@ -242,7 +257,78 @@
             </script>
         </form>
     </div>
+    <script>
+        // เมื่อโหลดหน้าเว็บ, ดึงข้อมูลจังหวัดจาก API
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/provinces', // ดึงข้อมูลจาก API
+                method: 'GET',
+                success: function (data) {
+                    // เพิ่มจังหวัดใน dropdown
+                    data.forEach(function (province) {
+                        $('#province').append('<option value="' + province.ProvinceName + '">' + province.ProvinceName + '</option>');
+                    });
+                },
+                error: function (err) {
+                    console.error('Error fetching provinces:', err);
+                }
+            });
+        });
 
+
+        // ดึงข้อมูลจาก API
+        fetch('/api/country')
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('country');
+
+                data.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.countryID;
+                    option.textContent = `${country.countryName} (${country.alpha2_code})`;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading countries:', error);
+            });
+
+        // ฟังก์ชันที่ทำงานเมื่อกดปุ่ม "แสดงผลการประเมินความเสี่ยง"
+        function savedata() {
+            // เก็บข้อมูลที่กรอกในฟอร์ม
+            const sbp1 = $('#sbp1').val();
+            const sbp2 = $('#sbp2').val();
+
+            // คำนวณ sbptotal และหาร 2
+            const sbptotal = (parseInt(sbp1) + parseInt(sbp2)) / 2;
+
+            const formData = {
+                sex: $('#cvsex').val(),
+                age: $('#age').val(),
+                smoking_status: $('#cvsmk').val(),
+                diabetes_status: $('#cvdm').val(),
+                province: $('#province').val(),
+                sbp1: sbp1,
+                sbp2: sbp2,
+                sbptotal: sbptotal,
+                total_cholesterol: $('#tc').val(),
+            };
+
+            // ส่งข้อมูลไปยังเซิร์ฟเวอร์
+            $.ajax({
+                url: '/api/save-form', // เส้นทางสำหรับเก็บข้อมูล
+                method: 'POST',
+                data: formData,
+                success: function (response) {
+                    $('#result').html('<h2>ผลการประเมิน: ' + response.result + '</h2>');
+                },
+                error: function (err) {
+                    console.error('Error saving data:', err);
+                    $('#result').html('<h2>เกิดข้อผิดพลาดในการประมวลผล</h2>');
+                }
+            });
+        }
+    </script>
     <footer>
         <div class="footer-content">
             <p>ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น

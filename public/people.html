@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Profile – พล.ต. ศ.นพ.ราม รังสินธุ์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand: #A51C30;
+            --brown: #4B1515;
+            --gold: #EBC79D;
+            --text: #101820;
+            --max: 1200px;
+            font-size: clamp(14px, 1.5vw, 18px);
+        }
+
+        body {
+            margin: 0;
+            font-family: Roboto, sans-serif;
+            color: var(--text)
+        }
+
+        a {
+            color: var(--brand);
+            text-decoration: none
+        }
+
+        /* ===== HERO ===== */
+        .profile-hero {
+            background: var(--brown);
+            color: #F5E8D8;
+            padding: 120px 20px 60px
+        }
+
+        .profile-hero__inner {
+            max-width: var(--max);
+            margin: auto;
+            display: flex;
+            gap: 60px
+        }
+
+        .profile-hero img {
+            width: 180px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 4px
+        }
+
+        .badge {
+            display: inline-block;
+            border: 1px solid var(--gold);
+            border-radius: 18px;
+            padding: 4px 12px;
+            font-size: .75em;
+            font-weight: 600;
+            margin-bottom: 18px
+        }
+
+        .profile-info h1 {
+            font-size: 2.8em;
+            font-weight: 400;
+            color: var(--gold);
+            margin: .1em 0 .6em
+        }
+
+        .profile-info h2 {
+            font-size: 1.05em;
+            font-weight: 700;
+            margin: .9em 0 .3em;
+            color: #F5E8D8
+        }
+
+        .profile-info p {
+            margin: .15em 0
+        }
+
+        /* ===== 2-COLUMN ROWS (Topic | Details) ===== */
+        .content-wrap {
+            /* ครอบทุกแถว */
+            max-width: var(--max);
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            /* ซ้าย 240 px ขวาเต็ม */
+            gap: 60px;
+            padding: 60px 20px;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .row:first-child {
+            padding-top: 80px
+        }
+
+        /* เว้นหัวแถวสูงขึ้น */
+
+        .topic {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .details {
+            font-size: 1em;
+            line-height: 1.65
+        }
+
+        /* ใช้กล่องไฮไลต์ & pub-item เดิมได้ */
+        .highlight-box {
+            background: #FFF5E8;
+            border-left: 4px solid var(--gold);
+            padding: 22px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            margin-bottom: 40px
+        }
+
+        .pub-item {
+            padding: 28px 0;
+            border-bottom: 1px solid var(--gold)
+        }
+
+        .pub-item:last-child {
+            border-bottom: none
+        }
+
+        /* Fade-in (ใช้คลาส .fade + JS เดิม) */
+        .row.fade {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: .6s
+        }
+
+        .row.show {
+            opacity: 1;
+            transform: none
+        }
+
+        /* Responsive – จอแคบสลับเป็นแนวตั้ง */
+        @media(max-width:900px) {
+            .row {
+                grid-template-columns: 1fr;
+                gap: 20px
+            }
+
+            .topic {
+                margin-bottom: 10px
+            }
+        }
+
+
+        /* responsive hero */
+        @media(max-width:800px) {
+            .profile-hero__inner {
+                flex-direction: column;
+                align-items: center;
+                text-align: center
+            }
+
+            .profile-hero img {
+                width: 160px;
+                height: 200px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- █ HERO -->
+    <section class="profile-hero">
+        <div class="profile-hero__inner">
+            <img src="/images/people/andrea.jpg" alt="Profile photo">
+            <div class="profile-info">
+                <span class="badge">Faculty Administration</span>
+                <h1>พล.ต. ศ.นพ.ราม รังสินธุ์</h1>
+
+                <h2>Dean of the Faculty</h2>
+                <p>Office of the Dean, Royal Thai Army Medical College</p>
+
+                <h2>Departments</h2>
+                <p>Military &amp; Community Medicine</p>
+
+                <h2>Other Positions</h2>
+                <p>Professor of Environmental Health</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ▇ MAIN (sidebar + content) -->
+    <main class="content-wrap">
+        <!-- Row 1 : Biography -->
+        <!-- <section class="row" id="bio">
+            <h3 class="topic">Biography</h3>
+            <div class="details">
+                <p>
+                    ศ.นพ.ราม รังสินธุ์ สำเร็จการศึกษาแพทยศาสตรบัณฑิตจากจุฬาลงกรณ์ฯ
+                    และวุฒิบัตรผู้เชี่ยวชาญเวชศาสตร์ทหาร ปัจจุบันดำรงตำแหน่งคณบดี
+                    วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า …
+                </p>
+            </div>
+        </section> -->
+
+        <!-- Row 2 : External profile (กล่อง Highlight) -->
+        <section class="row">
+            <h3 class="topic">Biography</h3>
+            <div class="details">
+                <a class="highlight-box" href="#">
+                    External Profile
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Row 3 : Publications -->
+        <section class="row" id="pub">
+            <h3 class="topic">Publications</h3>
+            <div class="details">
+                <article class="pub-item">
+                    <strong>Air Pollution Control Mitigates Frailty Progression…</strong><br>
+                    <em>Environ Sci Technol.</em> 2025 May 27 – PMID 40353491
+                </article>
+
+                <article class="pub-item">
+                    <strong>Cost-effectiveness of school integrated pest management…</strong><br>
+                    <em>Sci Total Environ.</em> 2025 Feb 12
+                </article>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script>
+        /* ===== Scroll spy & fade-in ===== */
+        const fades = [...document.querySelectorAll('.fade')];
+        const io = new IntersectionObserver((ents, obs) => {
+            ents.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('show'); obs.unobserve(e.target);
+                }
+            });
+        }, { threshold: .35 });
+        fades.forEach(el => io.observe(el));
+        document.querySelectorAll('.row').forEach(el => io.observe(el));
+    </script>
+</body>
+
+</html>

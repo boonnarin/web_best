@@ -1,3 +1,4 @@
+//controllers\authController.js
 import connection from '../models/db.js';
 import bcrypt from 'bcrypt';
 

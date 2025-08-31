@@ -4,7 +4,8 @@ import bodyParser from 'body-parser'; // ←
 import session from 'express-session';
 import path from 'path';
 import fs from 'fs';
-import './models/db.js';
+import connection from './models/db.js';
+
 import authRoutes from './routes/authRoutes.js';
 import { fileURLToPath } from 'url';
 
@@ -66,6 +67,75 @@ app.get('/visit', (req, res) => {
 
     res.json({ totalVisits: updated });
 });
+
+// API สำหรับดึงข้อมูลจังหวัด
+app.get('/api/provinces', (req, res) => {
+    connection.query('SELECT ProvinceName FROM province ORDER BY ProvinceName ASC', (err, results) => {
+        if (err) {
+            console.error('❌ Error fetching data:', err);
+            return res.status(500).send('Database error');
+        }
+        res.json(results); // ส่งข้อมูลเป็น JSON
+    });
+});
+
+// API สำหรับดึงข้อมูล
+app.get('/api/country', (req, res) => {
+    connection.query('SELECT countryID, countryName, alpha2_code FROM country', (err, results) => {
+        if (err) {
+            console.error('❌ Error fetching data:', err);
+            return res.status(500).send('Database error');
+        }
+        res.json(results); // ส่งข้อมูลเป็น JSON
+    });
+});
+
+
+// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม
+app.post('/api/save-form', (req, res) => {
+    const { sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province } = req.body;
+
+    const sql = `INSERT INTO form_lab (sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(sql, [sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province], (err, result) => {
+        if (err) {
+            console.error('❌ Error inserting data into DB:', err);
+            return res.status(500).send('Error saving data');
+        }
+        res.send({ result: 'Data saved successfully' });
+    });
+});
+
+
+// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม
+app.post('/api/save-formnonlab', (req, res) => {
+    const { sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province } = req.body;
+
+    const sql = `INSERT INTO form_nonlab (sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(sql, [sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province], (err, result) => {
+        if (err) {
+            console.error('❌ Error inserting data into DB:', err);
+            return res.status(500).send('Error saving data');
+        }
+        res.send({ result: 'Data saved successfully' });
+    });
+});
+
+
+// เส้นทางสำหรับทดสอบการเชื่อมต่อฐานข้อมูล
+app.get('/test-db', async (req, res) => {
+    try {
+        // ใช้ promise() ของ mysql2 เพื่อเชื่อมต่อและ query
+        const [rows, fields] = await connection.promise().query('SELECT 1');
+
+        // หากการเชื่อมต่อสำเร็จ
+        res.send(' Database connected');
+    } catch (err) {
+        // หากเกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล
+        console.error('Database connection failed:', err);
+        res.status(500).send('Database connection failed');
+    }
+});
+
 
 // Start server
 const port = process.env.PORT || 4000;

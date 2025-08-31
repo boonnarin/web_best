@@ -12,6 +12,7 @@
         }
 
         body {
+            padding-top: 80px;
             margin: 0;
             font-family: 'Roboto', sans-serif;
             color: #333;
@@ -19,9 +20,9 @@
         }
 
         header {
-            background-color: transparent;
+            background-color: #333;
             color: white;
-            padding: 15px 20px;
+            padding: 15px 45px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -214,6 +215,7 @@
             text-align: center;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
             width: 100%;
+            height: 500px;
             box-sizing: border-box;
             transition: background-image 1s ease-in-out;
             /* เพิ่มการเปลี่ยนภาพแบบค่อยเป็นค่อยไป */
@@ -266,11 +268,11 @@
             background: #fff;
             margin: 15px 0;
             padding: 20px;
-            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px; */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             transition: transform 0.5s ease, opacity 0.5s ease;
             /* เพิ่ม transition สำหรับ opacity และ transform */
-            /* box-sizing: border-box; */
+            box-sizing: border-box;
             opacity: 0;
             /* ซ่อน card */
             transform: translateY(50px);
@@ -325,8 +327,6 @@
             display: flex;
             gap: 60px;
         }
-
-
 
         .sidebar {
             flex: 0 0 220px;
@@ -433,6 +433,73 @@
             transform: translate(6px, -50%);
         }
 
+        /* ===== FEATURE SECTION ===== */
+        .feature {
+            max-width: 1200px;
+            margin: 100px auto;
+            /* ระยะห่างรอบ ๆ ให้โล่งโปร่ง */
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            opacity: 0;
+            /* ใช้สำหรับ fade-in */
+            transform: translateY(60px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .feature.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .feature-img {
+            flex: 0 0 420px;
+            /* รูปภาพกว้างคงที่ */
+        }
+
+        .feature-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .feature-content {
+            flex: 1 1 auto;
+        }
+
+        .feature-content h2 {
+            font-size: 2.2em;
+            margin: 0 0 .4em;
+            color: #101820;
+        }
+
+        .feature-content p {
+            font-size: 1.05em;
+            line-height: 1.55;
+            margin: 0 0 1.1em;
+        }
+
+        .feature-link {
+            display: inline-block;
+            font-weight: 700;
+            text-decoration: none;
+            color: #A51C30;
+            border-bottom: 2px solid #A51C30;
+            padding-bottom: 2px;
+            transition: color .3s, border-color .3s;
+        }
+
+        .feature-link:hover {
+            color: #821726;
+            border-color: #821726
+        }
+
+        /* สลับทิศทาง */
+        .feature--reverse {
+            flex-direction: row-reverse
+        }
+
         footer {
             background-color: #2B2B2B;
             color: white;
@@ -440,102 +507,24 @@
             text-align: center;
         }
 
-        /* ===== PEOPLE SECTION ===== */
-        .people {
-            background: #F9FAFB;
-            padding: 60px 20px;
-            box-sizing: border-box;
+        /* ===== Responsive ===== */
+        @media(max-width:900px) {
+            .feature {
+                flex-direction: column;
+                text-align: center
+            }
+
+            .feature--reverse {
+                flex-direction: column
+            }
+
+            /* ยกเลิก reverse บนจอแคบ */
+            .feature-img {
+                flex: none;
+                width: 100%;
+                max-width: 420px
+            }
         }
-
-        .people-container {
-            max-width: 1200px;
-            margin: auto;
-            display: grid;
-            gap: 40px;
-        }
-
-        .people-heading {
-            font-size: 2.4em;
-            font-weight: 700;
-            color: #101820;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        /* profile card */
-        .profile {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, .08);
-            overflow: hidden;
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            opacity: 0;
-            /* สำหรับ fade-in */
-            transform: translateY(60px);
-            transition: transform .6s ease, opacity .6s ease;
-        }
-
-        .profile.visible {
-            /*​ ใช้กับ IntersectionObserver (ดู JS ด้านล่าง) */
-            opacity: 1;
-            transform: none;
-        }
-
-        .avatar {
-            flex: 0 0 220px;
-            position: relative;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-body {
-            flex: 1 1 auto;
-            padding: 28px 32px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .name {
-            font-size: 1.4em;
-            margin: 0 0 6px;
-            color: #A51C30;
-        }
-
-        .role {
-            font-weight: 600;
-            margin: 0 0 12px;
-        }
-
-        .bio {
-            flex: 1 0 auto;
-            font-size: .95em;
-            color: #555;
-            margin: 0 0 18px;
-        }
-
-        .profile-btn {
-            align-self: flex-start;
-            background: #A51C30;
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: .9em;
-            transition: background .3s;
-        }
-
-        .profile-btn:hover {
-            background: #821726
-        }
-
-
 
         /* ===== Responsive ===== */
         @media (min-width: 768px) {
@@ -636,140 +625,36 @@
         <p>storyเล็กน้อย</p>
     </section>
 
-    <!-- Content -->
-    <section class="content">
-        <div class="vertical-cards">
-            <h1>การวิจัย</h1>
-            <div class="card">
-                <img src="/images/1.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ทหาร</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button onclick="window.location.href='test2.html';">อ่านเพิ่มเติม</button>
-
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="/images/2.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ชุมชน</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button>อ่านเพิ่มเติม</button>
-                </div>
-            </div>
+    <!-- ===== FEATURE SECTIONS (ต่อจาก .programs) ===== -->
+    <section class="feature">
+        <div class="feature-img">
+            <img src="/images/feature1.jpg" alt="Public Health Champions" />
+        </div>
+        <div class="feature-content">
+            <h2>Public Health Champions</h2>
+            <p>
+                Harvard Chan alumni are Public Health Champions, addressing the biggest
+                health challenges of our time. They are leaders committed to understanding
+                the drivers of disease and disparities and promoting powerful solutions
+                for organizations, policymakers, and the public.
+            </p>
+            <a href="#" class="feature-link">Meet our alumni champions &nbsp;↗</a>
         </div>
     </section>
 
-    <!-- Content -->
-    <section class="content">
-        <div class="vertical-cards">
-            <h1>การเผยแพร่ผลงานวิชาการ</h1>
-            <div class="card">
-                <img src="/images/1.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ทหาร</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button>อ่านเพิ่มเติม</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="/images/2.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ชุมชน</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button>อ่านเพิ่มเติม</button>
-                </div>
-            </div>
+    <section class="feature feature--reverse">
+        <div class="feature-img">
+            <!-- ตัวอย่างเป็นภาพตัวอย่าง YouTube thumbnail -->
+            <img src="/images/feature2.jpg" alt="Does Harvard Chan School really need donor support?" />
         </div>
-    </section>
-
-    <!-- <section class="content">
-        <div class="card">
-            <img src="/images/1.jpg" alt="Faculty" />
-            <div>
-                <h2>HIV ในทหารใหม่</h2>
-                <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                <button>อ่านเพิ่มเติม</button>
-            </div>
-        </div>
-    </section> -->
-
-    <section class="programs">
-        <div class="programs-container">
-            <!-- Sidebar Heading -->
-            <aside class="sidebar sticky">วิชาการ</aside>
-
-            <!-- Main Content -->
-            <div class="program-content">
-                <h2>การบริการวิชาการ</h2>
-                <a href="#" class="finder-box">###############
-                    <!-- <span class="arrow">&#8594;</span>-->
-                </a>
-                <ul class="program-list">
-                    <li>
-                        <a href="#">
-                            <span class="title">• โรคลมร้อน</span>
-                            <span class="desc">เกรินนำ</span>
-                            <span class="arrow">&#8594;</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="title">• โรคติดเชื้อเอชไอวี</span>
-                            <span class="desc">เกรินนำ</span>
-                            <span class="arrow">&#8594;</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="title">• เว็บแอพลิเคชันสำหรับประเมินความเสี่ยงโรคหัวใจและหลอดเลือด</span>
-                            <span class="desc">เกรินนำ<span>
-                                    <span class="arrow">&#8594;</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ===== Section : OUR PEOPLE  (ต่อจากของเดิม) ===== -->
-    <section class="people">
-        <div class="people-container">
-            <h2 class="people-heading">ทีมงานของเรา</h2>
-
-            <!-- profile card -->
-            <article class="profile">
-                <figure class="avatar">
-                    <img src="/images/person1.jpg" alt="Dr. Somchai Phanich" />
-                </figure>
-                <div class="profile-body">
-                    <h3 class="name">พ.อ. (พิเศษ) นพ. สมชาย พานิช</h3>
-                    <p class="role">หัวหน้าหน่วยวิจัยเวชศาสตร์ทหาร</p>
-                    <p class="bio">
-                        สนใจงานวิจัยด้านเวชศาสตร์ทหาร ภาวะร้อนเกิน
-                        และการตอบสนองของระบบหัวใจ-หลอดเลือดต่อสภาวะกดดันสูง-ต่ำ
-                    </p>
-                    <a class="profile-btn" href="#">ดูประวัติ &nbsp;→</a>
-                </div>
-            </article>
-
-            <!-- ทำซ้ำได้ไม่จำกัด -->
-            <article class="profile">
-                <figure class="avatar"><img src="/images/person2.jpg" alt="Dr. Wilaiporn S." /></figure>
-                <div class="profile-body">
-                    <h3 class="name">พ.ท.หญิง พญ. วิไลพร ศรีสุชน</h3>
-                    <p class="role">นักวิจัยอาวุโส</p>
-                    <p class="bio">เชี่ยวชาญโรคติดเชื้อเขตร้อน การแพทย์ผ่านเทเลเมดิซีน และการประยุกต์ AI
-                        ในสมรภูมิการแพทย์
-                        ภาคสนาม</p>
-                    <a class="profile-btn" href="#">ดูประวัติ &nbsp;→</a>
-                </div>
-            </article>
-
+        <div class="feature-content">
+            <h2>Your Support Matters</h2>
+            <p>
+                Donor impact reaches far beyond Harvard Chan School. Watch to see how
+                supporting our students creates ripples of health improvement across the
+                globe.
+            </p>
+            <a href="#" class="feature-link">Watch the story &nbsp;↗</a>
         </div>
     </section>
 
@@ -849,22 +734,21 @@
 
         // เรียกใช้งานครั้งแรกเพื่อให้ภาพแรกแสดงทันที
         changeBackgroundImage();
-
-        /* ===== JS : เพิ่ม fade-in ให้การ์ดทีมงาน ===== */
-        document.addEventListener('DOMContentLoaded', () => {
-            const teamCards = document.querySelectorAll('.profile');
-            const obs = new IntersectionObserver(entries => {
-                entries.forEach(en => {
-                    if (en.isIntersecting) {
-                        en.target.classList.add('visible');
-                        obs.unobserve(en.target);
-                    }
-                });
-            }, { threshold: .4 });
-            teamCards.forEach(c => obs.observe(c));
-        });
     </script>
 
+    <script>
+        // === Observer สำหรับ .feature =========
+        const featObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(en => {
+                if (en.isIntersecting) {
+                    en.target.classList.add('visible');
+                    obs.unobserve(en.target);
+                }
+            });
+        }, { threshold: .4 });
+
+        document.querySelectorAll('.feature').forEach(f => featObserver.observe(f));
+    </script>
 
 
 </body>

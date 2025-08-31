@@ -12,6 +12,8 @@
         href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         .container {
             flex: 1;
@@ -204,7 +206,9 @@
 
             <div class="form-group">
                 <label for="province">จังหวัดที่อยู่ (Province) <span class="required">*</span></label>
-                <input type="text" id="province" name="province" placeholder="จังหวัด">
+                <select type="text" id="province" name="province" placeholder="จังหวัด">
+                    <option value="">กรุณาเลือกจังหวัด</option>
+                </select>
                 <!-- <div class="note">มิลลิกรัมต่อเดซิลิตร (mg/dL)</div> -->
             </div>
 
@@ -212,6 +216,10 @@
             <div>
                 <button type="button" class="btn btn-success" id="callab" onclick="nonlab()"
                     style="float: right;">แสดงผลการประเมินความเสี่ยง</button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-success" id="callab" onclick="savedata()"
+                    style="float: right;  margin-right: 20px;" style="float: right;">เก็บข้อมูลที่ประเมิน</button>
             </div>
 
             <div class="text-start text-muted mb-3">
@@ -231,6 +239,61 @@
 
         </form>
     </div>
+    <script>
+        // เมื่อโหลดหน้าเว็บ, ดึงข้อมูลจังหวัดจากเซิร์ฟเวอร์
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/provinces', // ดึงข้อมูลจาก API
+                method: 'GET',
+                success: function (data) {
+                    // สำหรับแต่ละจังหวัดใน data
+                    data.forEach(function (province) {
+                        $('#province').append('<option value="' + province.ProvinceName + '">' + province.ProvinceName + '</option>');
+                    });
+                },
+                error: function (err) {
+                    console.error('Error fetching provinces:', err);
+                }
+            });
+        });
+
+        // ฟังก์ชันที่ทำงานเมื่อกดปุ่ม "แสดงผลการประเมินความเสี่ยง"
+        function savedata() {
+            // เก็บข้อมูลที่กรอกในฟอร์ม
+            const sbp1 = $('#sbp1').val();
+            const sbp2 = $('#sbp2').val();
+
+            // คำนวณ sbptotal และหาร 2
+            const sbptotal = (parseInt(sbp1) + parseInt(sbp2)) / 2;
+
+            const formData = {
+                sex: $('#cvsex').val(),
+                age: $('#age').val(),
+                smoking_status: $('#cvsmk').val(),
+                weight: $('#weight').val(),
+                height: $('#height_cm').val(),
+                province: $('#province').val(),
+                sbp1: sbp1,
+                sbp2: sbp2,
+                sbptotal: sbptotal,
+                total_cholesterol: $('#tc').val(),
+            };
+
+            // ส่งข้อมูลไปยังเซิร์ฟเวอร์
+            $.ajax({
+                url: '/api/save-formnonlab', // เส้นทางสำหรับเก็บข้อมูล
+                method: 'POST',
+                data: formData,
+                success: function (response) {
+                    $('#result').html('<h2>ผลการประเมิน: ' + response.result + '</h2>');
+                },
+                error: function (err) {
+                    console.error('Error saving data:', err);
+                    $('#result').html('<h2>เกิดข้อผิดพลาดในการประมวลผล</h2>');
+                }
+            });
+        }
+    </script>
     <footer>
         <div class="footer-content">
             <p>ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น

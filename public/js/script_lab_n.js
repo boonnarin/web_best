@@ -5,15 +5,10 @@ function generateStataCode() {
     var name = document.getElementById("name").value;
     var lastname = document.getElementById("lastname").value;
     var cvsex = document.getElementById("cvsex").value;
-   
     // var cvsmk = document.querySelector('input[name="cvsmk"]:checked').value;
     var cvsmk = document.getElementById("cvsmk").value;
-    
-    
     // var cvdm = document.querySelector('input[name="cvdm"]:checked').value;
     var cvdm = document.getElementById("cvdm").value;
-    
-    
     //tc
     var tc = parseFloat(document.getElementById('tc').value);
     var tccal = (tc * 0.02586);
@@ -21,12 +16,46 @@ function generateStataCode() {
     var sbp1 = parseFloat(document.getElementById('sbp1').value);
     var sbp2 = parseFloat(document.getElementById('sbp2').value);
     var sbp = ((sbp1 + sbp2) / 2);
-
     //age
-     var age = document.getElementById('age').value;
+    var age = document.getElementById('age').value;
     // const birthYear = document.getElementById('birthYear').value;
     // const currentYear = new Date().getFullYear() + 543;
     // const age = currentYear - birthYear;
+
+
+    // // คำนวณ sbptotal (ค่าเฉลี่ยของ sbp1 และ sbp2)
+    // var sbptotal = sbp;
+
+    // // รวบรวมข้อมูลที่กรอกในฟอร์ม
+    // const formData = {
+    //     name: name,
+    //     lastname: lastname,
+    //     sex: cvsex,
+    //     age: age,
+    //     smoking_status: cvsmk,
+    //     diabetes_status: cvdm,
+    //     province: $('#province').val(),
+    //     sbp1: sbp1,
+    //     sbp2: sbp2,
+    //     sbptotal: sbptotal,
+    //     total_cholesterol: tccal,
+    // };
+
+    // // ส่งข้อมูลไปยังเซิร์ฟเวอร์
+    // $.ajax({
+    //     url: '/api/save-form',  // เส้นทางสำหรับเก็บข้อมูล
+    //     method: 'POST',
+    //     data: formData,
+    //     success: function (response) {
+    //         // แสดงผลการประเมินจากเซิร์ฟเวอร์
+    //         $('#result').html('<h2>ผลการประเมิน: ' + response.result + '</h2>');
+    //     },
+    //     error: function (err) {
+    //         console.error('Error saving data:', err);
+    //         $('#result').html('<h2>เกิดข้อผิดพลาดในการประมวลผล</h2>');
+    //     }
+    // });
+
     //หยุดการทำงานหากข้อมูลไม่ครบ
     if (!cvsex || !cvsmk || !cvdm || !tc || !sbp1 || !sbp2 || !age) {
         alert("โปรดกรอกข้อมูลให้ครบทุกช่อง");
@@ -3446,7 +3475,7 @@ function generateStataCode() {
     document.cookie = `statas=${statas}; path=/`;
     document.cookie = `sbp=${sbp}; path=/`;
     document.cookie = `tc=${tc}; path=/`;
-    
+
 
     // ส่งไปยังหน้า result.html
     window.location.href = "result.html";

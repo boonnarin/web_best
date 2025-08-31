@@ -18,8 +18,11 @@
             background-color: #fff;
         }
 
+
         header {
-            background-color: transparent;
+            /* background-color: transparent; */
+            background-color: #110247;
+
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -35,7 +38,7 @@
         }
 
         header.scrolled {
-            background-color: #242424;
+            background-color: #12055e;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
@@ -83,12 +86,54 @@
             white-space: nowrap;
         }
 
+
         /* right‑side actions (language + hamburger) */
         .header-actions {
             margin-left: auto;
             display: flex;
             align-items: center;
-            gap: 12px
+            gap: 8px;
+            /* flex-direction: row-reverse; */
+            /* ทำให้ลูกตัวแรก (main-nav) ไปอยู่ขวาสุด */
+        }
+
+        /* manu in header */
+
+        .main-nav {
+
+            align-items: center;
+            gap: 8px;
+            /* ระยะห่างระหว่างลิงก์ในเมนู */
+        }
+
+        /* ลิงก์หน้าแรก: เส้นวิ่งใต้ข้อความ */
+        .main-nav a {
+            position: relative;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 6px 2px;
+            /* เว้นนิดหน่อยเพื่อให้เส้นไม่ติดตัวอักษร */
+        }
+
+        .main-nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            /* ใต้ตัวอักษรเล็กน้อย */
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            transform-origin: left;
+            /* เริ่มจากซ้ายไปขวา */
+            transition: transform .25s ease;
+        }
+
+        .main-nav a:hover::after,
+        .main-nav a:focus-visible::after {
+            transform: scaleX(1);
         }
 
         /* language toggle */
@@ -115,6 +160,7 @@
             opacity: 1
         }
 
+
         /* hamburger */
         .menu-toggle {
             width: 28px;
@@ -140,7 +186,7 @@
             left: 0;
             height: 100vh;
             width: 100%;
-            background-color: #181717;
+            background-color: #201563;
             color: white;
             display: flex;
             flex-direction: column;
@@ -205,28 +251,115 @@
         }
 
 
-        .banner {
-            /* background-image: url('/images/3.jpg'); */
+        /* █ Banner Slider */
+        .banner-slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            /* ปรับสูงตามต้องการ */
+            overflow: hidden;
+            margin-top: 70px;
+            /* 70px = ความสูง header */
+            background: #201563;
+        }
+
+        .slides-wrap {
+            width: min(1000px, 100%);
+            height: 500px;
+            overflow: hidden;
+            margin: 0 auto;
+            /* จัดกึ่งกลางแนวนอน */
+        }
+
+        .slides {
+            display: flex;
+            height: 100%;
+            transition: transform .6s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
-            color: white;
-            padding: 300px 20px 150px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .caption {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
             text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            box-sizing: border-box;
-            transition: background-image 1s ease-in-out;
-            /* เพิ่มการเปลี่ยนภาพแบบค่อยเป็นค่อยไป */
+            color: #fff;
+            text-shadow: 0 2px 4px #000;
         }
 
-        .banner h1 {
+        .caption h1 {
             font-size: 3em;
-            margin-bottom: 0.3em;
-            font-weight: bold;
+            margin-bottom: .3em;
+            font-weight: 700
         }
 
-        .banner p {
-            font-size: 1.2em;
+        .caption p {
+            font-size: 1.2em
+        }
+
+        /* arrows */
+        .nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, .4);
+            color: #fff;
+            border: 0;
+            width: 48px;
+            height: 48px;
+            font-size: 2em;
+            cursor: pointer;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            transition: background .3s;
+            z-index: 10
+        }
+
+        .nav:hover {
+            background: rgba(0, 0, 0, .65)
+        }
+
+        .prev {
+            left: 20px
+        }
+
+        .next {
+            right: 20px
+        }
+
+        /* dots */
+        .dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dots button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 0;
+            background: rgba(255, 255, 255, .5);
+            cursor: pointer;
+            transition: .3s
+        }
+
+        .dots button.active {
+            background: #fff;
+            scale: 1.3
         }
 
         .content {
@@ -266,11 +399,11 @@
             background: #fff;
             margin: 15px 0;
             padding: 20px;
-            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px; */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             transition: transform 0.5s ease, opacity 0.5s ease;
             /* เพิ่ม transition สำหรับ opacity และ transform */
-            /* box-sizing: border-box; */
+            box-sizing: border-box;
             opacity: 0;
             /* ซ่อน card */
             transform: translateY(50px);
@@ -325,8 +458,6 @@
             display: flex;
             gap: 60px;
         }
-
-
 
         .sidebar {
             flex: 0 0 220px;
@@ -433,109 +564,99 @@
             transform: translate(6px, -50%);
         }
 
+        /* ===== FEATURE SECTION ===== */
+        .feature {
+            max-width: 1200px;
+            margin: 100px auto;
+            /* ระยะห่างรอบ ๆ ให้โล่งโปร่ง */
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            opacity: 0;
+            /* ใช้สำหรับ fade-in */
+            transform: translateY(60px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .feature.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .feature-img {
+            flex: 0 0 420px;
+            /* รูปภาพกว้างคงที่ */
+        }
+
+        .feature-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .feature-content {
+            flex: 1 1 auto;
+        }
+
+        .feature-content h2 {
+            font-size: 2.2em;
+            margin: 0 0 .4em;
+            color: #101820;
+        }
+
+        .feature-content p {
+            font-size: 1.05em;
+            line-height: 1.55;
+            margin: 0 0 1.1em;
+        }
+
+        .feature-link {
+            display: inline-block;
+            font-weight: 700;
+            text-decoration: none;
+            color: #A51C30;
+            border-bottom: 2px solid #A51C30;
+            padding-bottom: 2px;
+            transition: color .3s, border-color .3s;
+        }
+
+        .feature-link:hover {
+            color: #821726;
+            border-color: #821726
+        }
+
+        /* สลับทิศทาง */
+        .feature--reverse {
+            flex-direction: row-reverse
+        }
+
+        /* ===== Responsive ===== */
+        @media(max-width:900px) {
+            .feature {
+                flex-direction: column;
+                text-align: center
+            }
+
+            .feature--reverse {
+                flex-direction: column
+            }
+
+            /* ยกเลิก reverse บนจอแคบ */
+            .feature-img {
+                flex: none;
+                width: 100%;
+                max-width: 420px
+            }
+        }
+
+
         footer {
             background-color: #2B2B2B;
             color: white;
             padding: 20px;
             text-align: center;
         }
-
-        /* ===== PEOPLE SECTION ===== */
-        .people {
-            background: #F9FAFB;
-            padding: 60px 20px;
-            box-sizing: border-box;
-        }
-
-        .people-container {
-            max-width: 1200px;
-            margin: auto;
-            display: grid;
-            gap: 40px;
-        }
-
-        .people-heading {
-            font-size: 2.4em;
-            font-weight: 700;
-            color: #101820;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        /* profile card */
-        .profile {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, .08);
-            overflow: hidden;
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            opacity: 0;
-            /* สำหรับ fade-in */
-            transform: translateY(60px);
-            transition: transform .6s ease, opacity .6s ease;
-        }
-
-        .profile.visible {
-            /*​ ใช้กับ IntersectionObserver (ดู JS ด้านล่าง) */
-            opacity: 1;
-            transform: none;
-        }
-
-        .avatar {
-            flex: 0 0 220px;
-            position: relative;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-body {
-            flex: 1 1 auto;
-            padding: 28px 32px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .name {
-            font-size: 1.4em;
-            margin: 0 0 6px;
-            color: #A51C30;
-        }
-
-        .role {
-            font-weight: 600;
-            margin: 0 0 12px;
-        }
-
-        .bio {
-            flex: 1 0 auto;
-            font-size: .95em;
-            color: #555;
-            margin: 0 0 18px;
-        }
-
-        .profile-btn {
-            align-self: flex-start;
-            background: #A51C30;
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: .9em;
-            transition: background .3s;
-        }
-
-        .profile-btn:hover {
-            background: #821726
-        }
-
-
 
         /* ===== Responsive ===== */
         @media (min-width: 768px) {
@@ -604,6 +725,12 @@
         </div>
 
         <div class="header-actions">
+            <!-- main nav -->
+            <nav class="main-nav">
+                <a href="/หน้าเเรก.html">หน้าแรก</a>
+
+                <a href="/profile.html">บุคลากร</a>
+            </nav>
             <!-- language toggle -->
             <div class="lang-toggle" id="lang-toggle">
                 <span class="lang current" data-lang="th">TH</span>
@@ -630,101 +757,122 @@
         <a href="#">ติดต่อ</a>
     </div>
 
-    <!-- Banner -->
-    <section class="banner">
-        <h1>หน่วยวิจัยเวชศาสตร์ทหาร วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า</h1>
-        <p>storyเล็กน้อย</p>
-    </section>
+    <!-- █████ Banner Slider █████ -->
+    <section class="banner-slider">
+        <button class="nav prev" aria-label="previous">&#10094;</button>
 
-    <!-- Content -->
-    <section class="content">
-        <div class="vertical-cards">
-            <h1>การวิจัย</h1>
-            <div class="card">
-                <img src="/images/1.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ทหาร</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button onclick="window.location.href='test2.html';">อ่านเพิ่มเติม</button>
-
+        <div class="slides-wrap">
+            <div class="slides" id="slides">
+                <div class="slide" style="background-image:url('/images/logo1maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>หน่วยวิจัยเวชศาสตร์ทหาร</h1>
+                        <p>เรื่องราวเล็กน้อยสไลด์ 1</p> -->
+                    </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <img src="/images/2.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ชุมชน</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button>อ่านเพิ่มเติม</button>
+                <div class="slide" style="background-image:url('/images/logo2maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>การวิจัยเพื่อกองทัพ</h1>
+                        <p>เรื่องราวเล็กน้อยสไลด์ 2</p> -->
+                    </div>
                 </div>
+
+                <div class="slide" style="background-image:url('/images/logo3maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>สร้างองค์ความรู้ใหม่</h1>
+                        <p>เรื่องราวเล็กน้อยสไลด์ 3</p> -->
+                    </div>
+                </div>
+
             </div>
         </div>
+
+        <button class="nav next" aria-label="next">&#10095;</button>
+
+        <div class="dots" id="dots"></div>
     </section>
 
-    <!-- Content -->
-    <section class="content">
-        <div class="vertical-cards">
-            <h1>การเผยแพร่ผลงานวิชาการ</h1>
-            <div class="card">
-                <img src="/images/1.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ทหาร</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button>อ่านเพิ่มเติม</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="/images/2.jpg" alt="Faculty" />
-                <div>
-                    <h2>• เวชศาสตร์ชุมชน</h2>
-                    <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                    <button>อ่านเพิ่มเติม</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- <section class="content">
-        <div class="card">
-            <img src="/images/1.jpg" alt="Faculty" />
-            <div>
-                <h2>HIV ในทหารใหม่</h2>
-                <p>งานวิจัยที่ตีพิมพ์ brief รายละเอียดเล็กน้อย</p>
-                <button>อ่านเพิ่มเติม</button>
-            </div>
-        </div>
-    </section> -->
 
     <section class="programs">
         <div class="programs-container">
             <!-- Sidebar Heading -->
-            <aside class="sidebar sticky">วิชาการ</aside>
+            <aside class="sidebar sticky">การวิจัย</aside>
 
             <!-- Main Content -->
             <div class="program-content">
-                <h2>การบริการวิชาการ</h2>
+                <h2>เวชศาสตร์ทหาร (Military Medicine)</h2>
                 <a href="#" class="finder-box">###############
                     <!-- <span class="arrow">&#8594;</span>-->
                 </a>
                 <ul class="program-list">
                     <li>
                         <a href="#">
-                            <span class="title">• โรคลมร้อน</span>
+                            <span
+                                class="title">การพัฒนาระบบการรายงานสถานการณ์การบาดเจ็บจากความรุนแรงในพื้นที่จังหวัดชายแดนใต้</span>
                             <span class="desc">เกรินนำ</span>
                             <span class="arrow">&#8594;</span>
                         </a>
                     </li>
                     <li>
                         <a href="#">
-                            <span class="title">• โรคติดเชื้อเอชไอวี</span>
+                            <span class="title">การป้องกันการเจ็บป่วยจากความร้อนในการฝึกทหารใหม่
+                                ด้วยระบบการบันทึกปัจจัยเสี่ยงรายวัน</span>
                             <span class="desc">เกรินนำ</span>
                             <span class="arrow">&#8594;</span>
                         </a>
                     </li>
                     <li>
                         <a href="#">
-                            <span class="title">• เว็บแอพลิเคชันสำหรับประเมินความเสี่ยงโรคหัวใจและหลอดเลือด</span>
+                            <span class="title">พลวัตรของปัจจัยเสี่ยงต่อการติดเชื้อเอชไอวีในกลุ่มทหารเกณฑ์ของกองทัพบก:
+                                การบูรณาการระบบเฝ้าระวังพฤติกรรมเสี่ยงเข้ากับระบบเฝ้าระวังการติดเชื้อเอชไอวี</span>
+                            <span class="desc">เกรินนำ<span>
+                                    <span class="arrow">&#8594;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span
+                                class="title">การเฝ้าระวังปัจจัยเสี่ยงโรคหัวใจและหลอดเลือดและภาวะเมตาบอลิกซินโดรมในกำลังพลกองทัพบก</span>
+                            <span class="desc">เกรินนำ<span>
+                                    <span class="arrow">&#8594;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="title">
+                                การพัฒนารูปแบบบริการปฐมภูมิสำหรับผู้ป่วยโรคไม่ติดต่อเรื้อรังโดยใช้นวัตกรรมเครือข่ายผู้ช่วยเหลือกำลังพลที่เกษียณอายุสังกัดกองทัพบก</span>
+                            <span class="desc">เกรินนำ<span>
+                                    <span class="arrow">&#8594;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="title">รูปแบบการป้องกันการติดเชื้อไวรัสโคโรนา 2019
+                                ในกำลังพลที่ปฏิบัติหน้าที่ในแนวชายแดนด้านสาธารณรัฐแห่งสหภาพเมียนมา</span>
+                            <span class="desc">เกรินนำ<span>
+                                    <span class="arrow">&#8594;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span
+                                class="title">การพัฒนาประสิทธิภาพการรักษาโรคไม่ติดต่อเรื้อรังอย่างต่อเนื่องในกำลังพลทหารประจำการและอาสาสมัครทหารพรานจังหวัดชายแดนใต้</span>
+                            <span class="desc">เกรินนำ<span>
+                                    <span class="arrow">&#8594;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="title">ความชุกและปัจจัยเสี่ยงที่ส่งผลต่อการรักษาวัณโรคไม่สำเร็จ
+                                ในผู้ป่วยที่เข้ารับการรักษาในโรงพยาบาลสังกัดกองทัพบก</span>
+                            <span class="desc">เกรินนำ<span>
+                                    <span class="arrow">&#8594;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="title">การทดสอบอุปกรณ์ตรวจสีปัสสาวะอัตโนมัติ
+                                สำหรับใช้ในการเฝ้าระวังโรคลมร้อนในทหารกองประจำการในห้วงการฝึกทหารใหม่</span>
                             <span class="desc">เกรินนำ<span>
                                     <span class="arrow">&#8594;</span>
                         </a>
@@ -736,42 +884,6 @@
         </div>
     </section>
 
-    <!-- ===== Section : OUR PEOPLE  (ต่อจากของเดิม) ===== -->
-    <section class="people">
-        <div class="people-container">
-            <h2 class="people-heading">ทีมงานของเรา</h2>
-
-            <!-- profile card -->
-            <article class="profile">
-                <figure class="avatar">
-                    <img src="/images/person1.jpg" alt="Dr. Somchai Phanich" />
-                </figure>
-                <div class="profile-body">
-                    <h3 class="name">พ.อ. (พิเศษ) นพ. สมชาย พานิช</h3>
-                    <p class="role">หัวหน้าหน่วยวิจัยเวชศาสตร์ทหาร</p>
-                    <p class="bio">
-                        สนใจงานวิจัยด้านเวชศาสตร์ทหาร ภาวะร้อนเกิน
-                        และการตอบสนองของระบบหัวใจ-หลอดเลือดต่อสภาวะกดดันสูง-ต่ำ
-                    </p>
-                    <a class="profile-btn" href="#">ดูประวัติ &nbsp;→</a>
-                </div>
-            </article>
-
-            <!-- ทำซ้ำได้ไม่จำกัด -->
-            <article class="profile">
-                <figure class="avatar"><img src="/images/person2.jpg" alt="Dr. Wilaiporn S." /></figure>
-                <div class="profile-body">
-                    <h3 class="name">พ.ท.หญิง พญ. วิไลพร ศรีสุชน</h3>
-                    <p class="role">นักวิจัยอาวุโส</p>
-                    <p class="bio">เชี่ยวชาญโรคติดเชื้อเขตร้อน การแพทย์ผ่านเทเลเมดิซีน และการประยุกต์ AI
-                        ในสมรภูมิการแพทย์
-                        ภาคสนาม</p>
-                    <a class="profile-btn" href="#">ดูประวัติ &nbsp;→</a>
-                </div>
-            </article>
-
-        </div>
-    </section>
 
 
     <footer>
@@ -826,43 +938,68 @@
     </script>
 
     <script>
-        // รายชื่อภาพที่จะใช้เป็นพื้นหลัง
-        const images = [
-            '/images/1.jpg',
-            '/images/2.jpg',
-            '/images/3.jpg'
-        ];
+        (() => {
+            const slides = document.querySelectorAll('.slide');
+            const slider = document.getElementById('slides');
+            const dotsWrap = document.getElementById('dots');
+            let index = 0, auto;
 
-        let currentImageIndex = 0;
+            /* สร้างจุด */
+            slides.forEach((_, i) => {
+                const b = document.createElement('button');
+                if (i === 0) b.classList.add('active');
+                b.addEventListener('click', () => go(i));
+                dotsWrap.appendChild(b);
+            });
+            const dots = dotsWrap.children;
 
-        // ฟังก์ชันเพื่อเปลี่ยนภาพพื้นหลัง
-        function changeBackgroundImage() {
-            // เปลี่ยนพื้นหลังของ .banner
-            document.querySelector('.banner').style.backgroundImage = `url(${images[currentImageIndex]})`;
+            /* ฟังก์ชันสลับสไลด์ */
+            function go(i) {
+                index = (i + slides.length) % slides.length;
+                slider.style.transform = `translateX(-${index * 100}%)`;
+                [...dots].forEach(d => d.classList.remove('active'));
+                dots[index].classList.add('active');
+                resetAuto();
+            }
 
-            // ปรับตัวแปร index สำหรับภาพถัดไป
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-        }
+            /* ปุ่มลูกศร */
+            document.querySelector('.prev').onclick = () => go(index - 1);
+            document.querySelector('.next').onclick = () => go(index + 1);
 
-        // ตั้งเวลาให้เปลี่ยนภาพทุกๆ 5 วินาที
-        setInterval(changeBackgroundImage, 3000);
+            /* เลื่อนอัตโนมัติทุก 5 วิ */
+            function resetAuto() {
+                clearInterval(auto);
+                auto = setInterval(() => go(index + 1), 5000);
+            }
+            resetAuto();
+        })();
+    </script>
 
-        // เรียกใช้งานครั้งแรกเพื่อให้ภาพแรกแสดงทันที
-        changeBackgroundImage();
+    <script>
+        // === Observer สำหรับ .feature =========
+        const featObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(en => {
+                if (en.isIntersecting) {
+                    en.target.classList.add('visible');
+                    obs.unobserve(en.target);
+                }
+            });
+        }, { threshold: .4 });
 
-        /* ===== JS : เพิ่ม fade-in ให้การ์ดทีมงาน ===== */
-        document.addEventListener('DOMContentLoaded', () => {
-            const teamCards = document.querySelectorAll('.profile');
-            const obs = new IntersectionObserver(entries => {
-                entries.forEach(en => {
-                    if (en.isIntersecting) {
-                        en.target.classList.add('visible');
-                        obs.unobserve(en.target);
-                    }
-                });
-            }, { threshold: .4 });
-            teamCards.forEach(c => obs.observe(c));
-        });
+        document.querySelectorAll('.feature').forEach(f => featObserver.observe(f));
+    </script>
+
+    <script>
+        /* === Fade-in .profile-card (reuse observer style) === */
+        const profObserver = new IntersectionObserver((es, ob) => {
+            es.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    ob.unobserve(e.target);
+                }
+            });
+        }, { threshold: .35 });
+        document.querySelectorAll('.profile-card').forEach(c => profObserver.observe(c));
     </script>
 
 

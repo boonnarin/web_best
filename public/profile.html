@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
+    <style>
+        html {
+            font-size: clamp(14px, 1.5vw, 18px);
+        }
+
+        body {
+            padding-top: 10px;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            background-color: #fff;
+
+        }
+
+        header {
+            /* background-color: transparent; */
+            background-color: #110247;
+
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+
+        header.scrolled {
+            background-color: #12055e;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            /* ระยะห่างระหว่างรูปกับข้อความ */
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo img {
+            max-width: 100px;
+            /* ขนาดโลโก้รูปภาพ */
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            white-space: nowrap;
+        }
+
+        .logogo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            /* ระยะห่างระหว่างรูปกับข้อความ */
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logogo img {
+            max-width: 200px;
+            /* ขนาดโลโก้รูปภาพ */
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logogo-text {
+            white-space: nowrap;
+        }
+
+
+        /* right‑side actions (language + hamburger) */
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* flex-direction: row-reverse; */
+            /* ทำให้ลูกตัวแรก (main-nav) ไปอยู่ขวาสุด */
+        }
+
+        /* manu in header */
+
+        .main-nav {
+
+            align-items: center;
+            gap: 8px;
+            /* ระยะห่างระหว่างลิงก์ในเมนู */
+        }
+
+        /* ลิงก์หน้าแรก: เส้นวิ่งใต้ข้อความ */
+        .main-nav a {
+            position: relative;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 6px 2px;
+            /* เว้นนิดหน่อยเพื่อให้เส้นไม่ติดตัวอักษร */
+        }
+
+        .main-nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            /* ใต้ตัวอักษรเล็กน้อย */
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            transform-origin: left;
+            /* เริ่มจากซ้ายไปขวา */
+            transition: transform .25s ease;
+        }
+
+        .main-nav a:hover::after,
+        .main-nav a:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        /* language toggle */
+        .lang-toggle {
+            color: #fff;
+            font-size: .9em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .lang-toggle .lang {
+            opacity: .6;
+            transition: opacity .3s
+        }
+
+        .lang-toggle .current {
+            font-weight: 700;
+            opacity: 1
+        }
+
+        .lang-toggle:hover .lang {
+            opacity: 1
+        }
+
+
+        /* hamburger */
+        .menu-toggle {
+            width: 28px;
+            height: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            background: #fff;
+            border-radius: 2px;
+            transition: transform .3s, opacity .3s
+        }
+
+
+        .overlay-menu {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            background-color: #201563;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 60px 30px;
+            box-sizing: border-box;
+            transition: top 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            z-index: 1100;
+        }
+
+        .overlay-menu.active {
+            top: 0;
+            opacity: 1;
+        }
+
+        .overlay-menu .menu-logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .overlay-menu a {
+            color: white;
+            font-size: 3em;
+            margin: 15px 0;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            /* ทำให้ลิงก์มีขนาดตามตัวอักษร */
+            position: relative;
+            /* เพื่อจัดการกับ ::after */
+            overflow: hidden;
+            /* ป้องกันเส้นวิ่งออกนอกพื้นที่ */
+        }
+
+        .overlay-menu a::after {
+            content: '';
+            /* สร้าง pseudo-element */
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            /* เริ่มต้นที่ด้านซ้ายสุด */
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: left 0.3s ease;
+            /* ความลื่นในการแสดงเส้น */
+        }
+
+        .overlay-menu a:hover::after {
+            left: 0;
+            /* เมื่อ hover, เส้นจะวิ่งไปขวา */
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+
+        /* █ Banner Slider */
+        .banner-slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            /* ปรับสูงตามต้องการ */
+            overflow: hidden;
+            margin-top: 70px;
+            /* 70px = ความสูง header */
+            background: #201563;
+        }
+
+        .slides-wrap {
+            width: min(1000px, 100%);
+            height: 500px;
+            overflow: hidden;
+            margin: 0 auto;
+            /* จัดกึ่งกลางแนวนอน */
+        }
+
+        .slides {
+            display: flex;
+            height: 100%;
+            transition: transform .6s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .caption {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 4px #000;
+        }
+
+        .caption h1 {
+            font-size: 3em;
+            margin-bottom: .3em;
+            font-weight: 700
+        }
+
+        .caption p {
+            font-size: 1.2em
+        }
+
+        /* arrows */
+        .nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, .4);
+            color: #fff;
+            border: 0;
+            width: 48px;
+            height: 48px;
+            font-size: 2em;
+            cursor: pointer;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            transition: background .3s;
+            z-index: 10
+        }
+
+        .nav:hover {
+            background: rgba(0, 0, 0, .65)
+        }
+
+        .prev {
+            left: 20px
+        }
+
+        .next {
+            right: 20px
+        }
+
+        /* dots */
+        .dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dots button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 0;
+            background: rgba(255, 255, 255, .5);
+            cursor: pointer;
+            transition: .3s
+        }
+
+        .dots button.active {
+            background: #fff;
+            scale: 1.3
+        }
+
+        .content {
+            padding: 20px 20px;
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .vertical-cards {
+            display: flex;
+            flex-direction: column;
+            /* แสดงผลเป็นแนวตั้ง */
+            gap: 10px;
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s;
+            box-sizing: border-box;
+        }
+
+        .vertical-cards h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            flex: 1 1 100%;
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            /* เพิ่ม transition สำหรับ opacity และ transform */
+            box-sizing: border-box;
+            opacity: 0;
+            /* ซ่อน card */
+            transform: translateY(50px);
+            /* เลื่อน card ไปด้านล่าง */
+        }
+
+        .card.visible {
+            opacity: 1;
+            /* ทำให้ card ปรากฏ */
+            transform: translateY(0);
+            /* เลื่อนกลับมาที่ตำแหน่งเดิม */
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 40%;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .card h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .card button {
+            background-color: #A51C30;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .card button:hover {
+            background-color: #821726;
+        }
+
+        /* ===== Degree Program Finder Section ===== */
+        .programs {
+            padding: 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .programs-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            gap: 60px;
+        }
+
+        .sidebar {
+            flex: 0 0 220px;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #101820;
+        }
+
+        .sidebar.sticky {
+            position: sticky;
+            top: 120px;
+            font-size: 3.2em;
+            margin-bottom: 35px;
+            color: #101820;
+        }
+
+        .program-content {
+            flex: 1 1 auto;
+        }
+
+        .program-content h2 {
+            font-size: 2.2em;
+            margin-bottom: 35px;
+            color: #101820;
+        }
+
+        .finder-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #FFF5E8;
+            border-left: 4px solid #FED7A5;
+            padding: 22px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 50px;
+        }
+
+        .finder-box .arrow {
+            font-size: 1.4em;
+        }
+
+        .program-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .program-list li {
+            border-bottom: 1px solid #E9E9E9;
+        }
+
+        .program-list li a {
+            display: block;
+            padding: 28px 0;
+            text-decoration: none;
+            color: #333;
+            position: relative;
+        }
+
+        .program-list li a:hover {
+            background: #fafafa;
+        }
+
+        .program-list .title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        /* running line effect */
+        .program-list .title::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            height: 2px;
+            width: 0;
+            background: #A51C30;
+            transition: width 0.35s ease;
+        }
+
+        .program-list li a:hover .title::after {
+            width: 100%;
+        }
+
+        .program-list .desc {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .program-list .arrow {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s;
+        }
+
+        .program-list li a:hover .arrow {
+            transform: translate(6px, -50%);
+        }
+
+        /* ===== FEATURE SECTION ===== */
+        .feature {
+            max-width: 1200px;
+            margin: 100px auto;
+            /* ระยะห่างรอบ ๆ ให้โล่งโปร่ง */
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            opacity: 0;
+            /* ใช้สำหรับ fade-in */
+            transform: translateY(60px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .feature.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .feature-img {
+            flex: 0 0 420px;
+            /* รูปภาพกว้างคงที่ */
+        }
+
+        .feature-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .feature-content {
+            flex: 1 1 auto;
+        }
+
+        .feature-content h2 {
+            font-size: 2.2em;
+            margin: 0 0 .4em;
+            color: #101820;
+        }
+
+        .feature-content p {
+            font-size: 1.05em;
+            line-height: 1.55;
+            margin: 0 0 1.1em;
+        }
+
+        .feature-link {
+            display: inline-block;
+            font-weight: 700;
+            text-decoration: none;
+            color: #A51C30;
+            border-bottom: 2px solid #A51C30;
+            padding-bottom: 2px;
+            transition: color .3s, border-color .3s;
+        }
+
+        .feature-link:hover {
+            color: #821726;
+            border-color: #821726
+        }
+
+        /* สลับทิศทาง */
+        .feature--reverse {
+            flex-direction: row-reverse
+        }
+
+        footer {
+            background-color: #2B2B2B;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* ===== PROFILES GRID ===== */
+        .profiles {
+            max-width: 1200px;
+            margin: 120px auto;
+        }
+
+        /* --- Layout: 3 ใบ / แถว (ดีฟอลต์) --- */
+        .profiles .profiles-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 60px 40px;
+        }
+
+        /* --- Layout: 2 ใบ / แถว (ใช้กับ section.two-col) --- */
+        .profiles.two-col .profiles-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* --- Layout: 1 ใบ / แถว (ใช้กับ section.one-col) --- */
+        .profiles.one-col .profiles-container {
+            grid-template-columns: 1fr;
+        }
+
+        /* --------- เส้นแบ่ง (border-right) --------- */
+        .profile-card {
+            position: relative;
+            padding-right: 40px;
+            /* เว้นระยะจากเส้น */
+        }
+
+        .profile-card::after {
+            /* เส้นแนวตั้ง */
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 1px;
+            background: #EBC79D;
+        }
+
+        /* ตัดเส้นตัวสุดท้ายของแต่ละแถว - 3 ใบต่อแถว */
+        .profiles .profile-card:nth-child(3n)::after {
+            display: none;
+        }
+
+        /* ตัดเส้นตัวสุดท้ายของแต่ละแถว - 2 ใบต่อแถว */
+        .profiles.two-col .profile-card:nth-child(2n)::after {
+            display: none;
+        }
+
+        /* ซ่อนเส้นเมื่อมีใบเดียว */
+        .profiles.one-col .profile-card::after {
+            display: none;
+        }
+
+        /* --- การ์ดสวยงาม (เหมือนเดิม) --- */
+        .profile-card {
+            display: block;
+            /* anchor กินพื้นที่เต็มการ์ด */
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+            /* สืบทอดสีข้อความปกติ */
+            transition: background .3s, box-shadow .3s, transform .3s;
+        }
+
+        .profile-card:hover {
+            background: rgba(165, 28, 48, .05);
+            /* สีแดงแบรนด์จาง 5% (ปรับได้) */
+            box-shadow: 0 6px 14px rgba(0, 0, 0, .12);
+            transform: translateY(-6px);
+            cursor: pointer;
+        }
+
+        /* รักษาเส้นคั่นแนวตั้งเดิมให้ทำงานกับ anchor ด้วย */
+        .profile-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 1px;
+            background: #EBC79D;
+        }
+
+        .profile-card.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .avatar {
+            margin: 0 0 16px
+        }
+
+        .avatar img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 4px
+        }
+
+        .fullname {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin: 0 0 6px;
+            color: #101820
+        }
+
+        .role,
+        .dept {
+            margin: 0;
+            line-height: 1.4;
+            font-size: .95em
+        }
+
+        .role {
+            font-weight: 600
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 10px;
+            border: 1px solid #C78D2A;
+            border-radius: 20px;
+            font-size: .75em;
+            font-weight: 600;
+            color: #C78D2A;
+        }
+
+        /* --- Responsive (จอแคบ) --- */
+        @media(max-width:900px) {
+
+            .profiles .profiles-container,
+            .profiles.two-col .profiles-container {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .profiles.one-col .profiles-container {
+                grid-template-columns: 1fr
+            }
+
+            /* ปรับเส้นให้เข้ากับ 2 คอลัมน์ */
+            .profiles .profile-card:nth-child(2n)::after {
+                display: none
+            }
+        }
+
+        @media(max-width:600px) {
+            .profiles .profiles-container {
+                grid-template-columns: 1fr
+            }
+
+            .profile-card::after {
+                display: none
+            }
+
+            .profile-card {
+                padding-right: 0
+            }
+        }
+
+
+        /* ===== Responsive ===== */
+        @media(max-width:900px) {
+            .feature {
+                flex-direction: column;
+                text-align: center
+            }
+
+            .feature--reverse {
+                flex-direction: column
+            }
+
+            /* ยกเลิก reverse บนจอแคบ */
+            .feature-img {
+                flex: none;
+                width: 100%;
+                max-width: 420px
+            }
+        }
+
+        /* ===== Responsive ===== */
+        @media (min-width: 768px) {
+            .card {
+                flex: 1 1 calc(50% - 60px);
+            }
+
+            nav a {
+                margin: 0 15px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .programs-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                flex: none;
+                font-size: 1.4em;
+                margin-bottom: 25px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            header,
+            .banner-slider,
+
+            .content {
+                padding: 15px;
+            }
+
+
+            .card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .card img {
+                width: 100%;
+                margin: 0 0 15px;
+            }
+
+            .finder-box {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .program-list .arrow {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== Header ===== -->
+    <header id="header">
+        <div class="logo">
+            <img src="/images/lolo.png" alt="Logo">
+            <span class="logo-text">Research Unit for Military Medicine</span>
+        </div>
+
+        <div class="header-actions">
+            <!-- main nav -->
+            <nav class="main-nav">
+                <a href="/หน้าเเรก.html">หน้าแรก</a>
+
+                <a href="/profile.html">บุคลากร</a>
+            </nav>
+            <!-- language toggle -->
+            <div class="lang-toggle" id="lang-toggle">
+                <span class="lang current" data-lang="th">TH</span>
+                |
+                <span class="lang" data-lang="en">EN</span>
+            </div>
+
+            <!-- Hamburger Button -->
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fullscreen Overlay Menu -->
+    <div class="overlay-menu" id="overlay-menu">
+        <div class="logogo">
+            <img src="/images/lolo.png" alt="Logo" />
+        </div>
+        <div class="close-menu" id="close-menu">&times;</div>
+        <a href="#">หน้าแรก</a>
+        <a href="#">เกี่ยวกับเรา</a>
+        <a href="#">บุคลากร</a>
+        <a href="#">ติดต่อ</a>
+    </div>
+
+    <!-- █████ Banner Slider █████ -->
+    <section class="banner-slider">
+        <button class="nav prev" aria-label="previous">&#10094;</button>
+
+        <div class="slides-wrap">
+            <div class="slides" id="slides">
+                <div class="slide" style="background-image:url('/images/logo1maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>หน่วยวิจัยเวชศาสตร์ทหาร</h1>
+                        <p>เรื่องราวเล็กน้อยสไลด์ 1</p> -->
+                    </div>
+                </div>
+
+                <div class="slide" style="background-image:url('/images/logo2maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>การวิจัยเพื่อกองทัพ</h1>
+                        <p>เรื่องราวเล็กน้อยสไลด์ 2</p> -->
+                    </div>
+                </div>
+
+                <div class="slide" style="background-image:url('/images/logo3maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>สร้างองค์ความรู้ใหม่</h1>
+                        <p>เรื่องราวเล็กน้อยสไลด์ 3</p> -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <button class="nav next" aria-label="next">&#10095;</button>
+
+        <div class="dots" id="dots"></div>
+    </section>
+
+
+    <!-- ===== PROFILES GRID ===== -->
+    <section class="profiles">
+        <div class="profiles-container">
+
+            <!-- card 1 -->
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">พล.ต. ศ.นพ.ราม รังสินธุ์</h3>
+                <p class="role">ศาสตราจารย์</p>
+                <p class="dept">เวชศาสตร์ทหารและชุมชน</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+            <!-- card 2 -->
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">พล.ต. ศ.นพ.มฑิรุทธ มุ่งถิ่น</h3>
+                <p class="role">ศาสตราจารย์</p>
+                <p class="dept">ปาราสิตวิทยา</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+            <!-- card 3 -->
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">พล.ต.หญิง ผศ.ปนัดดา หัตถโชติ</h3>
+                <p class="role">ผู้ช่วยศาสตราจารย์</p>
+                <p class="dept">สรีรวิทยา</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+            <!-- card 4 -->
+
+
+            <!-- … เติมการ์ดเพิ่มได้ไม่จำกัด … -->
+
+        </div>
+    </section>
+
+    <!-- ===== PROFILES GRID ===== -->
+    <section class="profiles">
+        <div class="profiles-container">
+
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">พ.อ.หญิง ผศ.พญ.กัลยา จงเชิดชูตระกูล</h3>
+                <p class="role">ผู้ช่วยศาสตราจารย์</p>
+                <p class="dept">เวชศาสตร์ทหารและชุมชน</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+            <!-- card 1 -->
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">พ.ต. นพ.ณัชชา เหมปฐวี</h3>
+                <p class="role"></p>
+                <p class="dept">เวชศาสตร์ทหารและชุมชน</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+            <!-- card 2 -->
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">พ.ต. นพ.จาตุรนต์ ภูเวียง</h3>
+                <p class="role">Dean for Academic Affairs</p>
+                <p class="dept">โรคปอดและเวชบำบัดวิกฤต อายุศาสตร์</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+
+
+            <!-- … เติมการ์ดเพิ่มได้ไม่จำกัด … -->
+
+        </div>
+    </section>
+
+    <!-- ===== PROFILES GRID ===== -->
+    <section class="profiles">
+        <div class="profiles-container">
+
+            <!-- card 1 -->
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">ร.ท. นพ.ณภัทร วงเกลียวเรียน</h3>
+                <p class="role"></p>
+                <p class="dept">เวชศาสตร์ทหารและชุมชน</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+            <!-- card 3 -->
+            <a href="profileBoonsub.html" class="profile-card">
+
+
+                <figure class="avatar">
+                    <img src="/images/profileBoonsub140x140.JPG" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">ร.อ.ผศ.นพ.บุญทรัพย์ ศักดิ์บุญญารัตน์</h3>
+                <p class="role">ผู้ช่วยศาสตราจารย์</p>
+                <p class="dept">เวชศาสตร์ทหารและชุมชน</p>
+                <span class="badge">สถานะ</span>
+
+
+            </a>
+
+            <!-- card 4 -->
+            <article class="profile-card">
+                <figure class="avatar">
+                    <img src="/images/blank-profile-picture140x140.png" alt="PEOPLE">
+                </figure>
+                <h3 class="fullname">ร.อ.หญิง พญ.ณัฏฐ์นรี ธัญจรูญ</h3>
+                <p class="role">Assoc. Professor of Environmental Health</p>
+                <p class="dept">เวชศาสตร์ทหารและชุมชน</p>
+                <span class="badge">สถานะ</span>
+            </article>
+
+            <!-- … เติมการ์ดเพิ่มได้ไม่จำกัด … -->
+
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 . สงวนลิขสิทธิ์</p>
+    </footer>
+
+    <!-- Script -->
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function () {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Menu toggle logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const overlayMenu = document.getElementById('overlay-menu');
+        const closeMenu = document.getElementById('close-menu');
+
+        menuToggle.addEventListener('click', () => {
+            overlayMenu.classList.add('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            overlayMenu.classList.remove('active');
+        });
+
+        // ✅ ปิดเมนูเมื่อคลิกลิงก์ใน overlay-menu
+        const overlayLinks = overlayMenu.querySelectorAll('a');
+        overlayLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                overlayMenu.classList.remove('active');
+            });
+        });
+
+        // สร้าง observer เพื่อสังเกตเมื่อ element เข้ามาใน viewport
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // เพิ่ม class 'visible' เมื่อ card เข้ามาใน viewport
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // หยุดสังเกตเมื่อ card ปรากฏแล้ว
+                }
+            });
+        }, {
+            threshold: 0.5 // เมื่อ 50% ของ card ปรากฏใน viewport
+        });
+
+        // เลือกทุกๆ .card และเริ่มการสังเกต
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+
+    <script>
+        (() => {
+            const slides = document.querySelectorAll('.slide');
+            const slider = document.getElementById('slides');
+            const dotsWrap = document.getElementById('dots');
+            let index = 0, auto;
+
+            /* สร้างจุด */
+            slides.forEach((_, i) => {
+                const b = document.createElement('button');
+                if (i === 0) b.classList.add('active');
+                b.addEventListener('click', () => go(i));
+                dotsWrap.appendChild(b);
+            });
+            const dots = dotsWrap.children;
+
+            /* ฟังก์ชันสลับสไลด์ */
+            function go(i) {
+                index = (i + slides.length) % slides.length;
+                slider.style.transform = `translateX(-${index * 100}%)`;
+                [...dots].forEach(d => d.classList.remove('active'));
+                dots[index].classList.add('active');
+                resetAuto();
+            }
+
+            /* ปุ่มลูกศร */
+            document.querySelector('.prev').onclick = () => go(index - 1);
+            document.querySelector('.next').onclick = () => go(index + 1);
+
+            /* เลื่อนอัตโนมัติทุก 5 วิ */
+            function resetAuto() {
+                clearInterval(auto);
+                auto = setInterval(() => go(index + 1), 5000);
+            }
+            resetAuto();
+        })();
+    </script>
+
+    <script>
+        // === Observer สำหรับ .feature =========
+        const featObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(en => {
+                if (en.isIntersecting) {
+                    en.target.classList.add('visible');
+                    obs.unobserve(en.target);
+                }
+            });
+        }, { threshold: .4 });
+
+        document.querySelectorAll('.feature').forEach(f => featObserver.observe(f));
+    </script>
+
+    <script>
+        /* === Fade-in .profile-card (reuse observer style) === */
+        const profObserver = new IntersectionObserver((es, ob) => {
+            es.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    ob.unobserve(e.target);
+                }
+            });
+        }, { threshold: .35 });
+        document.querySelectorAll('.profile-card').forEach(c => profObserver.observe(c));
+    </script>
+
+
+</body>
+
+</html>

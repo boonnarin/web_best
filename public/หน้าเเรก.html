@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
+    <style>
+        html {
+            font-size: clamp(14px, 1.5vw, 18px);
+        }
+
+        body {
+            padding-top: 10px;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            background-color: #fff;
+
+        }
+
+        header {
+            /* background-color: transparent; */
+            background-color: #110247;
+
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+
+        header.scrolled {
+            background-color: #12055e;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            /* ระยะห่างระหว่างรูปกับข้อความ */
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo img {
+            max-width: 100px;
+            /* ขนาดโลโก้รูปภาพ */
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            white-space: nowrap;
+        }
+
+        .logogo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            /* ระยะห่างระหว่างรูปกับข้อความ */
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logogo img {
+            max-width: 200px;
+            /* ขนาดโลโก้รูปภาพ */
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logogo-text {
+            white-space: nowrap;
+        }
+
+        /* right‑side actions (language + hamburger) */
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* flex-direction: row-reverse; */
+            /* ทำให้ลูกตัวแรก (main-nav) ไปอยู่ขวาสุด */
+        }
+
+        /* manu in header */
+
+        .main-nav {
+
+            align-items: center;
+            gap: 8px;
+            /* ระยะห่างระหว่างลิงก์ในเมนู */
+        }
+
+        /* ลิงก์หน้าแรก: เส้นวิ่งใต้ข้อความ */
+        .main-nav a {
+            position: relative;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 6px 2px;
+            /* เว้นนิดหน่อยเพื่อให้เส้นไม่ติดตัวอักษร */
+        }
+
+        .main-nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            /* ใต้ตัวอักษรเล็กน้อย */
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            transform-origin: left;
+            /* เริ่มจากซ้ายไปขวา */
+            transition: transform .25s ease;
+        }
+
+        .main-nav a:hover::after,
+        .main-nav a:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        /* language toggle */
+        .lang-toggle {
+            color: #fff;
+            font-size: .9em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .lang-toggle .lang {
+            opacity: .6;
+            transition: opacity .3s
+        }
+
+        .lang-toggle .current {
+            font-weight: 700;
+            opacity: 1
+        }
+
+        .lang-toggle:hover .lang {
+            opacity: 1
+        }
+
+        /* hamburger */
+        .menu-toggle {
+            width: 28px;
+            height: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            background: #fff;
+            border-radius: 2px;
+            transition: transform .3s, opacity .3s
+        }
+
+
+        .overlay-menu {
+            position: fixed;
+            top: -100%;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            background-color: #201563;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 60px 30px;
+            box-sizing: border-box;
+            transition: top 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            z-index: 1100;
+        }
+
+        .overlay-menu.active {
+            top: 0;
+            opacity: 1;
+        }
+
+        .overlay-menu .menu-logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .overlay-menu a {
+            color: white;
+            font-size: 3em;
+            margin: 15px 0;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            /* ทำให้ลิงก์มีขนาดตามตัวอักษร */
+            position: relative;
+            /* เพื่อจัดการกับ ::after */
+            overflow: hidden;
+            /* ป้องกันเส้นวิ่งออกนอกพื้นที่ */
+        }
+
+        .overlay-menu a::after {
+            content: '';
+            /* สร้าง pseudo-element */
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            /* เริ่มต้นที่ด้านซ้ายสุด */
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: left 0.3s ease;
+            /* ความลื่นในการแสดงเส้น */
+        }
+
+        .overlay-menu a:hover::after {
+            left: 0;
+            /* เมื่อ hover, เส้นจะวิ่งไปขวา */
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+
+        /* █ Banner Slider */
+        .banner-slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            /* ปรับสูงตามต้องการ */
+            overflow: hidden;
+            margin-top: 70px;
+            /* 70px = ความสูง header */
+            background: #201563;
+
+
+        }
+
+        .slides-wrap {
+            width: min(1000px, 100%);
+            height: 500px;
+            overflow: hidden;
+            margin: 0 auto;
+            /* จัดกึ่งกลางแนวนอน */
+        }
+
+        .slides {
+            display: flex;
+            height: 100%;
+            transition: transform .6s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .caption {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 4px #000;
+        }
+
+        .caption h1 {
+            font-size: 3em;
+            margin-bottom: .3em;
+            font-weight: 700
+        }
+
+        .caption p {
+            font-size: 1.2em
+        }
+
+        /* arrows */
+        .nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, .4);
+            color: #fff;
+            border: 0;
+            width: 48px;
+            height: 48px;
+            font-size: 2em;
+            cursor: pointer;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            transition: background .3s;
+            z-index: 10
+        }
+
+        .nav:hover {
+            background: rgba(0, 0, 0, .65)
+        }
+
+        .prev {
+            left: 20px
+        }
+
+        .next {
+            right: 20px
+        }
+
+        /* dots */
+        .dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dots button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 0;
+            background: rgba(255, 255, 255, .5);
+            cursor: pointer;
+            transition: .3s
+        }
+
+        .dots button.active {
+            background: #fff;
+            scale: 1.3
+        }
+
+        .content {
+            padding: 20px 20px;
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .vertical-cards {
+            display: flex;
+            flex-direction: column;
+            /* แสดงผลเป็นแนวตั้ง */
+            gap: 10px;
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.3s;
+            box-sizing: border-box;
+        }
+
+        .vertical-cards h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            flex: 1 1 100%;
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            /* เพิ่ม transition สำหรับ opacity และ transform */
+            box-sizing: border-box;
+            opacity: 0;
+            /* ซ่อน card */
+            transform: translateY(50px);
+            /* เลื่อน card ไปด้านล่าง */
+        }
+
+        .card.visible {
+            opacity: 1;
+            /* ทำให้ card ปรากฏ */
+            transform: translateY(0);
+            /* เลื่อนกลับมาที่ตำแหน่งเดิม */
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card img {
+            width: 40%;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .card h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .card button {
+            background-color: #A51C30;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .card button:hover {
+            background-color: #821726;
+        }
+
+        /* ===== Degree Program Finder Section ===== */
+        .programs {
+            padding: 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .programs-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            gap: 60px;
+        }
+
+        .sidebar {
+            flex: 0 0 220px;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #101820;
+        }
+
+        .sidebar.sticky {
+            position: sticky;
+            top: 120px;
+            font-size: 3.2em;
+            margin-bottom: 35px;
+            color: #101820;
+        }
+
+        .program-content {
+            flex: 1 1 auto;
+        }
+
+        .program-content h2 {
+            font-size: 2.2em;
+            margin-bottom: 35px;
+            color: #101820;
+        }
+
+        .finder-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #FFF5E8;
+            border-left: 4px solid #FED7A5;
+            padding: 22px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 50px;
+        }
+
+        .finder-box .arrow {
+            font-size: 1.4em;
+        }
+
+        .program-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .program-list li {
+            border-bottom: 1px solid #E9E9E9;
+        }
+
+        .program-list li a {
+            display: block;
+            padding: 28px 0;
+            text-decoration: none;
+            color: #333;
+            position: relative;
+        }
+
+        .program-list li a:hover {
+            background: #fafafa;
+        }
+
+        .program-list .title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        /* running line effect */
+        .program-list .title::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            height: 2px;
+            width: 0;
+            background: #A51C30;
+            transition: width 0.35s ease;
+        }
+
+        .program-list li a:hover .title::after {
+            width: 100%;
+        }
+
+        .program-list .desc {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .program-list .arrow {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s;
+        }
+
+        .program-list li a:hover .arrow {
+            transform: translate(6px, -50%);
+        }
+
+        /* ===== FEATURE SECTION ===== */
+        .feature {
+            max-width: 1200px;
+            margin: 100px auto;
+            /* ระยะห่างรอบ ๆ ให้โล่งโปร่ง */
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            opacity: 0;
+            /* ใช้สำหรับ fade-in */
+            transform: translateY(60px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .feature.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .feature-img {
+            flex: 0 0 420px;
+            /* รูปภาพกว้างคงที่ */
+        }
+
+        .feature-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .feature-content {
+            flex: 1 1 auto;
+        }
+
+        .feature-content h2 {
+            font-size: 2.2em;
+            margin: 0 0 .4em;
+            color: #101820;
+        }
+
+        .feature-content p {
+            font-size: 1.05em;
+            line-height: 1.55;
+            margin: 0 0 1.1em;
+        }
+
+        .feature-link {
+            display: inline-block;
+            font-weight: 700;
+            text-decoration: none;
+            color: #A51C30;
+            border-bottom: 2px solid #A51C30;
+            padding-bottom: 2px;
+            transition: color .3s, border-color .3s;
+        }
+
+        .feature-link:hover {
+            color: #821726;
+            border-color: #821726
+        }
+
+        /* สลับทิศทาง */
+        .feature--reverse {
+            flex-direction: row-reverse
+        }
+
+
+
+        /* ===== Accordion (white, stick-together, bottom border only) ===== */
+        .acc-wrap {
+            max-width: 1400px;
+            margin: 30px auto 10px;
+            padding: 0 20px;
+            box-sizing: border-box;
+            background: #fff;
+            /* พื้นหลังขาวล้วน */
+        }
+
+        /* การ์ดแนวตั้งชิดกัน: เริ่มมีเฉพาะเส้นล่าง */
+        .acc-card {
+            background: #fff;
+            border: 1px solid transparent;
+            /* กัน layout กระดุกกระดิก */
+            border-bottom-color: #d1d5db;
+            /* แสดงเฉพาะเส้นล่าง */
+            border-radius: 0;
+            margin: 0;
+            /* ชิดติดกัน */
+            box-shadow: none;
+            overflow: hidden;
+            transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease, border-radius .18s ease;
+        }
+
+        /* เอา bullet summary ออก */
+        .acc-card>summary {
+            list-style: none
+        }
+
+        .acc-card>summary::-webkit-details-marker {
+            display: none
+        }
+
+        /* แถบบรรทัดหัวข้อ */
+        .acc-card>summary {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            cursor: pointer;
+            position: relative;
+            outline: none;
+            user-select: none;
+            background: #fff;
+            /* ขาวเสมอ */
+        }
+
+        .acc-card>summary:hover {
+            background: #fff;
+            /* ขาว ไม่เปลี่ยนสี */
+        }
+
+        .acc-card>summary:focus-visible {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .35) inset;
+            /* วงแหวนโฟกัส */
+        }
+
+        /* Active states: โชว์กรอบครบ + เงา + มุมโค้ง */
+        .acc-card:hover,
+        .acc-card:focus-within,
+        .acc-card[open] {
+            border-color: #d1d5db;
+            border-radius: 12px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, .06);
+        }
+
+        /* ไอคอนกลม */
+        .acc-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #fff;
+            color: #111827;
+            border: 1px solid #e5e7eb;
+            /* คอนทราสต์กับพื้นขาว */
+            flex: 0 0 auto;
+        }
+
+        /* ข้อความหัวข้อ */
+        .acc-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            flex: 1 1 auto
+        }
+
+        .acc-kicker {
+            font-size: .86rem;
+            color: #334155
+        }
+
+        .acc-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+            letter-spacing: .005em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #0b1220;
+        }
+
+        /* ลูกศรขวา/ลง */
+        .acc-chevron {
+            --s: 8px;
+            width: var(--s);
+            height: var(--s);
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(-45deg);
+            transition: transform .2s ease;
+            opacity: .9;
+            flex: 0 0 auto;
+        }
+
+        .acc-card[open]>summary .acc-chevron {
+            transform: rotate(135deg)
+        }
+
+        /* เนื้อหา (ใช้ acc-content แทน .content ของระบบเดิม เพื่อไม่ชน) */
+        .acc-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .28s ease, padding .28s ease;
+            background: #fff;
+            /* คงขาว */
+            border-top: none;
+            /* minimal */
+        }
+
+        .acc-card[open] .acc-content {
+            padding: 8px 20px 14px;
+            max-height: 460px;
+            /* ปรับตามจำนวนรายการจริง */
+        }
+
+        /* รายการย่อย: เส้นซ้ายช่วยแบ่งบนพื้นขาว */
+        .acc-items {
+            padding: 0;
+            margin: 6px 0 0;
+            list-style: none
+        }
+
+        .acc-items li {
+            padding: 10px 12px 10px 16px;
+            margin-left: 6px;
+            border-left: 2px solid #d1d5db;
+            color: #0f172a;
+        }
+
+        .acc-items li+li {
+            margin-top: 6px
+        }
+
+        .acc-items a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .acc-items a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Accordion list items: hover + full-row click + running underline ===== */
+        .acc-items {
+            padding: 0;
+            margin: 6px 0 0;
+            list-style: none;
+        }
+
+        .acc-items li {
+            margin-left: 6px;
+            border-left: 2px solid #d1d5db;
+            /* แถบซ้ายช่วยจัดลำดับข้อมูลบนพื้นขาว */
+        }
+
+        /* ลิงก์กินพื้นที่ทั้งแถว -> คลิกได้ทั้ง <li> */
+        .acc-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+            padding: 10px 12px 10px 16px;
+            /* ย้าย padding มาไว้ที่ a เพื่อให้ clickable ทั้งแถว */
+            border-radius: 8px;
+            position: relative;
+            transition: background-color .2s ease, transform .2s ease;
+            outline: none;
+        }
+
+        /* โฮเวอร์/โฟกัส: ไฮไลต์แถว */
+        .acc-link:hover {
+            background: #fafafa;
+        }
+
+        .acc-link:focus-visible {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .35) inset;
+            /* วงแหวนโฟกัสคีย์บอร์ด */
+        }
+
+        /* ลูกศรด้านขวา (ขยับเล็กน้อยเมื่อโฮเวอร์) */
+        .acc-link-arrow {
+            transition: transform .25s ease, opacity .25s ease;
+            opacity: .85;
+        }
+
+        .acc-link:hover .acc-link-arrow,
+        .acc-link:focus-visible .acc-link-arrow {
+            transform: translateX(4px);
+            opacity: 1;
+        }
+
+        /* เส้นวิ่งใต้ตัวอักษร (เฉพาะใต้ข้อความ ไม่ทั้งแถว) */
+        .acc-link-text {
+            position: relative;
+            font-weight: 600;
+            /* เพิ่มคอนทราสต์กับพื้นขาว */
+        }
+
+        .acc-link-text::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            height: 2px;
+            width: 0;
+            background: #A51C30;
+            /* สีแบรนด์ (เปลี่ยนได้ตามต้องการ) */
+            transition: width .3s ease;
+        }
+
+        /* ทริกเกอร์เส้นวิ่งเมื่อ hover/focus ที่แถวหรือลิงก์ */
+        .acc-link:hover .acc-link-text::after,
+        .acc-link:focus-visible .acc-link-text::after {
+            width: 100%;
+        }
+
+        /* (ถ้าต้องการ) เส้นวิ่งทำงานเมื่อ hover ที่ <li> ทั้งแถวด้วย */
+        .acc-items li:hover .acc-link-text::after {
+            width: 100%;
+        }
+
+        /* เว้นระยะห่างใต้ Accordion section */
+        .acc-wrap {
+            margin-bottom: clamp(60px, 6vw, 400px);
+        }
+
+        .site-footer {
+            background: #1e0f5a;
+            /* สีน้ำเงินเข้ม */
+            color: #fff;
+            text-align: center;
+            padding: 30px 20px;
+            font-family: "Prompt", sans-serif;
+        }
+
+        .footer-top {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .footer-menu {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-menu a {
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-menu a:hover {
+            color: #fdd835;
+            /* สีทอง */
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .footer-links img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #fff;
+            padding: 5px;
+            transition: transform 0.3s;
+        }
+
+        .footer-links img:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            margin-top: 20px;
+        }
+
+        .footer-info {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .footer-copy {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy img {
+            height: 50px;
+        }
+
+
+        /* ===== Responsive ===== */
+        @media(max-width:900px) {
+            .main-nav {
+                display: none;
+            }
+
+            s .feature {
+                flex-direction: column;
+                text-align: center
+            }
+
+            .feature--reverse {
+                flex-direction: column
+            }
+
+            /* ยกเลิก reverse บนจอแคบ */
+            .feature-img {
+                flex: none;
+                width: 100%;
+                max-width: 420px
+            }
+
+            .programs-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                flex: none;
+                font-size: 1.4em;
+                margin-bottom: 25px;
+            }
+        }
+
+
+        /* ===== Responsive ===== */
+        @media (min-width: 768px) {
+            .card {
+                flex: 1 1 calc(50% - 60px);
+            }
+
+            nav a {
+                margin: 0 15px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            header,
+            .banner-slider,
+
+            .content {
+                padding: 15px;
+            }
+
+
+            .card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .card img {
+                width: 100%;
+                margin: 0 0 15px;
+            }
+
+            .finder-box {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .program-list .arrow {
+                right: 10px;
+            }
+
+            .acc-card>summary {
+                padding: 14px 16px
+            }
+
+            .acc-content {
+                padding: 0 16px
+            }
+
+            .acc-card[open] .acc-content {
+                padding: 8px 16px 14px
+            }
+
+            .acc-title {
+                white-space: normal
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== Header ===== -->
+    <header id="header">
+        <div class="logo">
+            <img src="/images/lolo.png" alt="Logo">
+            <span class="logo-text">Research Unit for Military Medicine</span>
+        </div>
+
+        <div class="header-actions">
+
+            <!-- main nav -->
+            <nav class="main-nav">
+                <a href="/หน้าเเรก.html">หน้าแรก</a>
+
+                <a href="/profile.html">บุคลากร</a>
+            </nav>
+
+            <!-- language toggle -->
+            <div class="lang-toggle" id="lang-toggle">
+                <span class="lang current" data-lang="th">TH</span>
+                |
+                <span class="lang" data-lang="en">EN</span>
+            </div>
+
+            <!-- Hamburger Button -->
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fullscreen Overlay Menu -->
+    <div class="overlay-menu" id="overlay-menu">
+        <div class="logogo">
+            <img src="/images/lolo.png" alt="Logo" />
+        </div>
+        <div class="close-menu" id="close-menu">&times;</div>
+        <a href="#">หน้าแรก</a>
+        <a href="#">เกี่ยวกับเรา</a>
+        <a href="#">บุคลากร</a>
+        <a href="#">ติดต่อ</a>
+    </div>
+
+    <!-- █████ Banner Slider █████ -->
+    <section class="banner-slider">
+        <button class="nav prev" aria-label="previous">&#10094;</button>
+
+        <div class="slides-wrap">
+            <div class="slides" id="slides">
+                <div class="slide" style="background-image:url('/images/logo1maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>หน่วยวิจัยเวชศาสตร์ทหาร</h1>
+                            <p>เรื่องราวเล็กน้อยสไลด์ 1</p> -->
+                    </div>
+                </div>
+
+                <div class="slide" style="background-image:url('/images/logo2maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>การวิจัยเพื่อกองทัพ</h1>
+                            <p>เรื่องราวเล็กน้อยสไลด์ 2</p> -->
+                    </div>
+                </div>
+
+                <div class="slide" style="background-image:url('/images/logo3maxx500.png')">
+                    <div class="caption">
+                        <!-- <h1>สร้างองค์ความรู้ใหม่</h1>
+                            <p>เรื่องราวเล็กน้อยสไลด์ 3</p> -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <button class="nav next" aria-label="next">&#10095;</button>
+
+        <div class="dots" id="dots"></div>
+    </section>
+
+    <!-- ===== FEATURE SECTIONS (ต่อจาก .programs) ===== -->
+    <section class="feature">
+        <div class="feature-img">
+            <img src="/images/FEATURE1.jpg" alt="รูป" />
+        </div>
+        <div class="feature-content">
+            <h2>หัวข้อ</h2>
+            <p>
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+            </p>
+            <!-- ห -->
+        </div>
+    </section>
+
+    <section class="feature feature--reverse">
+        <div class="feature-img">
+            <img src="/images/FEATURE2.jpg" alt="รูป" />
+        </div>
+        <div class="feature-content">
+            <h2>หัวข้อ</h2>
+            <p>
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            </p>
+            <!-- <a href="#" class="feature-link">Watch the story &nbsp;↗</a> -->
+        </div>
+    </section>
+
+
+
+
+    <!-- ===== Accordion Sections (สารบัญเว็บไซต์) ===== -->
+    <section class="acc-wrap" id="site-sections" aria-label="หัวข้อหลัก">
+        <!-- การวิจัย -->
+        <details class="acc-card" open>
+            <summary>
+                <span class="acc-icon" aria-hidden="true">
+                    <!-- book icon -->
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                        <path d="M4 4.5A2.5 2.5 0 0 1 6.5 7H20V21H6.5A2.5 2.5 0 0 1 4 18.5z" />
+                    </svg>
+                </span>
+                <span class="acc-text">
+                    <span class="acc-kicker">หัวข้อ #1</span>
+                    <span class="acc-title">การวิจัย</span>
+                </span>
+                <span class="acc-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="acc-content">
+                <ul class="acc-items">
+                    <li>
+                        <a class="acc-link" href="/research1.html">
+                            <span class="acc-link-text">เวชศาสตร์ทหาร</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">เวชศาสตร์ชุมชน</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- การเผยแพร่ผลงานวิชาการ -->
+        <details class="acc-card">
+            <summary>
+                <span class="acc-icon" aria-hidden="true">
+                    <!-- file-text -->
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 2v6h6" />
+                        <path d="M16 13H8" />
+                        <path d="M16 17H8" />
+                        <path d="M10 9H8" />
+                    </svg>
+                </span>
+                <span class="acc-text">
+                    <span class="acc-kicker">หัวข้อ #2</span>
+                    <span class="acc-title">การเผยแพร่ผลงานวิชาการ</span>
+                </span>
+                <span class="acc-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="acc-content">
+                <ul class="acc-items">
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">งานวิจัยตีพิมพ์เผยแพร่ในวารสารระดับนานาชาติ</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">งานวิจัยนำเสนอในการประชุมวิชาการ</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">รางวัล</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- การบริการวิชาการ -->
+        <details class="acc-card">
+            <summary>
+                <span class="acc-icon" aria-hidden="true">
+                    <!-- stethoscope -->
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 3v6a4 4 0 1 0 8 0V3" />
+                        <path d="M8 15a5 5 0 0 0 10 0v-2" />
+                        <circle cx="20" cy="10" r="2" />
+                    </svg>
+                </span>
+                <span class="acc-text">
+                    <span class="acc-kicker">หัวข้อ #3</span>
+                    <span class="acc-title">การบริการวิชาการ</span>
+                </span>
+                <span class="acc-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="acc-content">
+                <ul class="acc-items">
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">โรคลมร้อน</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">โรคติดเชื้อเอชไอวี</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">เว็บแอพลิเคชันสำหรับประเมินความเสี่ยงโรคหัวใจและหลอดเลือด</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- บุคลากร -->
+        <details class="acc-card">
+            <summary>
+                <span class="acc-icon" aria-hidden="true">
+                    <!-- users -->
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </span>
+                <span class="acc-text">
+                    <span class="acc-kicker">หัวข้อ #4</span>
+                    <span class="acc-title">บุคลากร</span>
+                </span>
+                <span class="acc-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="acc-content">
+                <ul class="acc-items">
+                    <li>
+                        <a class="acc-link" href="/profile.html">
+                            <span class="acc-link-text">ผู้วิจัย</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">ผู้ช่วยนักวิจัย</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- เกี่ยวกับหน่วยวิจัยฯ -->
+        <details class="acc-card">
+            <summary>
+                <span class="acc-icon" aria-hidden="true">
+                    <!-- info -->
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4" />
+                        <path d="M12 8h.01" />
+                    </svg>
+                </span>
+                <span class="acc-text">
+                    <span class="acc-kicker">หัวข้อ #5</span>
+                    <span class="acc-title">เกี่ยวกับหน่วยวิจัยฯ</span>
+                </span>
+                <span class="acc-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="acc-content">
+                <ul class="acc-items">
+                    <li>
+                        <a class="acc-link" href="/profile.html">
+                            <span class="acc-link-text">วิสัยทัศน์ พันธกิจ</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="acc-link" href="#">
+                            <span class="acc-link-text">ที่อยู่</span>
+                            <span class="acc-link-arrow" aria-hidden="true">→</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </section>
+
+    <!-- ===== Footer Section ===== -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-menu">
+
+                <a href="#">คลังรูปภาพ</a>
+                <a href="#">ปฏิทินกิจกรรม</a>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <a href="#"><img src="/images/fb.png" alt="Facebook" /></a>
+            <a href="#"><img src="/images/yt.png" alt="Youtube" /></a>
+            <a href="#"><img src="/images/pmk.png" alt="PMK" /></a>
+            <a href="#"><img src="/images/pcm.png" alt="PCM" /></a>
+            <a href="#"><img src="/images/journal.png" alt="Journal" /></a>
+            <a href="#"><img src="/images/imrc.png" alt="IMRC" /></a>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-info">
+                <p>
+                    วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า <br />
+                    317 ถนนราชวิถี แขวงทุ่งพญาไท เขตพญาไท กรุงเทพฯ 10400 <br />
+                    โทรศัพท์ 0 2354 7826
+                </p>
+            </div>
+            <div class="footer-copy">
+                <img src="/images/50pmk.png" alt="50 years" />
+                <p>Copyright © 2023 Phramongkutklao College Of Medicine</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Script -->
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function () {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Menu toggle logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const overlayMenu = document.getElementById('overlay-menu');
+        const closeMenu = document.getElementById('close-menu');
+
+        menuToggle.addEventListener('click', () => {
+            overlayMenu.classList.add('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            overlayMenu.classList.remove('active');
+        });
+
+        // ✅ ปิดเมนูเมื่อคลิกลิงก์ใน overlay-menu
+        const overlayLinks = overlayMenu.querySelectorAll('a');
+        overlayLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                overlayMenu.classList.remove('active');
+            });
+        });
+
+        // สร้าง observer เพื่อสังเกตเมื่อ element เข้ามาใน viewport
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // เพิ่ม class 'visible' เมื่อ card เข้ามาใน viewport
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // หยุดสังเกตเมื่อ card ปรากฏแล้ว
+                }
+            });
+        }, {
+            threshold: 0.5 // เมื่อ 50% ของ card ปรากฏใน viewport
+        });
+
+        // เลือกทุกๆ .card และเริ่มการสังเกต
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+
+    <script>
+        (() => {
+            const slides = document.querySelectorAll('.slide');
+            const slider = document.getElementById('slides');
+            const dotsWrap = document.getElementById('dots');
+            let index = 0, auto;
+
+            /* สร้างจุด */
+            slides.forEach((_, i) => {
+                const b = document.createElement('button');
+                if (i === 0) b.classList.add('active');
+                b.addEventListener('click', () => go(i));
+                dotsWrap.appendChild(b);
+            });
+            const dots = dotsWrap.children;
+
+            /* ฟังก์ชันสลับสไลด์ */
+            function go(i) {
+                index = (i + slides.length) % slides.length;
+                slider.style.transform = `translateX(-${index * 100}%)`;
+                [...dots].forEach(d => d.classList.remove('active'));
+                dots[index].classList.add('active');
+                resetAuto();
+            }
+
+            /* ปุ่มลูกศร */
+            document.querySelector('.prev').onclick = () => go(index - 1);
+            document.querySelector('.next').onclick = () => go(index + 1);
+
+            /* เลื่อนอัตโนมัติทุก 5 วิ */
+            function resetAuto() {
+                clearInterval(auto);
+                auto = setInterval(() => go(index + 1), 5000);
+            }
+            resetAuto();
+        })();
+    </script>
+
+    <script>
+        // === Observer สำหรับ .feature =========
+        const featObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(en => {
+                if (en.isIntersecting) {
+                    en.target.classList.add('visible');
+                    obs.unobserve(en.target);
+                }
+            });
+        }, { threshold: .4 });
+
+        document.querySelectorAll('.feature').forEach(f => featObserver.observe(f));
+    </script>
+
+    <script>
+        /* === Fade-in .profile-card (reuse observer style) === */
+        const profObserver = new IntersectionObserver((es, ob) => {
+            es.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    ob.unobserve(e.target);
+                }
+            });
+        }, { threshold: .35 });
+        document.querySelectorAll('.profile-card').forEach(c => profObserver.observe(c));
+    </script>
+
+
+</body>
+
+</html>
