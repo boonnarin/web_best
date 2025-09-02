@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>non_lab</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="css/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .container {
+            flex: 1;
+            background-color: #e4e4e4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .form-row .form-group {
+            width: 48%;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .form-row .form-group {
+                width: 100%;
+            }
+        }
+
+        /* ทำให้โมดัลอยู่บนสุด และคลิกปุ่มได้แน่นอน */
+        .modal {
+            z-index: 1065 !important;
+        }
+
+        .modal-backdrop.show {
+            z-index: 1060 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="/images/logo.png" alt="Logo" />
+            <img src="/images/Logo_su.png" alt="Logo_su" style="width: 60px; height: auto" />
+            <div class="header-text">
+                <div class="header-title">Web Application Enhancing Cardiovascular Disease Risk Assessment</div>
+                <div class="header-subtitle">by Phramongkutklao College of Medicine & Silpakorn University</div>
+            </div>
+        </div>
+        <div class="right-buttons">
+            <div class="dropdown">
+                <div class="dropdown-content">
+                    <a href="/">หน้าหลัก</a>
+                    <a href="/about">About Me</a>
+                </div>
+                <button>&#8942;</button>
+            </div>
+
+            <a href="/login.html" class="login-button" id="loginbutton">Sign In</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <form id="theForm" novalidate>
+            <h2 style="font-size: 28px">
+                <strong>การประเมินความเสี่ยงโรคหัวใจและหลอดเลือดแบบไม่ใช้ผลการตรวจเลือด</strong>
+            </h2>
+            <h3 style="font-size: 22px">
+                Non-Laboratory-based predicted 10-year CVD Risk (The 2019 WHO CVD Risk Charts)
+            </h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">ชื่อ (Name)</label>
+                    <input type="text" id="name" name="name" class="form-control"
+                        placeholder="ไม่จำเป็นต้องกรอก (no required)" />
+                </div>
+                <div class="form-group">
+                    <label for="lastname">นามสกุล (Surname)</label>
+                    <input type="text" id="lastname" name="lastname" class="form-control"
+                        placeholder="ไม่จำเป็นต้องกรอก (no required)" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cvsex">เพศ (Sex) <span class="text-danger">*</span></label>
+                    <select id="cvsex" name="cvsex" class="form-select" required>
+                        <option value="">ระบุเพศ (Select Sex)</option>
+                        <option value="1">ชาย (Male)</option>
+                        <option value="0">หญิง (Female)</option>
+                    </select>
+                    <div class="invalid-feedback">โปรดระบุเพศ</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">อายุ (Age) <span class="text-danger">*</span></label>
+                    <input type="number" id="age" name="age" min="39" class="form-control" placeholder="อายุ"
+                        required />
+                    <div class="invalid-feedback">อายุต้องไม่น้อยกว่า 39 ปี</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cvsmk">ปัจจุบันสูบบุหรี่ (Current smoking) <span class="text-danger">*</span></label>
+                    <select id="cvsmk" name="cvsmk" class="form-select" required>
+                        <option value="">โปรดระบุ (Select Status)</option>
+                        <option id="cvsmky" value="1">สูบ (Yes)</option>
+                        <option id="cvsmkn" value="0">ไม่สูบ (No)</option>
+                    </select>
+                    <div class="invalid-feedback">โปรดระบุสถานะการสูบบุหรี่</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sbp1">ระดับความดันโลหิตค่าบน ครั้งที่ 1 (1st SBP) <span
+                            class="text-danger">*</span></label>
+                    <input type="number" id="sbp1" name="sbp1" class="form-control" placeholder="เช่น 140" required />
+                    <div class="note">มิลลิเมตรปรอท (mmHg)</div>
+                </div>
+                <div class="form-group">
+                    <label for="sbp2">ระดับความดันโลหิตค่าบน ครั้งที่ 2 (2nd SBP) <span
+                            class="text-danger">*</span></label>
+                    <input type="number" id="sbp2" name="sbp2" class="form-control" placeholder="เช่น 138" required />
+                    <div class="note">มิลลิเมตรปรอท (mmHg)</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="weight">น้ำหนัก (Weight) <span class="text-danger">*</span></label>
+                    <input type="number" id="weight" name="weight" min="1" class="form-control"
+                        placeholder="กิโลกรัม (kg)" required />
+                    <div class="invalid-feedback">โปรดกรอกน้ำหนัก</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="height_cm">ส่วนสูง (Height) <span class="text-danger">*</span></label>
+                    <input type="number" id="height_cm" name="height_cm" min="1" class="form-control"
+                        placeholder="เซนติเมตร (cm)" required />
+                    <div class="invalid-feedback">โปรดกรอกส่วนสูง</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="province">จังหวัดที่อยู่ (Province) <span class="text-danger">*</span></label>
+                <select id="province" name="province" class="form-select" required>
+                    <option value="">กรุณาเลือกจังหวัด</option>
+                </select>
+                <div class="invalid-feedback">โปรดเลือกจังหวัด</div>
+            </div>
+
+            <script src="js/script_nonlab_n.js"></script>
+
+            <!-- ปุ่มหลัก: แสดงผล (จะมีป๊อปอัพถามก่อน) -->
+            <div class="mt-2 d-flex gap-2 justify-content-end">
+                <button type="button" id="btnShowRisk" class="btn btn-success"
+                    onclick="nonlab()">แสดงผลการประเมินความเสี่ยง</button>
+                <!-- ปุ่มบันทึกเดิม (ไม่จำเป็น) ซ่อนไว้เพื่อความเข้ากันได้ -->
+                <button type="button" id="btnSaveOnly" class="btn btn-success d-none"
+                    onclick="savedata()">เก็บข้อมูลที่ประเมิน</button>
+            </div>
+
+            <div class="text-start text-muted mb-3">
+                จำนวนผู้เข้าใช้งาน: <span id="visit-counter">กำลังโหลด...</span> ครั้ง
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal: ยืนยันก่อนแสดงผล -->
+    <div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveConfirmLabel">บันทึกข้อมูลก่อนหรือไม่?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+                </div>
+                <div class="modal-body">
+                    ต้องการบันทึกข้อมูลที่กรอกไว้ลงระบบก่อนแสดงผลการประเมินหรือไม่
+                    <div id="saveErrorBox" class="alert alert-danger d-none mt-3">
+                        <span id="saveErrorText"></span>
+                    </div>
+                </div>
+                <div class="modal-footer flex-nowrap gap-2">
+                    <button id="skipSave" type="button" class="btn btn-outline-secondary text-nowrap"
+                        data-bs-dismiss="modal">
+                        ไม่บันทึก แสดงผลเลย
+                    </button>
+                    <button id="confirmSaveFirst" type="button" class="btn btn-success text-nowrap">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" id="saveSpinner" role="status"
+                            aria-hidden="true"></span>
+                        บันทึกก่อน แล้วแสดงผล
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: สถานะ (โหลด/สำเร็จ/กำลังประมวลผล) -->
+    <div class="modal fade" id="progressModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+        data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div id="progressSpinner" class="mb-3">
+                    <div class="spinner-border" role="status" aria-hidden="true"></div>
+                </div>
+                <h5 id="progressTitle" class="mb-1">กำลังดำเนินการ...</h5>
+                <div id="progressText" class="text-muted">โปรดรอสักครู่</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>
+                ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด …
+            </p>
+            <p>
+                <sup>1</sup> WHO CVD Risk Chart Working Group (2019) …
+                <a href="https://doi.org/10.1016/S2214-109X(19)30318-3"
+                    target="_blank">https://doi.org/10.1016/S2214-109X(19)30318-3</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // โหลดจังหวัด
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/provinces',
+                method: 'GET',
+                success: function (data) {
+                    data.forEach(function (province) {
+                        $('#province').append('<option value="' + province.ProvinceName + '">' + province.ProvinceName + '</option>');
+                    });
+                },
+                error: function (err) {
+                    console.error('Error fetching provinces:', err);
+                }
+            });
+
+            // นับผู้เข้าใช้งาน
+            fetch('/visit?page=form_non_lab')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('visit-counter').textContent = data.totalVisits.toLocaleString();
+                })
+                .catch(() => {
+                    document.getElementById('visit-counter').textContent = 'เกิดข้อผิดพลาด';
+                });
+        });
+
+        // ===== เก็บข้อมูลแบบ non-lab =====
+        function savedata() {
+            const s1 = Number($('#sbp1').val());
+            const s2 = Number($('#sbp2').val());
+
+            if (!Number.isFinite(s1) || !Number.isFinite(s2)) {
+                // แสดง invalid HTML5 แล้วโฟกัส
+                const form = document.getElementById('theForm');
+                form.classList.add('was-validated');
+                form.querySelector('#sbp1:invalid, #sbp2:invalid')?.focus();
+                return;
+            }
+
+            const sbptotal = Math.round(((s1 + s2) / 2) * 10) / 10;
+
+            const formData = {
+                sex: $('#cvsex').val(),
+                age: $('#age').val(),
+                smoking_status: $('#cvsmk').val(),
+                weight: $('#weight').val(),
+                height: $('#height_cm').val(),
+                province: $('#province').val(),
+                sbp1: s1,
+                sbp2: s2,
+                sbptotal: sbptotal
+            };
+
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: '/api/save-formnonlab',
+                    method: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        resolve(response);
+                    },
+                    error: function (err) {
+                        console.error('Error saving data:', err);
+                        reject(new Error('บันทึกข้อมูลไม่สำเร็จ กรุณาลองอีกครั้ง'));
+                    }
+                });
+            });
+        }
+
+        // ===== Hook ฟังก์ชัน nonlab() ให้ถามก่อนเสมอ =====
+        (function hookNonLab() {
+            const TARGET_FN_NAME = 'nonlab';
+            const SAVE_MODAL = new bootstrap.Modal(document.getElementById('saveConfirmModal'));
+            const PROG_MODAL = new bootstrap.Modal(document.getElementById('progressModal'), { backdrop: 'static', keyboard: false });
+
+            const $saveBtn = $('#confirmSaveFirst');
+            const $skipBtn = $('#skipSave');
+            const $saveSpin = $('#saveSpinner');
+            const $errBox = $('#saveErrorBox');
+            const $errText = $('#saveErrorText');
+            const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
+            function showConfirm() {
+                $errBox.addClass('d-none'); $errText.text('');
+                $saveSpin.addClass('d-none'); $saveBtn.prop('disabled', false); $skipBtn.prop('disabled', false);
+                SAVE_MODAL.show();
+            }
+            function showProgress(title, text, spinning = true) {
+                document.getElementById('progressTitle').textContent = title;
+                document.getElementById('progressText').textContent = text || 'โปรดรอสักครู่';
+                const sp = document.getElementById('progressSpinner');
+                spinning ? sp.classList.remove('d-none') : sp.classList.add('d-none');
+                PROG_MODAL.show();
+            }
+
+            // รอให้สคริปต์ js/script_nonlab_n.js ประกาศ nonlab() ก่อนค่อย hook
+            let tries = 0;
+            (function waitForOriginal() {
+                if (typeof window[TARGET_FN_NAME] === 'function' && !window.__originalNonlab) {
+                    window.__originalNonlab = window[TARGET_FN_NAME].bind(window);
+
+                    // แทนที่ด้วยตัวถามก่อน
+                    window[TARGET_FN_NAME] = function () {
+                        const form = document.getElementById('theForm');
+                        if (!form.checkValidity()) {
+                            form.classList.add('was-validated');
+                            form.querySelector(':invalid')?.focus();
+                            return;
+                        }
+                        showConfirm();
+                    };
+
+                    // บันทึกก่อน → ดีเลย์ 3 วิ → เรียกของเดิม
+                    $saveBtn.on('click', async function () {
+                        $errBox.addClass('d-none'); $errText.text('');
+                        $saveSpin.removeClass('d-none'); $saveBtn.prop('disabled', true); $skipBtn.prop('disabled', true);
+
+                        let promiseSave;
+                        try {
+                            promiseSave = savedata(); // ใช้ของหน้านี้
+                            SAVE_MODAL.hide();
+                            showProgress('กำลังบันทึกข้อมูล...', 'โปรดรอประมาณ 3 วินาที', true);
+                            await Promise.all([promiseSave, delay(3000)]);
+                            // แสดง “บันทึกสำเร็จ” สั้น ๆ
+                            document.getElementById('progressSpinner').classList.add('d-none');
+                            document.getElementById('progressTitle').textContent = 'บันทึกสำเร็จ';
+                            document.getElementById('progressText').textContent = '';
+                            await delay(1000);
+                            PROG_MODAL.hide();
+                            window.__originalNonlab();
+                        } catch (e) {
+                            PROG_MODAL.hide();
+                            $errText.text(e && e.message ? e.message : 'บันทึกข้อมูลไม่สำเร็จ');
+                            $errBox.removeClass('d-none');
+                            SAVE_MODAL.show();
+                        } finally {
+                            $saveSpin.addClass('d-none'); $saveBtn.prop('disabled', false); $skipBtn.prop('disabled', false);
+                        }
+                    });
+
+                    // ไม่บันทึก → ดีเลย์ 3 วิ → เรียกของเดิม
+                    $skipBtn.on('click', async function () {
+                        SAVE_MODAL.hide();
+                        showProgress('กำลังประมวลผล...', 'โปรดรอประมาณ 3 วินาที', true);
+                        await delay(3000);
+                        PROG_MODAL.hide();
+                        window.__originalNonlab();
+                    });
+
+                } else if (tries < 50) {
+                    tries++; setTimeout(waitForOriginal, 100);
+                } else {
+                    console.warn('ไม่พบ window.nonlab — โปรดประกาศใน js/script_nonlab_n.js');
+                }
+            })();
+
+            // โฟกัสปุ่มเมื่อเปิดโมดัล
+            document.addEventListener('shown.bs.modal', function (e) {
+                if (e.target.id === 'saveConfirmModal') {
+                    document.getElementById('confirmSaveFirst')?.focus();
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

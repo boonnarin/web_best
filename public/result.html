@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
         rel="stylesheet">
-        <link rel="stylesheet" href="css/spb-indicator.css">
+    <link rel="stylesheet" href="css/spb-indicator.css">
     <link rel="stylesheet" href="css/tc-indicator.css">
     <script> src = "https://github.com/parallax/jsPDF.git"</script>
     <script src='../node_modules/pdfmake/build/pdfmake.min.js'></script>
@@ -82,9 +82,9 @@
         <div class="right-buttons">
             <div class="dropdown">
                 <div class="dropdown-content">
-                     <a href="/">หน้าหลัก</a>
+                    <a href="/">หน้าหลัก</a>
                     <a href="aboutMe.html">About Me</a>
-                    
+
                 </div>
                 <button>&#8942;</button> <!-- Vertical ellipsis icon -->
             </div>
@@ -263,7 +263,7 @@
                         } else if (stataCode >= 5 && stataCode < 10) {
                             statascol = "<span style='background-color: #FFFF00; padding: 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงน้อย</span>";
                         } else if (stataCode >= 10 && stataCode < 20) {
-                             statascol = "<span style='background-color: #FF8C00; padding: 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงปานกลาง</span>";
+                            statascol = "<span style='background-color: #FF8C00; padding: 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงปานกลาง</span>";
                         } else if (stataCode >= 20 && stataCode < 30) {
                             statascol = "<span style='background-color: #FF0000; 10px; display: inline-block; vertical-align: middle; line-height: 1.5; white-space: nowrap;'>เสี่ยงสูง</span>";
                         } else if (stataCode >= 30) {
@@ -334,7 +334,7 @@
                     <p>- หากท่านดื่มสุรา ให้ลด หรือ เลิก (สายด่วนเลิกสุรา 1413) หากไม่ได้ดื่มอยู่แล้ว ไม่แนะนำให้ดื่ม</p>
                     <p>- ควรรับการตรวจสุขภาพเพื่อประเมินความเสี่ยงของโรคหัวใจและหลอดเลือด อย่างน้อย ปีละ 1 ครั้ง</p>
                     <p>- ผลการประเมินเหล่านี้เป็นการประเมินความเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือดเบื้องต้น ควรเข้ารับคำปรึกษาและตรวจเพิ่มเติมตามคำแนะนำของแพทย์</p>`;
-                      // สมมติว่าคุณมีตัวแปร sbp ที่เก็บค่าความดันโลหิตของผู้ใช้
+                        // สมมติว่าคุณมีตัวแปร sbp ที่เก็บค่าความดันโลหิตของผู้ใช้
                         const sbpValue = parseFloat(sbp); // แทนที่ sbp ด้วยตัวแปรที่เก็บค่าจริง
 
                         const sbpSections = [
@@ -390,7 +390,7 @@
 
                         // เรียกใช้ฟังก์ชันหลังจากที่ DOM ถูกอัปเดต
                         updateCholesterolIndicator();
-                    makepdf();
+                        makepdf();
                     </script>
 
                 </div>

@@ -1,4 +1,4 @@
-//controllers\authController.js
+// controllers/authController.js
 import connection from '../models/db.js';
 import bcrypt from 'bcrypt';
 
@@ -10,37 +10,50 @@ export const login = (req, res) => {
     connection.query(sql, [username], async (err, results) => {
         if (err) {
             console.error('❌ ข้อผิดพลาดในการดึงข้อมูล:', err);
-            return res.status(500).send('เกิดข้อผิดพลาดในระบบ');
+            // จะ send ตรงหรือ render หน้าเดิมก็ได้ แต่ถ้าจะ render ให้ส่ง files: [] ด้วย
+            return res.status(500).render('homeLogin', {
+                errorMessage: 'เกิดข้อผิดพลาดในระบบ',
+                files: [],
+            });
         }
 
         if (results.length === 0) {
-            return res.render('homeLogin', { errorMessage: 'ไม่พบชื่อผู้ใช้' });
+            return res.render('homeLogin', {
+                errorMessage: 'ไม่พบชื่อผู้ใช้',
+                files: [], // << ส่งค่าเริ่มต้นกันล้ม
+            });
         }
 
         const user = results[0];
         const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
-        if (passwordMatch) {
-            // ข้อมูลไฟล์ตัวอย่าง
-            const files = [
-                {
-                    name: 'ตัวอย่างไฟล์ A.xlsx',
-                    description: 'ไฟล์ตัวอย่าง A',
-                    size: '1.2 MB',
-                    downloadLink: '#', // ลิงก์ที่ไม่จริง
-                },
-                {
-                    name: 'ตัวอย่างไฟล์ B.xlsx',
-                    description: 'ไฟล์ตัวอย่าง B',
-                    size: '500 KB',
-                    downloadLink: '#', // ลิงก์ที่ไม่จริง
-                }
-            ];
-
-            return res.render('homeLogin', { successMessage: 'เข้าสู่ระบบสำเร็จ!', files });
-        } else {
-            return res.render('homeLogin', { errorMessage: 'รหัสผ่านไม่ถูกต้อง' });
+        if (!passwordMatch) {
+            return res.render('homeLogin', {
+                errorMessage: 'รหัสผ่านไม่ถูกต้อง',
+                files: [], // << ส่งค่าเริ่มต้นกันล้ม
+            });
         }
+
+        // ข้อมูลไฟล์ตัวอย่าง
+        const files = [
+            {
+                name: 'ตัวอย่างไฟล์ A.xlsx',
+                description: 'ไฟล์ตัวอย่าง A',
+                size: '1.2 MB',
+                downloadLink: '#',
+            },
+            {
+                name: 'ตัวอย่างไฟล์ B.xlsx',
+                description: 'ไฟล์ตัวอย่าง B',
+                size: '500 KB',
+                downloadLink: '#',
+            },
+        ];
+
+        return res.render('homeLogin', {
+            successMessage: 'เข้าสู่ระบบสำเร็จ!',
+            files, // << มีค่าเสมอ
+        });
     });
 };
 

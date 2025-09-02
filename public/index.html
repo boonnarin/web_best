@@ -81,6 +81,16 @@
         .button-nonlab:hover {
             background-color: #0270b5;
         }
+
+        .container {
+            flex: 1;
+            background-color: #f3f4f6;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+            max-width: 1000px;
+            margin: 48px auto
+        }
     </style>
 </head>
 
@@ -210,23 +220,25 @@
             <a href="form_non_lab.html" class="button-nonlab">การประเมินแบบไม่ใช้ผลเลือด (non-Laboratory)</a>
         </div>
     </main>
-    <footer>
-        <div class="footer-content">
-            <p>ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
+    <footer class="container my-4">
+        <div class="footer-content small text-muted">
+            <p>
+                ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
                 กล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบในระยะ 10 ปีข้างหน้า
-                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคกล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบมาก่อน โดย
-                การประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts สำหรับ
-                Southeast
-                Asia Countries<sup>1</sup>.</p>
-            <p><sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
-                risk
-                charts: revised models to estimate risk in 21 global regions. The Lancet. Global health, 7(10),
-                e1332–e1345.
+                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคหัวใจและหลอดเลือดและโรคเส้นเลือดสมองตีบมาก่อน
+                โดยการประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts สำหรับ
+                Southeast Asia Countries<sup>1</sup>.
+            </p>
+            <p>
+                <sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
+                charts:
+                revised models to estimate risk in 21 global regions. The Lancet. Global health, 7(10), e1332–e1345.
                 <a href="https://doi.org/10.1016/S2214-109X(19)30318-3"
                     target="_blank">https://doi.org/10.1016/S2214-109X(19)30318-3</a>
             </p>
         </div>
     </footer>
+
 
 </body>
 
