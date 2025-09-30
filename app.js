@@ -8,6 +8,7 @@ import connection from './models/db.js';
 
 import authRoutes from './routes/authRoutes.js';
 import { fileURLToPath } from 'url';
+import ExcelJS from 'exceljs';
 
 // ใช้ import.meta.url เพื่อกำหนด __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -119,6 +120,32 @@ app.post('/api/save-formnonlab', (req, res) => {
         res.send({ result: 'Data saved successfully' });
     });
 });
+// API สำหรับดึงข้อมูล form_lab
+app.get('/api/getFormLabData', (req, res) => {
+    const sql = 'SELECT sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province FROM form_lab';
+
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error('❌ Error fetching data:', err);
+            return res.status(500).send('Database error');
+        }
+        res.json(results); // ส่งข้อมูลในรูปแบบ JSON
+    });
+});
+
+
+// API สำหรับดึงข้อมูล form_nonlab
+app.get('/api/getFormNonLabData', (req, res) => {
+    const sql = 'SELECT sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province FROM form_nonlab';
+
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error('❌ Error fetching data:', err);
+            return res.status(500).send('Database error');
+        }
+        res.json(results); // ส่งข้อมูลในรูปแบบ JSON
+    });
+});
 
 
 // เส้นทางสำหรับทดสอบการเชื่อมต่อฐานข้อมูล
@@ -133,6 +160,123 @@ app.get('/test-db', async (req, res) => {
         // หากเกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล
         console.error('Database connection failed:', err);
         res.status(500).send('Database connection failed');
+    }
+});
+
+// ดาวน์โหลด Form Lab
+app.get('/download/formlab', async (req, res) => {
+    try {
+        const sql = 'SELECT sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province FROM form_lab';
+        connection.query(sql, async (err, results) => {
+            if (err) {
+                console.error('❌ Error fetching form_lab data:', err);
+                return res.status(500).send('Database error');
+            }
+
+            const workbook = new ExcelJS.Workbook();
+            const sheet = workbook.addWorksheet('Form Lab');
+
+            // ตั้งหัวตาราง
+            sheet.columns = [
+                { header: 'เพศ', key: 'sex', width: 10 },
+                { header: 'อายุ', key: 'age', width: 10 },
+                { header: 'สถานะการสูบบุหรี่', key: 'smoking_status', width: 15 },
+                { header: 'สถานะเบาหวาน', key: 'diabetes_status', width: 15 },
+                { header: 'SBP1', key: 'sbp1', width: 10 },
+                { header: 'SBP2', key: 'sbp2', width: 10 },
+                { header: 'SBP รวม', key: 'sbptotal', width: 10 },
+                { header: 'Total Cholesterol', key: 'total_cholesterol', width: 15 },
+                { header: 'จังหวัด', key: 'province', width: 20 },
+            ];
+
+            // เพิ่มข้อมูล
+            results.forEach(row => {
+                sheet.addRow({
+                    sex: row.sex == 1 ? 'ชาย' : 'หญิง',
+                    age: row.age,
+                    smoking_status: row.smoking_status == 1 ? 'สูบบุหรี่' : 'ไม่สูบบุหรี่',
+                    diabetes_status: row.diabetes_status == 1 ? 'มีเบาหวาน' : 'ไม่มีเบาหวาน',
+                    sbp1: row.sbp1,
+                    sbp2: row.sbp2,
+                    sbptotal: row.sbptotal,
+                    total_cholesterol: row.total_cholesterol,
+                    province: row.province,
+                });
+            });
+
+            // ส่งไฟล์ให้ดาวน์โหลด
+            res.setHeader(
+                'Content-Type',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            );
+            res.setHeader(
+                'Content-Disposition',
+                'attachment; filename="FormLab.xlsx"'
+            );
+
+            await workbook.xlsx.write(res);
+            res.end();
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error generating Excel file');
+    }
+});
+
+// ดาวน์โหลด Form NonLab
+app.get('/download/formnonlab', async (req, res) => {
+    try {
+        const sql = 'SELECT sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province FROM form_nonlab';
+        connection.query(sql, async (err, results) => {
+            if (err) {
+                console.error('❌ Error fetching form_nonlab data:', err);
+                return res.status(500).send('Database error');
+            }
+
+            const workbook = new ExcelJS.Workbook();
+            const sheet = workbook.addWorksheet('Form NonLab');
+
+            sheet.columns = [
+                { header: 'เพศ', key: 'sex', width: 10 },
+                { header: 'อายุ', key: 'age', width: 10 },
+                { header: 'สถานะการสูบบุหรี่', key: 'smoking_status', width: 15 },
+                { header: 'SBP1', key: 'sbp1', width: 10 },
+                { header: 'SBP2', key: 'sbp2', width: 10 },
+                { header: 'SBP รวม', key: 'sbptotal', width: 10 },
+                { header: 'น้ำหนัก', key: 'weight', width: 10 },
+                { header: 'ส่วนสูง', key: 'height', width: 10 },
+                { header: 'จังหวัด', key: 'province', width: 20 },
+            ];
+
+            results.forEach(row => {
+                sheet.addRow({
+                    sex: row.sex == 1 ? 'ชาย' : 'หญิง',
+                    age: row.age,
+                    smoking_status: row.smoking_status == 1 ? 'สูบบุหรี่' : 'ไม่สูบบุหรี่',
+                    sbp1: row.sbp1,
+                    sbp2: row.sbp2,
+                    sbptotal: row.sbptotal,
+                    weight: row.weight,
+                    height: row.height,
+                    province: row.province,
+                });
+            });
+
+            res.setHeader(
+                'Content-Type',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            );
+            res.setHeader(
+                'Content-Disposition',
+                'attachment; filename="FormNonLab.xlsx"'
+            );
+
+            await workbook.xlsx.write(res);
+            res.end();
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error generating Excel file');
     }
 });
 

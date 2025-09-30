@@ -1,3 +1,4 @@
+<!-- homeLogin -->
 <!DOCTYPE html>
 <html lang="th">
 
@@ -5,7 +6,15 @@
     <meta charset="UTF-8">
     <title>ดาวน์โหลดข้อมูล</title>
     <!-- CSS อยู่ในส่วนของ <style> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            padding: 2rem;
+        }
+
         body {
             font-family: 'Segoe UI', sans-serif;
             background: #f8f9fa;
@@ -15,35 +24,39 @@
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 2rem;
+        }
+
+        /* Scrollable table */
+        .table-scroll {
+            max-height: 400px;
+            /* ความสูงของตาราง scroll */
+            overflow-y: auto;
+            display: block;
+            margin-bottom: 2rem;
+            border: 1px solid #ccc;
+            border-radius: .5rem;
+            background: #fff;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 2rem;
-            background: white;
+            min-width: 800px;
+            /* เพื่อให้ scroll แสดงตอนคอลัมน์เยอะ */
         }
 
         th,
         td {
-            border: 1px solid #ccc;
-            padding: 1rem;
+            padding: .75rem;
             text-align: left;
         }
 
         th {
-            background: #007bff;
+            background-color: #007bff;
             color: white;
-        }
-
-        a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        a:hover {
-            text-decoration: underline;
+            position: sticky;
+            top: 0;
         }
     </style>
 </head>
@@ -57,32 +70,152 @@
             style="background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px;">ออกจากระบบ</button>
     </form>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ชื่อไฟล์</th>
-                <th>รายละเอียด</th>
-                <th>ขนาด</th>
-                <th>ดาวน์โหลด</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% files.forEach(file=> { %>
+
+
+    <h1>ข้อมูล Form Lab & Form NonLab</h1>
+
+    <!-- Top 6 Form Lab -->
+    <h2>Form Lab</h2>
+    <div class="table-scroll" id="scrollFormLab">
+        <table class="table table-hover">
+            <thead>
                 <tr>
-                    <td>
-                        <%= file.name %>
-                    </td>
-                    <td>
-                        <%= file.description || '-' %>
-                    </td>
-                    <td>
-                        <%= file.size %>
-                    </td>
-                    <td><a href="<%= file.downloadLink %>" download>📥 ดาวน์โหลด</a></td>
+                    <th>อันดับ</th>
+                    <th>เพศ</th>
+                    <th>อายุ</th>
+                    <th>สถานะการสูบบุหรี่</th>
+                    <th>สถานะเบาหวาน</th>
+                    <th>SBP1</th>
+                    <th>SBP2</th>
+                    <th>SBP รวม</th>
+                    <th>Total Cholesterol</th>
+                    <th>จังหวัด/ประเทศ</th>
                 </tr>
-                <% }); %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody id="FormLabData">
+                <!-- ข้อมูล form_lab -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mb-3">
+        <a href="/download/formlab" class="btn btn-success me-2">ดาวน์โหลด Form Lab เป็น Excel</a>
+    </div>
+
+    <!-- Form NonLab -->
+    <h2>Form NonLab</h2>
+    <div class="table-scroll" id="scrollFormNonLab">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>เพศ</th>
+                    <th>อายุ</th>
+                    <th>สถานะการสูบบุหรี่</th>
+                    <th>SBP1</th>
+                    <th>SBP2</th>
+                    <th>SBP รวม</th>
+                    <th>น้ำหนัก</th>
+                    <th>ส่วนสูง</th>
+                    <th>จังหวัด/ประเทศ</th>
+                </tr>
+            </thead>
+            <tbody id="formNonLabData">
+                <!-- ข้อมูล form_nonlab -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mb-3">
+        <a href="/download/formnonlab" class="btn btn-success">ดาวน์โหลด Form NonLab เป็น Excel</a>
+    </div>
+
+
+    <script>
+        // ตัวแปรเก็บข้อมูล
+        let formLabData = [];
+        let formNonLabData = [];
+        let labIndex = 0;
+        let nonLabIndex = 0;
+        const pageSize = 6; // แสดง 6 รายการต่อครั้ง
+
+        // ดึงข้อมูล form_lab
+        fetch('/api/getFormLabData')
+            .then(res => res.json())
+            .then(data => {
+                formLabData = data; // เรียง sbptotal
+                appendFormLab(); // แสดง 6 รายการแรก
+            });
+
+        // ดึงข้อมูล form_nonlab
+        fetch('/api/getFormNonLabData')
+            .then(res => res.json())
+            .then(data => {
+                formNonLabData = data;
+                appendFormNonLab();
+            });
+
+        // ฟังก์ชันเพิ่มข้อมูล form_lab
+        function appendFormLab() {
+            const tbody = document.getElementById('FormLabData');
+            const nextIndex = Math.min(labIndex + pageSize, formLabData.length);
+            for (let i = labIndex; i < nextIndex; i++) {
+                const record = formLabData[i];
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${i + 1}</td>
+            <td>${record.sex == 1 ? 'ชาย' : 'หญิง'}</td>
+            <td>${record.age}</td>
+            <td>${record.smoking_status == 1 ? 'สูบบุหรี่' : 'ไม่สูบบุหรี่'}</td>
+            <td>${record.diabetes_status == 1 ? 'มีเบาหวาน' : 'ไม่มีเบาหวาน'}</td>
+            <td>${record.sbp1}</td>
+            <td>${record.sbp2}</td>
+            <td>${record.sbptotal}</td>
+            <td>${record.total_cholesterol}</td>
+            <td>${record.province}</td>
+        `;
+                tbody.appendChild(row);
+            }
+            labIndex = nextIndex;
+        }
+
+        // ฟังก์ชันเพิ่มข้อมูล form_nonlab
+        function appendFormNonLab() {
+            const tbody = document.getElementById('formNonLabData');
+            const nextIndex = Math.min(nonLabIndex + pageSize, formNonLabData.length);
+            for (let i = nonLabIndex; i < nextIndex; i++) {
+                const record = formNonLabData[i];
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${record.sex == 1 ? 'ชาย' : 'หญิง'}</td>
+            <td>${record.age}</td>
+            <td>${record.smoking_status == 1 ? 'สูบบุหรี่' : 'ไม่สูบบุหรี่'}</td>
+            <td>${record.sbp1}</td>
+            <td>${record.sbp2}</td>
+            <td>${record.sbptotal}</td>
+            <td>${record.weight}</td>
+            <td>${record.height}</td>
+            <td>${record.province}</td>
+        `;
+                tbody.appendChild(row);
+            }
+            nonLabIndex = nextIndex;
+        }
+
+        // เพิ่ม event scroll สำหรับโหลดข้อมูลเพิ่ม
+        document.getElementById('scrollFormLab').addEventListener('scroll', function () {
+            const div = this;
+            if (div.scrollTop + div.clientHeight >= div.scrollHeight - 5) { // ใกล้ถึงด้านล่าง
+                appendFormLab();
+            }
+        });
+
+        document.getElementById('scrollFormNonLab').addEventListener('scroll', function () {
+            const div = this;
+            if (div.scrollTop + div.clientHeight >= div.scrollHeight - 5) {
+                appendFormNonLab();
+            }
+        });
+    </script>
 </body>
 
 </html>
