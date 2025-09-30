@@ -11,82 +11,111 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/stys.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="css/stys.css"> -->
+    <title>Computer-Based Technology in Enhancing Cardiovascular Disease Risk Assessment</title>
     <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-            margin: 0;
+        #form-bk {
+            width: 80%;
+            /* กำหนดความกว้างเป็น 80% ของพื้นที่ส่วนหนึ่ง */
+            max-width: 1200px;
+            /* กำหนดความกว้างสูงสุดเป็น 800px */
+            margin: 0 auto;
+            /* จัดวางให้อยู่กึ่งกลางตามแนวนอน */
+            padding: 20px;
+            /* เพิ่มระยะขอบซ้ายและขวา */
+            background-color: #f0f0f0;
+            /* กำหนดสีพื้นหลัง */
+            border-radius: 10px;
+            /* เพิ่มขอบมนเม็ด */
         }
 
-        html {
-            box-sizing: border-box;
+        .content {
+            max-width: 800px;
+
+            margin: 0 auto;
+            /* Center content horizontally */
+            padding: 20px;
+            /* Add padding for better readability */
+
         }
 
-        *,
-        *:before,
-        *:after {
-            box-sizing: inherit;
+        .content p {
+            margin-top: 0;
         }
 
-        .column {
-            float: left;
-            width: 33.3%;
-            margin-bottom: 16px;
-            padding: 0 8px;
+        .content ul {
+            padding-left: 20px;
+            /* Add left padding for better indentation */
         }
 
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            margin: 8px;
-        }
-
-        .about-section {
-            padding: 50px;
+        .button-container {
+            margin-top: 20px;
             text-align: center;
-            background-color: #474e5d;
+            /* Center buttons */
+        }
+
+        .button-container a {
+            display: inline-block;
+            padding: 15px 25px;
+            margin: 10px;
+            font-size: 16px;
             color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-lab {
+            background-color: #c40505;
+        }
+
+        .button-lab:hover {
+            background-color: #a30303;
+        }
+
+        .button-nonlab {
+            background-color: #089df9;
+        }
+
+        .button-nonlab:hover {
+            background-color: #0270b5;
         }
 
         .container {
-            padding: 0 16px;
+            flex: 1;
+            background-color: #f3f4f6;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+            max-width: 1000px;
+            margin: 48px auto
         }
 
-        .container::after,
-        .row::after {
-            content: "";
-            clear: both;
-            display: table;
+        /* ลิสต์แนวตั้งแบบกดได้ทั้งชิ้น */
+        .person-list .list-group-item {
+            border: 1px solid #e6e9ef;
+            border-radius: .75rem;
+            margin-bottom: .75rem;
+            padding: 1.25rem;
         }
 
-        .title {
-            color: grey;
+        .person-role {
+            color: #6c757d;
+            font-weight: 500;
         }
 
-        .button {
-            border: none;
-            outline: 0;
-            display: inline-block;
-            padding: 8px;
-            color: white;
-            background-color: #000;
-            text-align: center;
-            cursor: pointer;
-            width: 100%;
+        .list-group-item .chev {
+            opacity: .5;
         }
 
-        .button:hover {
-            background-color: #555;
-        }
-
-        @media screen and (max-width: 650px) {
-            .column {
-                width: 100%;
-                display: block;
-            }
+        .list-group-item:hover .chev {
+            opacity: 1;
         }
     </style>
     <title>about Me</title>
 </head>
+
 
 <body>
     <header class="header">
@@ -98,165 +127,188 @@
                 </div>
                 <div class="header-subtitle">by Phramongkutklao College of Medicine & Silpakorn University</div>
             </div>
-
         </div>
         <div class="right-buttons">
             <div class="dropdown">
                 <div class="dropdown-content">
-                    <a href="index.html">หน้าเเรก</a>
+                    <a href="/">หน้าหลัก</a>
                     <a href="aboutMe.html">About Me</a>
-                    <a href="#">Link 3</a>
+
                 </div>
                 <button>&#8942;</button> <!-- Vertical ellipsis icon -->
             </div>
-            <button class="login-button">Sign In</button>
+
+            <a href="/login.html" class="login-button" id="loginbutton">Sign In</a>
         </div>
+
+        <!-- ป๊อบอัพหน้าlogin
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="closeBtn">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="button" class="btn btn-success" id="submit">Success</button>
+
+                </form>
+            </div>
+        </div> -->
+        <script src="js/loginscrip.js"></script>
+
     </header>
-    <main>
+    <!-- ===== Main ===== -->
+    <main class="py-4">
+        <div class="about-section text-white text-center" style="padding:50px; background-color:#474e5d;">
+            <h1>About Me</h1>
+        </div>
 
-        <body>
+        <div class="container my-4">
+            <h2 class="text-center mb-3">ผู้พัฒนา (Developer)</h2>
 
-            <div class="about-section">
-                <h1>About Me</h1>
+            <!-- ใช้ list-group + list-group-item-action เพื่อให้ทั้งชิ้นกดได้ -->
+            <div class="list-group person-list">
+
+                <!-- 1 -->
+                <a class="list-group-item list-group-item-action" href="mailto:boonsub1991@pcm.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">ร.อ. ผศ.บุญทรัพย์ ศักดิ์บุญญารัตน์</h2>
+                            <div class="person-role mb-2">ผู้วิจัย (Principal investigator)</div>
+                            <div class="text-body-secondary">
+                                ภาควิชาเวชศาสตร์ทหารและชุมชน วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า<br>
+                                317 ถ.ราชวิถี แขวงทุ่งพญาไท เขตราชเทวี กรุงเทพมหานคร 10400
+                            </div>
+                            <div class="mt-2">อีเมล: boonsub1991@pcm.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
+
+                <!-- 2 -->
+                <a class="list-group-item list-group-item-action" href="mailto:rrangsin@pcm.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">พล.ต. ศ.ราม รังสินธุ์</h2>
+                            <div class="person-role mb-2">ผู้ร่วมวิจัย (Co-investigator)</div>
+                            <div class="text-body-secondary">ภาควิชาเวชศาสตร์ทหารและชุมชน
+                                วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า
+                            </div>
+                            <div class="mt-2">อีเมล: rrangsin@pcm.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
+
+                <!-- 3 -->
+                <a class="list-group-item list-group-item-action" href="mailto:mathirut@pcm.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">พล.ต. ศ.มฑิรุทธ มุ่งถิ่น</h2>
+                            <div class="person-role mb-2">ผู้ร่วมวิจัย (Co-investigator)</div>
+                            <div class="text-body-secondary">ภาควิชาปาราสิตวิทยา วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า</div>
+                            <div class="mt-2">อีเมล: mathirut@pcm.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
+
+                <!-- 4 -->
+                <a class="list-group-item list-group-item-action" href="mailto:j.kanlaya@pcm.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">พ.อ.หญิง ผศ.พญ.กัลยา จงเชิดชูตระกูล</h2>
+                            <div class="person-role mb-2">ผู้ร่วมวิจัย (Co-investigator)</div>
+                            <div class="text-body-secondary">ภาควิชาเวชศาสตร์ทหารและชุมชน
+                                วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า
+                            </div>
+                            <div class="mt-2">อีเมล: j.kanlaya@pcm.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
+
+                <!-- 5 -->
+                <a class="list-group-item list-group-item-action" href="mailto:jaturon.p@pcm.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">พ.ต.จาตุรนต์ ภูเวียง</h2>
+                            <div class="person-role mb-2">ผู้ร่วมวิจัย (Co-investigator)</div>
+                            <div class="text-body-secondary">กองอายุรกรรม โรงพยาบาลพระมงกุฎเกล้า</div>
+                            <div class="mt-2">อีเมล: jaturon.p@pcm.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
+
+                <!-- 6 -->
+                <a class="list-group-item list-group-item-action" href="mailto:pongpinigpinyo_s@su.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">ผศ.ดร.สุนีย์ พงษ์พินิจภิญโญ</h2>
+                            <div class="person-role mb-2">ผู้ร่วมวิจัย (Co-investigator)</div>
+                            <div class="text-body-secondary">ภาควิชาคอมพิวเตอร์ มหาวิทยาลัยศิลปากร</div>
+                            <div class="mt-2">อีเมล: pongpinigpinyo_s@su.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
+
+                <!-- 7 -->
+                <a class="list-group-item list-group-item-action" href="mailto:sakboonyarat_b3@su.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">นาย บุญนรินทร์ ศักดิ์บุญญารัตน์</h2>
+                            <div class="person-role mb-2">ผู้ร่วมวิจัย (Co-investigator)</div>
+                            <div class="text-body-secondary">คณะวิทยาศาสตร์ มหาวิทยาลัยศิลปากร</div>
+                            <div class="mt-2">อีเมล: sakboonyarat_b3@su.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
+
+                <!-- 8 -->
+                <a class="list-group-item list-group-item-action" href="mailto:srisawat_k5@su.ac.th">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 mb-1">นางสาว กัญญ์วรา ศรีสวัสดิ์</h2>
+                            <div class="person-role mb-2">ผู้ร่วมวิจัย (Co-investigator)</div>
+                            <div class="text-body-secondary">คณะวิทยาศาสตร์ มหาวิทยาลัยศิลปากร</div>
+                            <div class="mt-2">อีเมล: srisawat_k5@su.ac.th</div>
+                        </div>
+                        <div class="chev d-flex align-items-start">➜</div>
+                    </div>
+                </a>
 
             </div>
-
-            <h2 style="text-align:center">ผู้พัฒนา (Developer)</h2>
-            <div class="row">
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>ร.อ. ผศ.บุญทรัพย์ ศักดิ์บุญญารัตน์</h2>
-                            <p class="title">ผู้วิจัย (Principal investigator)</p>
-                            <p> ภาควิชาเวชศาสตร์ทหารและชุมชน วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า</p>
-                            <p>317 ถ.ราชวิถี แขวงทุ่งพญาไท เขตราชเทวี กรุงเทพมหานคร 10400
-                            </p>
-                            <p>boonsub1991@pcm.ac.th </p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>พล.ต. ศ.ราม รังสินธุ์</h2>
-                            <p class="title">ผู้ร่วมวิจัย (Co-investigator)</p>
-                            <p>ภาควิชาเวชศาสตร์ทหารและชุมชน วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า
-                            </p>
-                            <p>rrangsin@pcm.ac.th</p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>พล.ต. ศ.มฑิรุทธ มุ่งถิ่น </h2>
-                            <p class="title">ผู้ร่วมวิจัย (Co-investigator)</p>
-                            <p>
-                                ภาควิชาปาราสิตวิทยา วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า</p>
-                            <p>mathirut@pcm.ac.th</p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>พ.อ.หญิง ผศ.พญ.กัลยา จงเชิดชูตระกูล </h2>
-                            <p class="title">ผู้ร่วมวิจัย (Co-investigator)</p>
-                            <p>ภาควิชาเวชศาสตร์ทหารและชุมชน วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า
-                            </p>
-                            <p>j.kanlaya@pcm.ac.th</p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>พ.ต.จาตุรนต์ ภูเวียง </h2>
-                            <p class="title">ผู้ร่วมวิจัย (Co-investigator)</p>
-                            <p>กองอายุรกรรม โรงพยาบาลพระมงกุฎเกล้า </p>
-                            <p>jaturon.p@pcm.ac.th</p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>ผศ.ดร.สุนีย์ พงษ์พินิจภิญโญ</h2>
-                            <p class="title">ผู้ร่วมวิจัย (Co-investigator)</p>
-                            <p>ภาควิชาคอมพิวเตอร์ มหาวิทยาลัยศิลปากร</p>
-                            <p>pongpinigpinyo_s@su.ac.th</p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>นาย บุญนรินทร์ ศักดิ์บุญญารัตน์ </h2>
-                            <p class="title">ผู้ร่วมวิจัย (Co-investigator)</p>
-                            <p>คณะวิทยาศาสตร์ มหาวิทยาลัยศิลปากร</p>
-                            <p>sakboonyarat_b3@su.ac.th</p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column">
-                    <div class="card">
-                        <!-- <img src="#" alt="รูป" style="width:100%"> -->
-                        <div class="container">
-                            <h2>นางสาว กัญญ์วรา ศรีสวัสดิ์</h2>
-                            <p class="title">ผู้ร่วมวิจัย (Co-investigator)</p>
-                            <p>คณะวิทยาศาสตร์ มหาวิทยาลัยศิลปากร</p>
-                            <p>srisawat_k5@su.ac.th</p>
-                            <p><button class="button">Contact</button></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
+        </div>
     </main>
- <footer>
-        <div class="footer-content">
-            <p>ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
+
+    <footer class="container my-4">
+        <div class="footer-content small text-muted">
+            <p>
+                ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
                 กล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบในระยะ 10 ปีข้างหน้า
-                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคกล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบมาก่อน โดย
-                การประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts สำหรับ
-                Southeast
-                Asia Countries<sup>1</sup>.</p>
-            <p><sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
-                risk
-                charts: revised models to estimate risk in 21 global regions. The Lancet. Global health, 7(10),
-                e1332–e1345.
+                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคหัวใจและหลอดเลือดและโรคเส้นเลือดสมองตีบมาก่อน
+                โดยการประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts สำหรับ
+                Southeast Asia Countries<sup>1</sup>.
+            </p>
+            <p>
+                <sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
+                charts:
+                revised models to estimate risk in 21 global regions. The Lancet. Global health, 7(10), e1332–e1345.
                 <a href="https://doi.org/10.1016/S2214-109X(19)30318-3"
                     target="_blank">https://doi.org/10.1016/S2214-109X(19)30318-3</a>
             </p>
         </div>
     </footer>
-
 
 
 </body>

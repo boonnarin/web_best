@@ -64,11 +64,21 @@
             padding-left: 20px;
             /* Add left padding for better indentation */
         }
+
+        .container {
+            flex: 1;
+            background-color: #f3f4f6;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+            max-width: 1000px;
+            margin: 48px auto
+        }
     </style>
 </head>
 
 <body>
-     <header class="header">
+    <header class="header">
         <div class="logo-container">
             <img src="images/logo.png" alt="Logo">
             <img src="images/Logo_su.png" alt="Logo_su" style="width: 60px; height: auto;">
@@ -81,9 +91,9 @@
         <div class="right-buttons">
             <div class="dropdown">
                 <div class="dropdown-content">
-                     <a href="/">หน้าหลัก</a>
+                    <a href="/">หน้าหลัก</a>
                     <a href="aboutMe.html">About Me</a>
-                   
+
                 </div>
                 <button>&#8942;</button> <!-- Vertical ellipsis icon -->
             </div>
@@ -179,24 +189,24 @@
                         let ybmi = "";
                         let ybmip = "";
                         if (bmi2 < 18.5) {
-                                ybmi = "- <b>ท่านมีน้ำหนักต่ำกว่าเกณฑ์ (Underweight)</b>";
-                                ybmip = "- ท่านมีน้ำหนักต่ำกว่าเกณฑ์ (Underweight)";
-                            } else if (bmi2 >= 18.5 && bmi2 < 23) {
-                                ybmi = "- <b>ท่านมีน้ำหนักอยู่ในเกณฑ์ปกติ (Normal weight)</b>";
-                                ybmip = "- ท่านมีน้ำหนักอยู่ในเกณฑ์ปกติ (Normal weight)";
-                            } else if (bmi2 >= 23 && bmi2 < 25) {
-                                ybmi = "- <b>ท่านมีภาวะน้ำหนักเกิน (Overweight)</b> ควรลดน้ำหนัก ลดการบริโภคอาหารที่มีน้ำตาลและไขมันสูง รับประทานผักผลไม้เป็นประจำ และออกกำลังกายอย่างสม่ำเสมอ";
-                                ybmip = "- ท่านมีภาวะน้ำหนักเกิน (Overweight) ควรลดน้ำหนักและปรับปรุงพฤติกรรมการบริโภคอาหาร";
-                            } else if (bmi2 >= 25 && bmi2 < 30) {
-                                ybmi = "- <b>ท่านมีภาวะอ้วนระดับที่ 1 (Obesity I)</b> ควรลดน้ำหนัก ลดการบริโภคอาหารที่มีน้ำตาลและไขมันสูง รับประทานผักผลไม้เป็นประจำ และออกกำลังกายอย่างสม่ำเสมอ";
-                                ybmip = "- ท่านมีภาวะอ้วนระดับที่ 1 (Obesity I) ควรลดน้ำหนักและปรับปรุงพฤติกรรมการบริโภคอาหาร";
-                            } else if (bmi2 >= 30) {
-                                ybmi = "- <b>ท่านมีภาวะอ้วนอันตราย (Obesity II)</b> ควรปรึกษาแพทย์เพื่อรับคำแนะนำและการรักษาที่เหมาะสม";
-                                ybmip = "- ท่านมีภาวะอ้วนอันตราย (Obesity II) ควรปรึกษาแพทย์เพื่อรับคำแนะนำและการรักษาที่เหมาะสม";
-                            } else {
-                                ybmi = "";
-                                ybmip = "";
-                            }
+                            ybmi = "- <b>ท่านมีน้ำหนักต่ำกว่าเกณฑ์ (Underweight)</b>";
+                            ybmip = "- ท่านมีน้ำหนักต่ำกว่าเกณฑ์ (Underweight)";
+                        } else if (bmi2 >= 18.5 && bmi2 < 23) {
+                            ybmi = "- <b>ท่านมีน้ำหนักอยู่ในเกณฑ์ปกติ (Normal weight)</b>";
+                            ybmip = "- ท่านมีน้ำหนักอยู่ในเกณฑ์ปกติ (Normal weight)";
+                        } else if (bmi2 >= 23 && bmi2 < 25) {
+                            ybmi = "- <b>ท่านมีภาวะน้ำหนักเกิน (Overweight)</b> ควรลดน้ำหนัก ลดการบริโภคอาหารที่มีน้ำตาลและไขมันสูง รับประทานผักผลไม้เป็นประจำ และออกกำลังกายอย่างสม่ำเสมอ";
+                            ybmip = "- ท่านมีภาวะน้ำหนักเกิน (Overweight) ควรลดน้ำหนักและปรับปรุงพฤติกรรมการบริโภคอาหาร";
+                        } else if (bmi2 >= 25 && bmi2 < 30) {
+                            ybmi = "- <b>ท่านมีภาวะอ้วนระดับที่ 1 (Obesity I)</b> ควรลดน้ำหนัก ลดการบริโภคอาหารที่มีน้ำตาลและไขมันสูง รับประทานผักผลไม้เป็นประจำ และออกกำลังกายอย่างสม่ำเสมอ";
+                            ybmip = "- ท่านมีภาวะอ้วนระดับที่ 1 (Obesity I) ควรลดน้ำหนักและปรับปรุงพฤติกรรมการบริโภคอาหาร";
+                        } else if (bmi2 >= 30) {
+                            ybmi = "- <b>ท่านมีภาวะอ้วนอันตราย (Obesity II)</b> ควรปรึกษาแพทย์เพื่อรับคำแนะนำและการรักษาที่เหมาะสม";
+                            ybmip = "- ท่านมีภาวะอ้วนอันตราย (Obesity II) ควรปรึกษาแพทย์เพื่อรับคำแนะนำและการรักษาที่เหมาะสม";
+                        } else {
+                            ybmi = "";
+                            ybmip = "";
+                        }
 
                         // สร้างตัวแปร ysmk
                         let ysmk = "";
@@ -332,7 +342,7 @@
                     <p>- หากท่านดื่มสุรา ให้ลด หรือ เลิก (สายด่วนเลิกสุรา 1413) หากไม่ได้ดื่มอยู่แล้ว ไม่แนะนำให้ดื่ม</p>
                     <p>- ควรรับการตรวจสุขภาพเพื่อประเมินความเสี่ยงของโรคหัวใจและหลอดเลือด อย่างน้อย ปีละ 1 ครั้ง</p>
                     <p>- ผลการประเมินเหล่านี้เป็นการประเมินความเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือดเบื้องต้น ควรเข้ารับคำปรึกษาและตรวจเพิ่มเติมตามคำแนะนำของแพทย์</p>`;
-                    // สร้างตัวแปร bmiValue และ sections สำหรับแถบ BMI
+                        // สร้างตัวแปร bmiValue และ sections สำหรับแถบ BMI
                         const bmiValue = parseFloat(bmi3); // แปลงค่าเป็นตัวเลข
 
                         const sections = [
@@ -413,23 +423,25 @@
 
 
 
-    <footer>
-        <div class="footer-content">
-            <p>ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
+    <footer class="container my-4">
+        <div class="footer-content small text-muted">
+            <p>
+                ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
                 กล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบในระยะ 10 ปีข้างหน้า
-                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคกล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบมาก่อน โดย
-                การประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts สำหรับ
-                Southeast
-                Asia Countries<sup>1</sup>.</p>
-            <p><sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
-                risk
-                charts: revised models to estimate risk in 21 global regions. The Lancet. Global health, 7(10),
-                e1332–e1345.
+                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคหัวใจและหลอดเลือดและโรคเส้นเลือดสมองตีบมาก่อน
+                โดยการประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts สำหรับ
+                Southeast Asia Countries<sup>1</sup>.
+            </p>
+            <p>
+                <sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
+                charts:
+                revised models to estimate risk in 21 global regions. The Lancet. Global health, 7(10), e1332–e1345.
                 <a href="https://doi.org/10.1016/S2214-109X(19)30318-3"
                     target="_blank">https://doi.org/10.1016/S2214-109X(19)30318-3</a>
             </p>
         </div>
     </footer>
+
 
 
 
