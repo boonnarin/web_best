@@ -1,0 +1,372 @@
+/* ========================================
+   HEADER - Modern Medical Application
+   ======================================== */
+
+:root {
+    --header-height: 72px;
+    --brand-primary: #0b6bcb;
+    --brand-primary-dark: #084d92;
+    --brand-success: #10b981;
+    --brand-success-dark: #059669;
+    --header-bg: rgba(255, 255, 255, 0.85);
+    --header-border: rgba(15, 23, 42, 0.08);
+    --shadow-header: 0 1px 3px rgba(15, 23, 42, .04), 0 4px 12px rgba(15, 23, 42, .06);
+}
+
+/* ===== Header bar ===== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 28px;
+    height: var(--header-height);
+    background: var(--header-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--header-border);
+    box-shadow: var(--shadow-header);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    box-sizing: border-box;
+    transition: all .25s ease;
+}
+
+/* push body content below fixed header */
+body {
+    padding-top: var(--header-height);
+}
+
+/* ===== Logo ===== */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.logo-container img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    transition: transform .2s ease;
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+}
+
+.logo-container img:nth-of-type(2) {
+    width: 44px !important;
+    height: 44px !important;
+    border-left: 1.5px solid var(--header-border);
+    padding-left: 14px;
+    margin-left: 2px;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-width: 0;
+}
+
+.header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 560px;
+}
+
+.header-subtitle {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 560px;
+}
+
+/* ===== Right buttons ===== */
+.right-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* ===== Dropdown ===== */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown > button {
+    background: transparent;
+    border: 1px solid transparent;
+    font-size: 18px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: #475569;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s ease;
+    line-height: 1;
+}
+
+.dropdown > button:hover {
+    background: rgba(15, 23, 42, .05);
+    color: var(--brand-primary);
+    border-color: var(--header-border);
+}
+
+.dropdown > button:focus {
+    outline: none;
+    background: rgba(11, 107, 203, .08);
+    color: var(--brand-primary);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .12), 0 2px 4px rgba(15, 23, 42, .06);
+    z-index: 1040;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--header-border);
+    padding: 6px;
+    animation: dropdownSlide .18s ease-out;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-content a {
+    color: #1e293b;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all .15s ease;
+}
+
+.dropdown-content a:hover {
+    background: rgba(11, 107, 203, .08);
+    color: var(--brand-primary);
+}
+
+.dropdown-content a::before {
+    content: "→";
+    font-size: 14px;
+    color: #94a3b8;
+    transition: transform .2s ease;
+}
+
+.dropdown-content a:hover::before {
+    transform: translateX(2px);
+    color: var(--brand-primary);
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+    display: block;
+}
+
+/* ===== Login button ===== */
+.login-button {
+    background: linear-gradient(135deg, var(--brand-success) 0%, var(--brand-success-dark) 100%);
+    color: white;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, .3), 0 1px 2px rgba(16, 185, 129, .2);
+    transition: all .2s ease;
+    letter-spacing: .01em;
+    white-space: nowrap;
+}
+
+.login-button::before {
+    content: "→";
+    font-size: 14px;
+    opacity: 0;
+    width: 0;
+    transition: all .2s ease;
+}
+
+.login-button:hover {
+    background: linear-gradient(135deg, var(--brand-success-dark) 0%, #047857 100%);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, .4), 0 2px 4px rgba(16, 185, 129, .25);
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+.login-button:hover::before {
+    opacity: 1;
+    width: 14px;
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+/* ===== Content (legacy) ===== */
+.content {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.content p {
+    margin-top: 0;
+}
+
+.content ul {
+    padding-left: 20px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+    .header-title {
+        font-size: 14px;
+        max-width: 380px;
+    }
+
+    .header-subtitle {
+        font-size: 11.5px;
+        max-width: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --header-height: 64px;
+    }
+
+    .header {
+        padding: 0 16px;
+    }
+
+    .header-text {
+        display: none;
+    }
+
+    .logo-container {
+        gap: 10px;
+    }
+
+    .logo-container img:nth-of-type(2) {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    .login-button {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .dropdown > button {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0 12px;
+    }
+
+    .logo-container img {
+        width: 38px;
+        height: 38px;
+    }
+
+    .logo-container img:nth-of-type(2) {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    .login-button {
+        padding: 7px 14px;
+        font-size: 12.5px;
+    }
+}
+
+/* ===== Login Modal (legacy) ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(15, 23, 42, .55);
+    backdrop-filter: blur(4px);
+    padding-top: 80px;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 5% auto;
+    padding: 28px;
+    border: none;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, .2);
+    animation: modalFadeIn .25s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
