@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/spb-indicator.css">
+    <link rel="stylesheet" href="css/tc-indicator.css">
+    <script src='../node_modules/pdfmake/build/pdfmake.min.js'></script>
+    <script src='../node_modules/pdfmake/build/vfs_fonts.js'></script>
+    <link rel="stylesheet" href="css/styles.css">
+
+    <title>ผลการประเมินความเสี่ยง — CVD Risk Assessment</title>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+    <style>
+        :root {
+            --brand-primary: #0b6bcb;
+            --brand-primary-dark: #084d92;
+            --brand-accent: #e11d48;
+            --brand-success: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #dc2626;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --surface-muted: #f1f5f9;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, .04), 0 1px 3px rgba(15, 23, 42, .06);
+            --shadow-md: 0 4px 6px rgba(15, 23, 42, .04), 0 10px 15px rgba(15, 23, 42, .06);
+            --shadow-lg: 0 10px 15px rgba(15, 23, 42, .05), 0 20px 25px rgba(15, 23, 42, .08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            /* Risk colors */
+            --risk-very-low: #16a34a;
+            --risk-low: #84cc16;
+            --risk-moderate: #f59e0b;
+            --risk-high: #ea580c;
+            --risk-very-high: #b91c1c;
+        }
+
+        body {
+            font-family: 'Sarabun', system-ui, sans-serif;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(11, 107, 203, .04) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(225, 29, 72, .03) 0%, transparent 40%),
+                linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        main {
+            padding-bottom: 40px;
+        }
+
+        /* ===== Container override ===== */
+        #form1 {
+            display: flex;
+            justify-content: center;
+            padding: 0 16px;
+        }
+
+        #form-bk {
+            width: 100%;
+            max-width: 1040px;
+            margin: 24px auto;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        /* ===== Hero Section ===== */
+        .result-hero {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #1e88e5 50%, #0b6bcb 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: 32px 36px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, .1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .result-hero::after {
+            content: '\F4F4';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            top: 50%;
+            right: 36px;
+            transform: translateY(-50%);
+            font-size: 130px;
+            color: rgba(255, 255, 255, .08);
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .result-hero .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, .18);
+            border: 1px solid rgba(255, 255, 255, .25);
+            color: white;
+            border-radius: 999px;
+            font-size: .8rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        .result-hero h1 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            line-height: 1.3;
+            position: relative;
+            z-index: 2;
+        }
+
+        .result-hero .subtitle {
+            font-size: .92rem;
+            opacity: .92;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== Section Cards ===== */
+        .result-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 18px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title .icon-wrap {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(11, 107, 203, .1), rgba(11, 107, 203, .04));
+            color: var(--brand-primary);
+            border-radius: 8px;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .section-title.accent .icon-wrap {
+            background: linear-gradient(135deg, rgba(225, 29, 72, .1), rgba(225, 29, 72, .04));
+            color: var(--brand-accent);
+        }
+
+        .section-title.warning .icon-wrap {
+            background: linear-gradient(135deg, rgba(245, 158, 11, .12), rgba(245, 158, 11, .04));
+            color: var(--brand-warning);
+        }
+
+        .section-title.success .icon-wrap {
+            background: linear-gradient(135deg, rgba(16, 185, 129, .12), rgba(16, 185, 129, .04));
+            color: var(--brand-success);
+        }
+
+        /* ===== Health Info Grid ===== */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .info-item {
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            transition: all .2s ease;
+        }
+
+        .info-item:hover {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(11, 107, 203, .08);
+        }
+
+        .info-item .label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .info-item .value {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .info-item .value .unit {
+            font-size: .8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        /* ===== Risk Display ===== */
+        .risk-display {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        @media (max-width: 768px) {
+            .risk-display {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .risk-percent-card {
+            background: linear-gradient(135deg, var(--surface-soft), white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .risk-percent-card .label {
+            font-size: .85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .risk-percent-card .percent {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 8px 0;
+        }
+
+        .risk-percent-card .timeframe {
+            font-size: .82rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .risk-level-card {
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .risk-level-card .label {
+            font-size: .85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 999px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .12);
+            align-self: flex-start;
+        }
+
+        .risk-badge.very-low { background: linear-gradient(135deg, var(--risk-very-low), #15803d); }
+        .risk-badge.low { background: linear-gradient(135deg, var(--risk-low), #65a30d); color: #1a2e05; }
+        .risk-badge.moderate { background: linear-gradient(135deg, var(--risk-moderate), #d97706); }
+        .risk-badge.high { background: linear-gradient(135deg, var(--risk-high), #c2410c); }
+        .risk-badge.very-high { background: linear-gradient(135deg, var(--risk-very-high), #991b1b); }
+        .risk-badge.unknown { background: linear-gradient(135deg, #64748b, #475569); }
+
+        .risk-scale-mini {
+            display: flex;
+            gap: 2px;
+            margin-top: 16px;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .risk-scale-mini .seg {
+            flex: 1;
+            opacity: .4;
+            transition: opacity .3s ease;
+        }
+
+        .risk-scale-mini .seg.active {
+            opacity: 1;
+        }
+
+        .risk-scale-mini .seg:nth-child(1) { background: var(--risk-very-low); }
+        .risk-scale-mini .seg:nth-child(2) { background: var(--risk-low); }
+        .risk-scale-mini .seg:nth-child(3) { background: var(--risk-moderate); }
+        .risk-scale-mini .seg:nth-child(4) { background: var(--risk-high); }
+        .risk-scale-mini .seg:nth-child(5) { background: var(--risk-very-high); }
+
+        .risk-scale-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: .68rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* ===== Recommendation List ===== */
+        .recommend-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .recommend-list li {
+            position: relative;
+            padding: 14px 16px 14px 48px;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            font-size: .94rem;
+            color: var(--text-primary);
+            line-height: 1.65;
+            transition: all .2s ease;
+        }
+
+        .recommend-list li::before {
+            content: '\F26A';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, var(--brand-success), #059669);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .75rem;
+        }
+
+        .recommend-list li:hover {
+            border-color: var(--brand-success);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, .08);
+        }
+
+        .recommend-list li.warning::before {
+            content: '\F33B';
+            background: linear-gradient(135deg, var(--brand-warning), #d97706);
+        }
+
+        .recommend-list li.danger::before {
+            content: '\F623';
+            background: linear-gradient(135deg, var(--brand-danger), #b91c1c);
+        }
+
+        .recommend-list li b {
+            color: var(--brand-primary-dark);
+            font-weight: 700;
+        }
+
+        /* ===== Indicator Wrapper ===== */
+        .indicator-wrap {
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin: 14px 0;
+        }
+
+        .indicator-wrap .indicator-title {
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== Action Buttons ===== */
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 28px auto 20px;
+            padding: 0 16px;
+            max-width: 1040px;
+        }
+
+        .btn-action {
+            border-radius: 999px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: .95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-width: 1.5px;
+            transition: all .2s ease;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-back {
+            background: var(--surface);
+            color: var(--text-secondary);
+            border-color: var(--border-strong);
+        }
+
+        .btn-back:hover {
+            background: var(--surface-muted);
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+
+        .btn-pdf {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+            border-color: var(--brand-primary-dark);
+            color: white;
+            box-shadow: 0 4px 12px rgba(11, 107, 203, .3);
+        }
+
+        .btn-pdf:hover {
+            background: linear-gradient(135deg, var(--brand-primary-dark), #063968);
+            color: white;
+            box-shadow: 0 6px 16px rgba(11, 107, 203, .4);
+        }
+
+        /* ===== Disclaimer ===== */
+        .disclaimer-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, .06), transparent);
+            border-left: 3px solid var(--brand-warning);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-top: 16px;
+            font-size: .85rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .disclaimer-box i {
+            color: var(--brand-warning);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* ===== Footer ===== */
+        footer.container {
+            max-width: 1040px;
+            margin: 32px auto 24px;
+            padding: 0 16px;
+        }
+
+        footer .footer-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px 26px;
+            font-size: .82rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        footer a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Indicator overrides for SBP / TC bars ===== */
+        .sbp-bar,
+        .cholesterol-bar {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .result-hero {
+                padding: 24px 22px;
+            }
+
+            .result-hero h1 {
+                font-size: 1.35rem;
+            }
+
+            .result-hero::after {
+                display: none;
+            }
+
+            .result-section {
+                padding: 20px;
+            }
+
+            .risk-percent-card .percent {
+                font-size: 3.5rem;
+            }
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-section,
+        .result-hero {
+            animation: fadeInUp .5s ease both;
+        }
+
+        .result-section:nth-of-type(1) { animation-delay: .05s; }
+        .result-section:nth-of-type(2) { animation-delay: .1s; }
+        .result-section:nth-of-type(3) { animation-delay: .15s; }
+        .result-section:nth-of-type(4) { animation-delay: .2s; }
+    </style>
+</head>
+
+<body>
+    <!-- ===== Header (เดิม) ===== -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="images/logo.png" alt="Logo">
+            <img src="images/Logo_su.png" alt="Logo_su" style="width: 60px; height: auto;">
+            <div class="header-text">
+                <div class="header-title">Web Application Enhancing Cardiovascular Disease Risk Assessment</div>
+                <div class="header-subtitle">by Phramongkutklao College of Medicine &amp; Silpakorn University</div>
+            </div>
+        </div>
+        <div class="right-buttons">
+            <div class="dropdown">
+                <div class="dropdown-content">
+                    <a href="/">หน้าหลัก</a>
+                    <a href="aboutMe.html">About Me</a>
+                </div>
+                <button>&#8942;</button>
+            </div>
+            <a href="/login" class="login-button" id="loginbutton">Sign In</a>
+        </div>
+        <script src="js/loginscrip.js"></script>
+    </header>
+
+    <main>
+        <div id="form1">
+            <div id="form-bk">
+                <!-- ===== Hero ===== -->
+                <div class="result-hero">
+                    <span class="badge-tag">
+                        <i class="bi bi-clipboard2-pulse"></i>
+                        ผลการประเมิน
+                    </span>
+                    <h1>ผลการประเมินความเสี่ยงโรคหัวใจและหลอดเลือด</h1>
+                    <p class="subtitle">10-Year Cardiovascular Disease Risk Report</p>
+                </div>
+
+                <div id="result"></div>
+
+                <script src="js/scriptpdf.js"></script>
+                <script>
+                    // ===== Cookie helper =====
+                    function getCookie(name) {
+                        const value = `; ${document.cookie}`;
+                        const parts = value.split(`; ${name}=`);
+                        if (parts.length === 2) return parts.pop().split(';').shift();
+                    }
+
+                    // ===== Read cookies =====
+                    const name = getCookie('name');
+                    const lastname = getCookie('lastname');
+                    const cvsex = getCookie('cvsex');
+                    const cvdm = getCookie('cvdm');
+                    const cvsmk = getCookie('cvsmk');
+                    const cvsbp = getCookie('cvsbp');
+                    const cvtc = getCookie('cvtc');
+                    const age = getCookie('age');
+                    const cvage = getCookie('cvage');
+                    const stataCode = getCookie('stataCode');
+                    const statas = getCookie('statas');
+                    const sbp = getCookie('sbp');
+                    const tc = getCookie('tc');
+
+                    let name1 = (name && name !== "") ? name : "ไม่ระบุชื่อ";
+                    let lastname1 = (lastname && lastname !== "") ? lastname : "";
+
+                    // ===== Mapping =====
+                    let sex = cvsex == 1 ? "ชาย" : (cvsex == 0 ? "หญิง" : "-");
+                    let smk = cvsmk == 1 ? "สูบบุหรี่" : (cvsmk == 0 ? "ไม่สูบบุหรี่" : "-");
+                    let dm = cvdm == 1 ? "เป็นโรคเบาหวาน" : (cvdm == 0 ? "ไม่เป็นโรคเบาหวาน" : "-");
+
+                    // ===== Smoking advice =====
+                    let ysmk = "", ysmkp = "";
+                    if (cvsmk == 1) {
+                        ysmk = `<li class="warning"><b>เลิกบุหรี่</b> ติดต่อขอคำแนะนำเพิ่มเติมได้ที่สายด่วนเลิกบุหรี่ โทร 1600</li>`;
+                        ysmkp = "- เลิกบุหรี่ ติดต่อขอคำแนะนำเพิ่มเติมได้ที่สายด่วนเลิกบุหรี่ โทร 1600 ";
+                    }
+
+                    // ===== Diabetes advice =====
+                    let ydm = "", ydmp = "";
+                    if (cvdm == 1) {
+                        ydm = `<li class="warning"><b>ควบคุมระดับน้ำตาลในเลือดให้อยู่ในเกณฑ์ปกติ</b> รับประทานยารักษาโรคเบาหวานตามแพทย์แนะนำและไปตรวจติดตามรักษาตามแพทย์นัดอย่างสม่ำเสมอ</li>`;
+                        ydmp = "- ควบคุมระดับน้ำตาลในเลือดให้อยู่ในเกณฑ์ปกติ รับประทานยารักษาโรคเบาหวานตามแพทย์แนะนำและไปตรวจติดตามรักษาตามแพทย์นัดอย่างสม่ำเสมอ";
+                    }
+
+                    // ===== SBP advice =====
+                    let ysbp = "", ysbpp = "";
+                    const sbpNum = Number(sbp);
+                    if (sbpNum < 120) {
+                        ysbp = `<li><b>ระดับความดันโลหิตของท่านอยู่ในระดับเหมาะสม (optimal)</b></li>`;
+                        ysbpp = "ระดับความดันโลหิตของท่านอยู่ในระดับเหมาะสม (optimal)";
+                    } else if (sbpNum < 130) {
+                        ysbp = `<li><b>ระดับความดันโลหิตของท่านอยู่ในระดับปกติ (normal)</b></li>`;
+                        ysbpp = "ระดับความดันโลหิตของท่านอยู่ในระดับปกติ (normal)";
+                    } else if (sbpNum <= 140) {
+                        ysbp = `<li class="warning"><b>ระดับความดันโลหิตของท่านเริ่มสูงเล็กน้อย (high normal)</b> ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ</li>`;
+                        ysbpp = "- ระดับความดันโลหิตของท่านเริ่มสูงเล็กน้อย (high normal) ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                    } else if (sbpNum < 160) {
+                        ysbp = `<li class="danger"><b>ท่านมีความดันโลหิตสูง ระดับที่ 1 (Grade 1 Hypertension)</b> หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ</li>`;
+                        ysbpp = "- ท่านมีความดันโลหิตสูง ระดับที่ 1 (Grade 1 Hypertension) หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                    } else if (sbpNum < 180) {
+                        ysbp = `<li class="danger"><b>ท่านมีความดันโลหิตสูง ระดับที่ 2 (Grade 2 Hypertension)</b> หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ</li>`;
+                        ysbpp = "- ท่านมีความดันโลหิตสูง ระดับที่ 2 (Grade 2 Hypertension) หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                    } else if (sbpNum >= 180) {
+                        ysbp = `<li class="danger"><b>ท่านมีความดันโลหิตสูงระดับวิกฤต (Hypertensive crisis)</b> นั่งพักในที่สงบ 5 นาที ทำการวัดความดันโลหิตอีกครั้งหากยังสูงกว่า 180 มิลลิเมตรปรอท ควรพบแพทย์เพื่อตรวจรักษาเพิ่มเติม หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ</li>`;
+                        ysbpp = "- ท่านมีความดันโลหิตสูงระดับวิกฤต (Hypertensive crisis) นั่งพักในที่สงบ 5 นาที ทำการวัดความดันโลหิตอีกครั้งหากยังสูงกว่า 180 มิลลิเมตรปรอท ควรพบแพทย์เพื่อตรวจรักษาเพิ่มเติม หากเคยได้รับการวินิจฉัยโรคความดันโลหิตสูงอยู่แล้ว ให้รับประทานยารักษาตามแพทย์แนะนำและไปติดตามการรักษาตามนัดอย่างสม่ำเสมอ หากยังไม่เคยเข้ารับการรักษาให้ไปพบแพทย์เพื่อทำการตรวจวินิจฉัยและเข้ารับการรักษาต่อเนื่อง ควรลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป ควรรับประทานผักผลไม้เป็นประจำ";
+                    }
+
+                    // ===== TC advice =====
+                    let ytc = "", ytcp = "";
+                    const tcNum = Number(tc);
+                    if (tcNum < 150) {
+                        ytc = `<li><b>ระดับคลอเลสเตอรอลในเลือดของท่านอยู่ในเกณฑ์ปกติ</b></li>`;
+                        ytcp = "- ระดับคลอเลสเตอรอลในเลือดของท่านอยู่ในเกณฑ์ปกติ";
+                    } else if (tcNum < 200) {
+                        ytc = `<li class="warning"><b>ระดับคลอเลสเตอรอลในเลือดของท่านค่อนข้างสูง</b> ควรลดการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด</li>`;
+                        ytcp = "- ระดับคลอเลสเตอรอลในเลือดของท่านค่อนข้างสูง ควรลดการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด ";
+                    } else if (tcNum >= 200) {
+                        ytc = `<li class="danger"><b>ท่านมีภาวะคลอเลสเตอรอลในเลือดสูง</b> ซึ่งเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือด ควรเลี่ยงการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด</li>`;
+                        ytcp = "- ท่านมีภาวะคลอเลสเตอรอลในเลือดสูง ซึ่งเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือด ควรเลี่ยงการรับประทานอาหารที่มีไขมันสูง เช่น เนื้อแดง เนื้อติดมัน อาหารแปรรูป ไส้กรอก ขนมอบเนย อาหารฟาสต์ฟู๊ด ";
+                    }
+
+                    // ===== Risk badge =====
+                    const stataNum = Number(stataCode);
+                    let riskClass = "unknown";
+                    let riskLabel = "ไม่ตรงเงื่อนไข";
+                    let activeSeg = -1;
+
+                    if (stataCode === undefined || stataCode === null || isNaN(stataNum)) {
+                        // unknown
+                    } else if (stataNum < 5) {
+                        riskClass = "very-low";
+                        riskLabel = "เสี่ยงน้อยมาก";
+                        activeSeg = 1;
+                    } else if (stataNum < 10) {
+                        riskClass = "low";
+                        riskLabel = "เสี่ยงน้อย";
+                        activeSeg = 2;
+                    } else if (stataNum < 20) {
+                        riskClass = "moderate";
+                        riskLabel = "เสี่ยงปานกลาง";
+                        activeSeg = 3;
+                    } else if (stataNum < 30) {
+                        riskClass = "high";
+                        riskLabel = "เสี่ยงสูง";
+                        activeSeg = 4;
+                    } else if (stataNum >= 30) {
+                        riskClass = "very-high";
+                        riskLabel = "เสี่ยงสูงมาก";
+                        activeSeg = 5;
+                    }
+
+                    let segHtml = "";
+                    for (let i = 1; i <= 5; i++) {
+                        segHtml += `<div class="seg ${i <= activeSeg ? 'active' : ''}"></div>`;
+                    }
+
+                    // Diabetes badge
+                    let dmBadge = "";
+                    if (cvdm == 1) {
+                        dmBadge = `<span style="display:inline-block;padding:3px 10px;background:rgba(225,29,72,.1);color:var(--brand-accent);border-radius:999px;font-size:.78rem;font-weight:600;">${dm}</span>`;
+                    } else if (cvdm == 0) {
+                        dmBadge = `<span style="display:inline-block;padding:3px 10px;background:rgba(16,185,129,.1);color:var(--brand-success);border-radius:999px;font-size:.78rem;font-weight:600;">${dm}</span>`;
+                    }
+
+                    let smkBadge = "";
+                    if (cvsmk == 1) {
+                        smkBadge = `<span style="display:inline-block;padding:3px 10px;background:rgba(225,29,72,.1);color:var(--brand-accent);border-radius:999px;font-size:.78rem;font-weight:600;">${smk}</span>`;
+                    } else if (cvsmk == 0) {
+                        smkBadge = `<span style="display:inline-block;padding:3px 10px;background:rgba(16,185,129,.1);color:var(--brand-success);border-radius:999px;font-size:.78rem;font-weight:600;">${smk}</span>`;
+                    }
+
+                    // ===== Render =====
+                    const resultDiv = document.getElementById('result');
+
+                    resultDiv.innerHTML = `
+                    <!-- ===== Section 1: Health Information ===== -->
+                    <section class="result-section">
+                        <h2 class="section-title">
+                            <span class="icon-wrap"><i class="bi bi-person-vcard"></i></span>
+                            ข้อมูลสุขภาพ
+                        </h2>
+                        <div class="health-grid">
+                            <div class="info-item">
+                                <div class="label"><i class="bi bi-person"></i> ชื่อ-นามสกุล</div>
+                                <div class="value">${name1} ${lastname1}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label"><i class="bi bi-gender-ambiguous"></i> เพศ</div>
+                                <div class="value">${sex}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label"><i class="bi bi-calendar3"></i> อายุ</div>
+                                <div class="value">${age}<span class="unit">ปี</span></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label"><i class="bi bi-droplet-half"></i> โรคเบาหวาน</div>
+                                <div class="value" style="font-size:.95rem;">${dmBadge || '-'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label"><i class="bi bi-wind"></i> สถานะการสูบบุหรี่</div>
+                                <div class="value" style="font-size:.95rem;">${smkBadge || '-'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label"><i class="bi bi-activity"></i> ความดันโลหิต (เฉลี่ย)</div>
+                                <div class="value">${sbp}<span class="unit">mmHg</span></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label"><i class="bi bi-eyedropper"></i> คอลเลสเตอรอลรวม</div>
+                                <div class="value">${tc}<span class="unit">mg/dL</span></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ===== Section 2: Risk Result ===== -->
+                    <section class="result-section">
+                        <h2 class="section-title accent">
+                            <span class="icon-wrap"><i class="bi bi-heart-pulse"></i></span>
+                            ผลการประเมินความเสี่ยง
+                        </h2>
+                        <div class="risk-display">
+                            <div class="risk-percent-card">
+                                <div class="label">ความเสี่ยงรวม</div>
+                                <div class="percent">${stataCode}<span style="font-size:1.8rem;">%</span></div>
+                                <div class="timeframe">
+                                    <i class="bi bi-clock-history"></i>
+                                    ในระยะ 10 ปีข้างหน้า
+                                </div>
+                            </div>
+                            <div class="risk-level-card">
+                                <div class="label">ระดับความเสี่ยง</div>
+                                <div class="risk-badge ${riskClass}">
+                                    <i class="bi bi-shield-exclamation"></i>
+                                    ${riskLabel}
+                                </div>
+                                <div class="risk-scale-mini">${segHtml}</div>
+                                <div class="risk-scale-labels">
+                                    <span>น้อยมาก</span>
+                                    <span>น้อย</span>
+                                    <span>ปานกลาง</span>
+                                    <span>สูง</span>
+                                    <span>สูงมาก</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="disclaimer-box">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <span>
+                                ผลการประเมินนี้เป็นการประเมินความเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือดเบื้องต้น
+                                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคกล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบมาก่อน
+                            </span>
+                        </div>
+                    </section>
+
+                    <!-- ===== Section 3: Personalized Recommendations ===== -->
+                    <section class="result-section" id="specialRecommendation">
+                        <h2 class="section-title warning">
+                            <span class="icon-wrap"><i class="bi bi-lightbulb"></i></span>
+                            คำแนะนำเฉพาะบุคคล
+                        </h2>
+                        <p style="color:var(--text-secondary);margin-bottom:16px;">
+                            คำแนะนำเพื่อลดความเสี่ยงการเกิดโรคหัวใจและหลอดเลือดในอนาคต ตามผลการประเมินของท่าน
+                        </p>
+                        <ul class="recommend-list">
+                            ${ysmk}
+                            ${ydm}
+                        </ul>
+
+                        <div class="indicator-wrap">
+                            <div class="indicator-title">
+                                <i class="bi bi-speedometer2"></i>
+                                ระดับความดันโลหิตของท่าน (Systolic Blood Pressure)
+                            </div>
+                            <div class="sbp-bar">
+                                <div class="sbp-section optimal" id="optimal">
+                                    <span>ระดับเหมาะสม<br>(&lt;120)</span>
+                                </div>
+                                <div class="sbp-section normal" id="normal">
+                                    <span>ระดับปกติ<br>(120 - 129)</span>
+                                </div>
+                                <div class="sbp-section high-normal" id="high-normal">
+                                    <span>เริ่มสูงเล็กน้อย<br>(130 - 140)</span>
+                                </div>
+                                <div class="sbp-section hypertension1" id="hypertension1">
+                                    <span>ความดันโลหิตสูง ระดับที่ 1<br>(140 - 159)</span>
+                                </div>
+                                <div class="sbp-section hypertension2" id="hypertension2">
+                                    <span>ความดันโลหิตสูง ระดับที่ 2<br>(160 - 179)</span>
+                                </div>
+                                <div class="sbp-section crisis" id="crisis">
+                                    <span>ความดันโลหิตสูงระดับวิกฤต<br>(&ge;180)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="recommend-list">${ysbp}</ul>
+
+                        <div class="indicator-wrap">
+                            <div class="indicator-title">
+                                <i class="bi bi-droplet"></i>
+                                ระดับคอลเลสเตอรอลของท่าน (Total Cholesterol)
+                            </div>
+                            <div class="cholesterol-bar">
+                                <div class="cholesterol-section normal" id="cholesterol-normal">
+                                    <span>ปกติ<br>Normal<br>(&lt;150)</span>
+                                </div>
+                                <div class="cholesterol-section borderline-high" id="cholesterol-borderline-high">
+                                    <span>ค่อนข้างสูง<br>Borderline High<br>(150 - 199)</span>
+                                </div>
+                                <div class="cholesterol-section high" id="cholesterol-high">
+                                    <span>สูง<br>High<br>(&ge;200)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="recommend-list">${ytc}</ul>
+                    </section>
+
+                    <!-- ===== Section 4: General Advice ===== -->
+                    <section class="result-section">
+                        <h2 class="section-title success">
+                            <span class="icon-wrap"><i class="bi bi-stars"></i></span>
+                            คำแนะนำทั่วไป
+                        </h2>
+                        <ul class="recommend-list">
+                            <li>
+                                เพื่อลดความเสี่ยงต่อการเกิดโรคหัวใจและหลอดเลือด ควร<b>ออกกำลังกายอย่างสม่ำเสมอ</b>
+                                อย่างน้อยสัปดาห์ละ 3 วัน วันละ 20-30 นาที
+                                หากมีโรคประจำตัวหรืออาการเจ็บป่วย ควรปรึกษาบุคลากรทางการแพทย์ก่อน และไม่ควรหักโหมมากนัก
+                            </li>
+                            <li>
+                                หากท่าน<b>ดื่มสุรา ให้ลดหรือเลิก</b> (สายด่วนเลิกสุรา 1413)
+                                หากไม่ได้ดื่มอยู่แล้ว ไม่แนะนำให้ดื่ม
+                            </li>
+                            <li>
+                                ควรรับการ<b>ตรวจสุขภาพเพื่อประเมินความเสี่ยง</b>ของโรคหัวใจและหลอดเลือด อย่างน้อย ปีละ 1 ครั้ง
+                            </li>
+                            <li>
+                                ผลการประเมินเหล่านี้เป็นการประเมินความเสี่ยงเบื้องต้น
+                                <b>ควรเข้ารับคำปรึกษาและตรวจเพิ่มเติมตามคำแนะนำของแพทย์</b>
+                            </li>
+                        </ul>
+                    </section>
+                    `;
+
+                    // ===== Highlight indicators =====
+                    const sbpValue = parseFloat(sbp);
+                    const sbpSections = [
+                        { name: 'optimal', max: 120 },
+                        { name: 'normal', max: 130 },
+                        { name: 'high-normal', max: 140 },
+                        { name: 'hypertension1', max: 160 },
+                        { name: 'hypertension2', max: 180 },
+                        { name: 'crisis', max: Infinity }
+                    ];
+
+                    function updateSBPIndicator() {
+                        for (const section of sbpSections) {
+                            const sectionElement = document.getElementById(section.name);
+                            if (sectionElement) {
+                                if (sbpValue < section.max) {
+                                    sectionElement.classList.add('sbp-highlighted');
+                                    break;
+                                } else {
+                                    sectionElement.classList.remove('sbp-highlighted');
+                                }
+                            }
+                        }
+                    }
+                    updateSBPIndicator();
+
+                    const tcValue = parseFloat(tc);
+                    const cholesterolSections = [
+                        { name: 'cholesterol-normal', max: 150 },
+                        { name: 'cholesterol-borderline-high', max: 200 },
+                        { name: 'cholesterol-high', max: Infinity }
+                    ];
+
+                    function updateCholesterolIndicator() {
+                        for (const section of cholesterolSections) {
+                            const sectionElement = document.getElementById(section.name);
+                            if (sectionElement) {
+                                if (tcValue < section.max) {
+                                    sectionElement.classList.add('cholesterol-highlighted');
+                                    break;
+                                } else {
+                                    sectionElement.classList.remove('cholesterol-highlighted');
+                                }
+                            }
+                        }
+                    }
+                    updateCholesterolIndicator();
+
+                    // ===== Generate PDF =====
+                    if (typeof makepdf === 'function') {
+                        makepdf();
+                    }
+                </script>
+            </div>
+        </div>
+
+        <!-- ===== Action Buttons ===== -->
+        <div class="action-bar">
+            <button type="button" class="btn btn-action btn-back" onclick="goBack()">
+                <i class="bi bi-arrow-left"></i>
+                ย้อนกลับ
+            </button>
+            <button type="button" class="btn btn-action btn-pdf" id="make-pdf" onclick="makepdf()">
+                <i class="bi bi-file-earmark-pdf"></i>
+                ดาวน์โหลด PDF
+            </button>
+        </div>
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="container my-4">
+        <div class="footer-content">
+            <p>
+                <strong style="color: var(--text-primary);">เกี่ยวกับการประเมินนี้:</strong>
+                ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
+                กล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบในระยะ 10 ปีข้างหน้า
+                สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคหัวใจและหลอดเลือดและโรคเส้นเลือดสมองตีบมาก่อน
+                โดยการประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts
+                สำหรับ Southeast Asia Countries<sup>1</sup>.
+            </p>
+            <p style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border);">
+                <sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular disease
+                charts: revised models to estimate risk in 21 global regions. <em>The Lancet. Global Health</em>,
+                7(10), e1332–e1345.
+                <br>
+                <a href="https://doi.org/10.1016/S2214-109X(19)30318-3"
+                    target="_blank">https://doi.org/10.1016/S2214-109X(19)30318-3</a>
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>
