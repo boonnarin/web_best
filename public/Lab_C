@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="th">
+ 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>การประเมินความเสี่ยงโรคหัวใจและหลอดเลือด (Non-Lab)</title>
+ 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+ 
+    <!-- App styles / libs -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+ 
+    <style>
+        :root {
+            --brand-primary: #0b6bcb;
+            --brand-primary-dark: #084d92;
+            --brand-accent: #e11d48;
+            --brand-accent-soft: #fef2f4;
+            --brand-success: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #dc2626;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --surface-muted: #f1f5f9;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, .04), 0 1px 3px rgba(15, 23, 42, .06);
+            --shadow-md: 0 4px 6px rgba(15, 23, 42, .04), 0 10px 15px rgba(15, 23, 42, .06);
+            --shadow-lg: 0 10px 15px rgba(15, 23, 42, .05), 0 20px 25px rgba(15, 23, 42, .08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+ 
+        * {
+            box-sizing: border-box;
+        }
+ 
+        body {
+            font-family: 'Sarabun', system-ui, sans-serif;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(11, 107, 203, .04) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(225, 29, 72, .03) 0%, transparent 40%),
+                linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            margin: 0;
+            line-height: 1.6;
+        }
+ 
+        /* ===== Container ===== */
+        .container.app-container {
+            max-width: 1040px;
+            margin: 32px auto;
+            background: transparent;
+            padding: 0 16px;
+            box-shadow: none;
+            border-radius: 0;
+        }
+ 
+        /* ===== Page Header (Hero) ===== */
+        .page-hero {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #1e88e5 50%, #0b6bcb 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: 36px 40px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+ 
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, .1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+ 
+        .page-hero::after {
+            content: '\F4F4';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            top: 50%;
+            right: 40px;
+            transform: translateY(-50%);
+            font-size: 140px;
+            color: rgba(255, 255, 255, .08);
+            line-height: 1;
+            pointer-events: none;
+        }
+ 
+        .page-hero .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, .18);
+            border: 1px solid rgba(255, 255, 255, .25);
+            color: white;
+            border-radius: 999px;
+            font-size: .8rem;
+            font-weight: 500;
+            margin-bottom: 14px;
+            backdrop-filter: blur(8px);
+        }
+ 
+        .page-hero h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+            position: relative;
+            z-index: 2;
+        }
+ 
+        .page-hero .subtitle {
+            font-size: .95rem;
+            opacity: .92;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+            max-width: 70%;
+        }
+ 
+        /* ===== Progress Card ===== */
+        .progress-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+ 
+        .progress-card .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+ 
+        .progress-card .progress-label {
+            font-size: .85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+ 
+        .progress-card .progress-percent {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+ 
+        .progress-card .progress {
+            height: 8px;
+            border-radius: 999px;
+            background: var(--surface-muted);
+            overflow: hidden;
+        }
+ 
+        .progress-card .progress-bar {
+            transition: width .4s cubic-bezier(.4, 0, .2, 1);
+            border-radius: 999px;
+        }
+ 
+        /* ===== Section Cards ===== */
+        .section-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow .2s ease;
+        }
+ 
+        .section-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+ 
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 18px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+ 
+        .section-title .icon-wrap {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(11, 107, 203, .1), rgba(11, 107, 203, .04));
+            color: var(--brand-primary);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+ 
+        .section-title.accent .icon-wrap {
+            background: linear-gradient(135deg, rgba(225, 29, 72, .1), rgba(225, 29, 72, .04));
+            color: var(--brand-accent);
+        }
+ 
+        /* ===== Form Layout ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 20px;
+        }
+ 
+        .form-row.cols-1 {
+            grid-template-columns: 1fr;
+        }
+ 
+        .form-group {
+            margin: 0;
+        }
+ 
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: .9rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+ 
+        .form-group label .req {
+            color: var(--brand-accent);
+            font-weight: 700;
+        }
+ 
+        .form-group .hint-icon {
+            color: var(--text-muted);
+            font-size: .85rem;
+            margin-left: 4px;
+            cursor: help;
+        }
+ 
+        /* ===== Inputs ===== */
+        .form-control,
+        .form-select {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: .95rem;
+            font-family: inherit;
+            background: var(--surface);
+            transition: all .2s ease;
+            color: var(--text-primary);
+        }
+ 
+        .form-control:hover:not(:focus):not(:disabled),
+        .form-select:hover:not(:focus):not(:disabled) {
+            border-color: var(--border-strong);
+        }
+ 
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(11, 107, 203, .1);
+            outline: none;
+        }
+ 
+        .form-control::placeholder {
+            color: #94a3b8;
+            font-weight: 300;
+        }
+ 
+        .input-group {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+ 
+        .input-group .form-control {
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        }
+ 
+        .input-group-text {
+            background: var(--surface-muted);
+            border: 1.5px solid var(--border);
+            border-left: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: .85rem;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+ 
+        .input-group:focus-within .input-group-text {
+            border-color: var(--brand-primary);
+        }
+ 
+        .input-readonly {
+            background: linear-gradient(135deg, var(--surface-muted), #fafbfc) !important;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-style: dashed !important;
+        }
+ 
+        .note {
+            font-size: .78rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+ 
+        .invalid-feedback {
+            font-size: .8rem;
+            color: var(--brand-danger);
+            margin-top: 4px;
+        }
+ 
+        /* ===== Switch ===== */
+        .form-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+ 
+        .form-switch .form-check-input {
+            width: 2.5em;
+            height: 1.4em;
+            margin: 0;
+            cursor: pointer;
+            border-color: var(--border-strong);
+        }
+ 
+        .form-switch .form-check-input:checked {
+            background-color: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+ 
+        .form-switch label {
+            margin: 0;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+ 
+        /* ===== Region Toggle Tabs ===== */
+        .region-toggle {
+            display: inline-flex;
+            background: var(--surface-muted);
+            padding: 4px;
+            border-radius: 999px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            gap: 2px;
+        }
+ 
+        .region-tab {
+            background: transparent;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 999px;
+            font-family: inherit;
+            font-size: .9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all .25s cubic-bezier(.4, 0, .2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            position: relative;
+            white-space: nowrap;
+        }
+ 
+        .region-tab:hover:not(.active) {
+            color: var(--text-primary);
+        }
+ 
+        .region-tab.active {
+            background: var(--surface);
+            color: var(--brand-primary);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, .08), 0 1px 2px rgba(15, 23, 42, .04);
+            font-weight: 600;
+        }
+ 
+        .region-tab i {
+            font-size: 1rem;
+        }
+ 
+        @media (max-width: 480px) {
+            .region-toggle {
+                width: 100%;
+                display: flex;
+            }
+ 
+            .region-tab {
+                flex: 1;
+                justify-content: center;
+                padding: 10px 12px;
+                font-size: .85rem;
+            }
+        }
+ 
+        /* ===== Region Preview ===== */
+        .region-preview {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(11, 107, 203, .04), transparent);
+            border-left: 3px solid var(--brand-primary);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-size: .85rem;
+            color: var(--text-secondary);
+        }
+ 
+        .region-preview .preview-val {
+            font-weight: 600;
+            color: var(--brand-primary);
+        }
+ 
+        /* ===== Action Buttons ===== */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+        }
+ 
+        .btn-pill {
+            border-radius: 999px;
+            padding: 10px 24px;
+            font-weight: 600;
+            font-size: .95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-width: 1.5px;
+            transition: all .2s ease;
+        }
+ 
+        .btn-pill:hover {
+            transform: translateY(-1px);
+        }
+ 
+        .btn-outline-secondary {
+            border-color: var(--border-strong);
+            color: var(--text-secondary);
+            background: var(--surface);
+        }
+ 
+        .btn-outline-secondary:hover {
+            background: var(--surface-muted);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+ 
+        .btn-success {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+            border-color: var(--brand-primary-dark);
+            box-shadow: 0 4px 12px rgba(11, 107, 203, .3);
+            padding: 12px 28px;
+        }
+ 
+        .btn-success:hover {
+            background: linear-gradient(135deg, var(--brand-primary-dark), #063968);
+            border-color: #063968;
+            box-shadow: 0 6px 16px rgba(11, 107, 203, .4);
+        }
+ 
+        /* ===== Visit Counter ===== */
+        .visit-counter {
+            text-align: center;
+            margin: 20px 0;
+            padding: 12px 16px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            font-size: .85rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+ 
+        .visit-counter .count {
+            font-weight: 700;
+            color: var(--brand-primary);
+            font-size: 1rem;
+        }
+ 
+        /* ===== Modal ===== */
+        .modal {
+            z-index: 1065 !important;
+        }
+ 
+        .modal-backdrop.show {
+            z-index: 1060 !important;
+            background-color: rgba(15, 23, 42, .6);
+        }
+ 
+        .modal-content {
+            border: none;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 24px 48px rgba(15, 23, 42, .15);
+        }
+ 
+        .modal-header {
+            border-bottom: 1px solid var(--border);
+            padding: 18px 24px;
+        }
+ 
+        .modal-title {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+ 
+        .modal-body {
+            padding: 22px 24px;
+            color: var(--text-secondary);
+        }
+ 
+        .modal-footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 24px;
+        }
+ 
+        #saveConfirmModal .btn {
+            pointer-events: auto !important;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+ 
+        #progressModal .modal-content {
+            padding: 36px 24px;
+        }
+ 
+        #progressModal .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--brand-primary);
+            border-width: .3em;
+        }
+ 
+        #progressModal h5 {
+            margin: 16px 0 4px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+ 
+        /* ===== Footer ===== */
+        .footer-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-top: 28px;
+            box-shadow: var(--shadow-sm);
+        }
+ 
+        .footer-card .footer-content {
+            font-size: .82rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+ 
+        .footer-card p {
+            margin-bottom: 10px;
+        }
+ 
+        .footer-card a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            word-break: break-all;
+        }
+ 
+        .footer-card a:hover {
+            text-decoration: underline;
+        }
+ 
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .page-hero {
+                padding: 24px 22px;
+            }
+ 
+            .page-hero h1 {
+                font-size: 1.4rem;
+            }
+ 
+            .page-hero .subtitle {
+                max-width: 100%;
+                font-size: .88rem;
+            }
+ 
+            .page-hero::after {
+                display: none;
+            }
+ 
+            .section-card {
+                padding: 20px;
+            }
+ 
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+ 
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+ 
+            .form-actions .btn-pill {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+ 
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+ 
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+ 
+        .section-card {
+            animation: fadeInUp .5s ease both;
+        }
+ 
+        .section-card:nth-child(2) {
+            animation-delay: .05s;
+        }
+ 
+        .section-card:nth-child(3) {
+            animation-delay: .1s;
+        }
+    </style>
+</head>
+ 
+<body>
+    <!-- ===== Header ===== -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="/images/logo.png" alt="Logo">
+            <img src="/images/Logo_su.png" alt="Logo_su" style="width: 60px; height: auto;">
+            <div class="header-text">
+                <div class="header-title">Web Application Enhancing Cardiovascular Disease Risk Assessment</div>
+                <div class="header-subtitle">by Phramongkutklao College of Medicine &amp; Silpakorn University</div>
+            </div>
+        </div>
+        <div class="right-buttons">
+            <div class="dropdown">
+                <div class="dropdown-content">
+                    <a href="/">หน้าหลัก</a>
+                    <a href="/about">About Me</a>
+                </div>
+                <button>&#8942;</button>
+            </div>
+            <a href="/login.html" class="login-button" id="loginbutton">Sign In</a>
+        </div>
+    </header>
+ 
+    <div class="container app-container">
+        <form id="theForm" novalidate>
+ 
+            <!-- ===== Hero Section ===== -->
+            <div class="page-hero">
+                <span class="badge-tag">
+                    <i class="bi bi-shield-check"></i>
+                    Non-Laboratory Based Assessment
+                </span>
+                <h1>การประเมินความเสี่ยงโรคหัวใจและหลอดเลือด</h1>
+                <p class="subtitle">
+                    Non-laboratory-based predicted 10-year CVD Risk
+                    <br>
+                    <small style="opacity: .85;">The 2019 WHO CVD Risk Charts — Southeast Asia</small>
+                </p>
+            </div>
+ 
+            <!-- ===== Progress Card ===== -->
+            <div class="progress-card" id="form-completeness">
+                <div class="progress-header">
+                    <span class="progress-label">
+                        <i class="bi bi-clipboard-check"></i>
+                        ความคืบหน้าการกรอกฟอร์ม
+                    </span>
+                    <span class="progress-percent" id="progressLabel">0%</span>
+                </div>
+                <div class="progress">
+                    <div id="formProgress" class="progress-bar bg-danger" role="progressbar" style="width:0%;"
+                        aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+                </div>
+            </div>
+ 
+            <!-- ===== Personal Information ===== -->
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="icon-wrap"><i class="bi bi-person-vcard"></i></span>
+                    ข้อมูลส่วนบุคคล
+                </h3>
+ 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">ชื่อ <span class="text-muted small">(Name)</span></label>
+                        <input type="text" id="name" class="form-control"
+                            placeholder="ไม่จำเป็นต้องกรอก (optional)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">นามสกุล <span class="text-muted small">(Surname)</span></label>
+                        <input type="text" id="lastname" class="form-control"
+                            placeholder="ไม่จำเป็นต้องกรอก (optional)" />
+                    </div>
+                </div>
+ 
+                <div class="form-row" style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label for="cvsex">
+                            เพศ <span class="text-muted small">(Sex)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <select id="cvsex" class="form-select" required>
+                            <option value="">— ระบุเพศ —</option>
+                            <option value="1">ชาย (Male)</option>
+                            <option value="0">หญิง (Female)</option>
+                        </select>
+                        <div class="invalid-feedback">โปรดระบุเพศ</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">
+                            อายุ <span class="text-muted small">(Age)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" id="age" min="39" class="form-control" placeholder="เช่น 45"
+                                required />
+                            <span class="input-group-text">ปี</span>
+                        </div>
+                        <div class="invalid-feedback">อายุต้องไม่น้อยกว่า 39 ปี</div>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- ===== Health Indicators ===== -->
+            <div class="section-card">
+                <h3 class="section-title accent">
+                    <span class="icon-wrap"><i class="bi bi-heart-pulse"></i></span>
+                    ตัวชี้วัดสุขภาพ
+                </h3>
+ 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sbp1">
+                            ความดันค่าบน ครั้งที่ 1 <span class="text-muted small">(1st SBP)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" id="sbp1" class="form-control" placeholder="เช่น 140" required />
+                            <span class="input-group-text">mmHg</span>
+                        </div>
+                        <div class="invalid-feedback">กรอก SBP ครั้งที่ 1</div>
+                    </div>
+ 
+                    <div class="form-group">
+                        <label for="sbp2">
+                            ความดันค่าบน ครั้งที่ 2 <span class="text-muted small">(2nd SBP)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" id="sbp2" class="form-control" placeholder="เช่น 138" required />
+                            <span class="input-group-text">mmHg</span>
+                        </div>
+                        <div class="invalid-feedback">กรอก SBP ครั้งที่ 2</div>
+                    </div>
+                </div>
+ 
+                <div class="form-row" style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label for="cvsmk">
+                            ปัจจุบันสูบบุหรี่ <span class="text-muted small">(Current smoking)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <select id="cvsmk" class="form-select" required>
+                            <option value="">— โปรดระบุ —</option>
+                            <option value="1">สูบ (Yes)</option>
+                            <option value="0">ไม่สูบ (No)</option>
+                        </select>
+                        <div class="invalid-feedback">โปรดระบุสถานะการสูบบุหรี่</div>
+                    </div>
+ 
+                    <div class="form-group">
+                        <label for="sbpAvg">
+                            <i class="bi bi-calculator"></i>
+                            ค่าเฉลี่ย SBP
+                        </label>
+                        <input type="text" id="sbpAvg" class="form-control input-readonly" value="-" readonly />
+                        <div class="note">
+                            <i class="bi bi-info-circle"></i>
+                            ระบบจะคำนวณเมื่อกรอกครบทั้งสองค่า
+                        </div>
+                    </div>
+                </div>
+ 
+                <div class="form-row" style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label for="weight">
+                            น้ำหนัก <span class="text-muted small">(Weight)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" id="weight" name="weight" min="1" class="form-control"
+                                placeholder="เช่น 65" required />
+                            <span class="input-group-text">kg</span>
+                        </div>
+                        <div class="invalid-feedback">โปรดกรอกน้ำหนัก</div>
+                    </div>
+ 
+                    <div class="form-group">
+                        <label for="height_cm">
+                            ส่วนสูง <span class="text-muted small">(Height)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" id="height_cm" name="height_cm" min="1" class="form-control"
+                                placeholder="เช่น 170" required />
+                            <span class="input-group-text">cm</span>
+                        </div>
+                        <div class="invalid-feedback">โปรดกรอกส่วนสูง</div>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- ===== Location ===== -->
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="icon-wrap"><i class="bi bi-geo-alt"></i></span>
+                    ที่อยู่ปัจจุบัน
+                </h3>
+ 
+                <!-- Tab toggle: จังหวัด / Country -->
+                <div class="region-toggle" role="tablist" aria-label="เลือกประเภทที่อยู่">
+                    <button type="button" class="region-tab active" id="tabProvince" role="tab" aria-selected="true">
+                        <i class="bi bi-flag-fill"></i>
+                        จังหวัด (ไทย)
+                    </button>
+                    <button type="button" class="region-tab" id="tabCountry" role="tab" aria-selected="false">
+                        <i class="bi bi-globe2"></i>
+                        Country (ต่างประเทศ)
+                    </button>
+                </div>
+ 
+                <!-- hidden checkbox สำหรับ logic เดิม -->
+                <input type="checkbox" id="modeSwitcher" style="display:none;" />
+ 
+                <!-- จังหวัด (ไทย) — default แสดง -->
+                <div class="form-group" id="province-group">
+                    <label for="provinceTH">
+                        จังหวัดที่อยู่ <span class="text-muted small">(Province)</span>
+                        <span class="req">*</span>
+                    </label>
+                    <select id="provinceTH" class="form-select" required>
+                        <option value="">— กรุณาเลือกจังหวัด —</option>
+                    </select>
+                    <div class="invalid-feedback">โปรดเลือกจังหวัด</div>
+                </div>
+ 
+                <!-- ประเทศ (ต่างประเทศ) — ซ่อนไว้ -->
+                <div class="form-group" id="country-group" style="display:none;">
+                    <label for="country">
+                        Country
+                        <span class="req">*</span>
+                    </label>
+                    <select id="country" class="form-select">
+                        <option value="">— กรุณาเลือกประเทศ —</option>
+                    </select>
+                    <div class="invalid-feedback">โปรดเลือกประเทศ</div>
+                </div>
+ 
+                <!-- field เดียวที่ส่งเสมอ -->
+                <input type="hidden" id="province" name="province" value="" />
+                <div class="region-preview">
+                    <i class="bi bi-bookmark-check"></i>
+                    บันทึกลงฟิลด์ <code style="background: rgba(11,107,203,.08); padding: 1px 6px; border-radius: 4px; color: var(--brand-primary);">province</code>:
+                    <span class="preview-val" id="regionPreviewVal">-</span>
+                </div>
+            </div>
+ 
+            <!-- ===== Action Buttons ===== -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline-secondary btn-pill" id="btnClear">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                    ล้างฟอร์ม
+                </button>
+                <button type="button" class="btn btn-success btn-pill" id="btnShowRisk" onclick="nonlab()">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    แสดงผลการประเมินความเสี่ยง
+                </button>
+            </div>
+ 
+            <!-- ===== Visit Counter ===== -->
+            <div class="visit-counter">
+                <i class="bi bi-people"></i>
+                จำนวนผู้เข้าใช้งาน:
+                <span class="count" id="visit-counter">กำลังโหลด...</span>
+                ครั้ง
+            </div>
+ 
+            <div id="result" class="mt-3" aria-live="polite"></div>
+ 
+            <script>
+                // นับผู้เข้าใช้งาน
+                fetch('/visit?page=form_lab')
+                    .then(res => res.json())
+                    .then(data => { document.getElementById('visit-counter').textContent = data.totalVisits.toLocaleString(); })
+                    .catch(() => { document.getElementById('visit-counter').textContent = 'เกิดข้อผิดพลาด'; });
+            </script>
+        </form>
+    </div>
+ 
+    <!-- Modal: ยืนยันก่อนแสดงผล -->
+    <div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveConfirmLabel">
+                        <i class="bi bi-database-check me-2" style="color: var(--brand-primary);"></i>
+                        บันทึกข้อมูลก่อนหรือไม่?
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+                </div>
+                <div class="modal-body">
+                    ต้องการบันทึกข้อมูลที่กรอกไว้ลงระบบก่อนแสดงผลการประเมินหรือไม่
+                    <div id="saveErrorBox" class="alert alert-danger d-none mt-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span id="saveErrorText"></span>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center flex-nowrap gap-2">
+                    <button id="skipSave" type="button" class="btn btn-outline-secondary text-nowrap"
+                        data-bs-dismiss="modal">
+                        ไม่บันทึก แสดงผลทันที
+                    </button>
+                    <button id="confirmSaveFirst" type="button" class="btn btn-success text-nowrap">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" id="saveSpinner" role="status"
+                            aria-hidden="true"></span>
+                        บันทึกก่อน แล้วแสดงผล
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Modal: สถานะ -->
+    <div class="modal fade" id="progressModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+        data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div id="progressSpinner" class="mb-3">
+                    <div class="spinner-border" role="status" aria-hidden="true"></div>
+                </div>
+                <h5 id="progressTitle" class="mb-1">กำลังดำเนินการ...</h5>
+                <div id="progressText" class="text-muted">โปรดรอสักครู่</div>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- ===== Footer ===== -->
+    <div class="container app-container" style="padding-top: 0;">
+        <div class="footer-card">
+            <div class="footer-content">
+                <p>
+                    <strong style="color: var(--text-primary);">เกี่ยวกับการประเมินนี้:</strong>
+                    ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือด เช่น
+                    กล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบในระยะ 10 ปีข้างหน้า
+                    สำหรับผู้ที่ไม่เคยมีประวัติการป่วยด้วยโรคกล้ามเนื้อหัวใจขาดเลือดและโรคเส้นเลือดสมองตีบมาก่อน
+                    โดยการประเมินความเสี่ยงใช้ 2019 World Health Organization cardiovascular disease risk charts
+                    สำหรับ Southeast Asia Countries<sup>1</sup>.
+                </p>
+                <p style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border);">
+                    <sup>1</sup> WHO CVD Risk Chart Working Group (2019). World Health Organization cardiovascular
+                    disease charts: revised models to estimate risk in 21 global regions. <em>The Lancet. Global
+                        Health</em>, 7(10), e1332–e1345.
+                    <br>
+                    <a href="https://doi.org/10.1016/S2214-109X(19)30318-3"
+                        target="_blank">https://doi.org/10.1016/S2214-109X(19)30318-3</a>
+                </p>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- ===== Scripts ===== -->
+    <script src="js/script_nonlab_n.js"></script>
+    <script>
+        // ====== คำนวณ SBP เฉลี่ย ======
+        (function () {
+            const s1 = document.getElementById('sbp1'),
+                s2 = document.getElementById('sbp2'),
+                avg = document.getElementById('sbpAvg');
+ 
+            function up() {
+                const a = Number(s1.value), b = Number(s2.value);
+                avg.value = (isFinite(a) && isFinite(b) && a > 0 && b > 0)
+                    ? (((a + b) / 2).toFixed(1) + ' mmHg')
+                    : '-';
+            }
+            s1.addEventListener('input', up);
+            s2.addEventListener('input', up);
+            up();
+        })();
+ 
+        // ====== Tab toggle จังหวัด/Country ======
+        (function () {
+            const tabP = document.getElementById('tabProvince'),
+                tabC = document.getElementById('tabCountry'),
+                sw = document.getElementById('modeSwitcher'),
+                pWrap = document.getElementById('province-group'),
+                cWrap = document.getElementById('country-group');
+            const pTH = document.getElementById('provinceTH'),
+                ctry = document.getElementById('country'),
+                hidden = document.getElementById('province'),
+                preview = document.getElementById('regionPreviewVal');
+ 
+            function apply() {
+                const useC = sw.checked;
+                cWrap.style.display = useC ? '' : 'none';
+                pWrap.style.display = useC ? 'none' : '';
+                ctry.required = useC;
+                pTH.required = !useC;
+ 
+                // อัปเดต UI ของ tab
+                tabP.classList.toggle('active', !useC);
+                tabC.classList.toggle('active', useC);
+                tabP.setAttribute('aria-selected', String(!useC));
+                tabC.setAttribute('aria-selected', String(useC));
+ 
+                sync();
+            }
+            function sync() {
+                hidden.value = sw.checked ? (ctry.value || '') : (pTH.value || '');
+                preview.textContent = hidden.value || '-';
+            }
+ 
+            // คลิก tab จังหวัด
+            tabP.addEventListener('click', () => {
+                if (sw.checked) {
+                    sw.checked = false;
+                    apply();
+                    if (window.refreshFormProgress) window.refreshFormProgress();
+                }
+            });
+ 
+            // คลิก tab Country
+            tabC.addEventListener('click', () => {
+                if (!sw.checked) {
+                    sw.checked = true;
+                    apply();
+                    if (window.refreshFormProgress) window.refreshFormProgress();
+                }
+            });
+ 
+            ctry.addEventListener('change', sync);
+            pTH.addEventListener('change', sync);
+ 
+            // เริ่มต้นที่โหมดจังหวัด
+            sw.checked = false;
+            apply();
+ 
+            // โหลดจังหวัด
+            fetch('/api/provinces').then(r => r.json()).then(list => {
+                pTH.innerHTML = '<option value="">— กรุณาเลือกจังหวัด —</option>';
+                list.forEach(p => {
+                    const o = document.createElement('option');
+                    o.value = p.ProvinceName;
+                    o.textContent = p.ProvinceName;
+                    pTH.appendChild(o);
+                });
+            }).catch(() => { pTH.innerHTML = '<option value="">โหลดจังหวัดไม่สำเร็จ</option>'; });
+ 
+            // โหลดประเทศ
+            fetch('/api/country').then(r => r.json()).then(list => {
+                ctry.innerHTML = '<option value="">— กรุณาเลือกประเทศ —</option>';
+                list.forEach(c => {
+                    const o = document.createElement('option');
+                    o.value = c.countryName;
+                    o.textContent = `${c.countryName} (${c.alpha2_code})`;
+                    ctry.appendChild(o);
+                });
+            }).catch(() => { ctry.innerHTML = '<option value="">โหลดประเทศไม่สำเร็จ</option>'; });
+ 
+            // ฟังก์ชันล้างฟอร์ม
+            window.__clearForm = function () {
+                document.getElementById('theForm').reset();
+                // กลับไปโหมดจังหวัด (default)
+                sw.checked = false;
+                ctry.value = '';
+                pTH.value = '';
+                hidden.value = '';
+                preview.textContent = '-';
+                apply();
+                document.getElementById('sbpAvg').value = '-';
+                const form = document.getElementById('theForm');
+                form.classList.remove('was-validated');
+                form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                if (window.refreshFormProgress) window.refreshFormProgress();
+            };
+        })();
+ 
+        // ผูกปุ่มล้างฟอร์ม
+        document.getElementById('btnClear').addEventListener('click', function () {
+            if (window.__clearForm) window.__clearForm();
+        });
+ 
+        // ====== รวมข้อมูล + บันทึก ======
+        function collectFormDataOrThrow() {
+            const s1 = Number($('#sbp1').val());
+            const s2 = Number($('#sbp2').val());
+            if (!Number.isFinite(s1) || !Number.isFinite(s2)) {
+                throw new Error('โปรดกรอกค่าความดันโลหิตทั้งสองครั้ง');
+            }
+            const sbptotal = Math.round(((s1 + s2) / 2) * 10) / 10;
+ 
+            const region = $('#province').val();
+            if (!region) {
+                throw new Error('โปรดระบุ จังหวัด (โหมดไทย) หรือ ประเทศ (โหมดต่างประเทศ)');
+            }
+ 
+            return {
+                sex: $('#cvsex').val(),
+                age: $('#age').val(),
+                smoking_status: $('#cvsmk').val(),
+                weight: $('#weight').val(),
+                height: $('#height_cm').val(),
+                sbp1: s1,
+                sbp2: s2,
+                sbptotal: sbptotal,
+                province: region
+            };
+        }
+ 
+        function saveFormDataAsync() {
+            return new Promise((resolve, reject) => {
+                let data;
+                try { data = collectFormDataOrThrow(); }
+                catch (e) { return reject(e); }
+ 
+                $.ajax({
+                    url: '/api/save-formnonlab',
+                    method: 'POST',
+                    data,
+                    success: res => resolve(res),
+                    error: () => reject(new Error('บันทึกข้อมูลไม่สำเร็จ กรุณาลองอีกครั้ง'))
+                });
+            });
+        }
+ 
+        // ====== Hook nonlab ======
+        (function hookOriginalGenerate() {
+            const TARGET_FN_NAME = 'nonlab';
+            const SAVE_MODAL = new bootstrap.Modal(document.getElementById('saveConfirmModal'));
+            const PROG_MODAL = new bootstrap.Modal(document.getElementById('progressModal'),
+                { backdrop: 'static', keyboard: false });
+            const progressTitle = document.getElementById('progressTitle');
+            const progressText = document.getElementById('progressText');
+            const progressSpinner = document.getElementById('progressSpinner');
+            const $errBox = $('#saveErrorBox'),
+                $errText = $('#saveErrorText'),
+                $saveBtn = $('#confirmSaveFirst'),
+                $skipBtn = $('#skipSave'),
+                $saveSpin = $('#saveSpinner');
+            const delay = ms => new Promise(r => setTimeout(r, ms));
+ 
+            function showConfirm() {
+                $errBox.addClass('d-none'); $errText.text('');
+                $saveSpin.addClass('d-none');
+                $saveBtn.prop('disabled', false);
+                $skipBtn.prop('disabled', false);
+                SAVE_MODAL.show();
+            }
+            function showProgress(title, text, spinning = true) {
+                progressTitle.textContent = title;
+                progressText.textContent = text || 'โปรดรอสักครู่';
+                spinning
+                    ? progressSpinner.classList.remove('d-none')
+                    : progressSpinner.classList.add('d-none');
+                PROG_MODAL.show();
+            }
+ 
+            let tries = 0;
+            (function waitForOriginal() {
+                if (typeof window[TARGET_FN_NAME] === 'function' && !window.__originalGenerate) {
+                    window.__originalGenerate = window[TARGET_FN_NAME].bind(window);
+ 
+                    window[TARGET_FN_NAME] = function () {
+                        const form = document.getElementById('theForm');
+                        if (!form.checkValidity()) {
+                            form.classList.add('was-validated');
+                            form.querySelector(':invalid')?.focus();
+                            return;
+                        }
+                        showConfirm();
+                    };
+ 
+                    $saveBtn.on('click', async function () {
+                        $errBox.addClass('d-none'); $errText.text('');
+                        $saveSpin.removeClass('d-none');
+                        $saveBtn.prop('disabled', true);
+                        $skipBtn.prop('disabled', true);
+ 
+                        let p;
+                        try { p = saveFormDataAsync(); }
+                        catch (e) {
+                            $saveSpin.addClass('d-none');
+                            $saveBtn.prop('disabled', false);
+                            $skipBtn.prop('disabled', false);
+                            $errText.text(e.message || 'บันทึกข้อมูลไม่สำเร็จ');
+                            $errBox.removeClass('d-none');
+                            return;
+                        }
+ 
+                        SAVE_MODAL.hide();
+                        showProgress('กำลังบันทึกข้อมูล...', 'โปรดรอประมาณ 3 วินาที', true);
+ 
+                        try {
+                            await Promise.all([p, delay(3000)]);
+                            progressSpinner.classList.add('d-none');
+                            progressTitle.textContent = 'บันทึกสำเร็จ';
+                            progressText.textContent = '';
+                            await delay(1000);
+                            PROG_MODAL.hide();
+                            window.__originalGenerate();
+                        } catch (e) {
+                            PROG_MODAL.hide();
+                            $errText.text(e && e.message ? e.message : 'บันทึกข้อมูลไม่สำเร็จ');
+                            $errBox.removeClass('d-none');
+                            SAVE_MODAL.show();
+                        } finally {
+                            $saveSpin.addClass('d-none');
+                            $saveBtn.prop('disabled', false);
+                            $skipBtn.prop('disabled', false);
+                        }
+                    });
+ 
+                    $skipBtn.on('click', async function () {
+                        SAVE_MODAL.hide();
+                        showProgress('กำลังประมวลผล...', 'โปรดรอประมาณ 3 วินาที', true);
+                        await delay(3000);
+                        PROG_MODAL.hide();
+                        window.__originalGenerate();
+                    });
+ 
+                } else if (tries < 50) {
+                    tries++;
+                    setTimeout(waitForOriginal, 100);
+                } else {
+                    console.warn('ไม่พบ window.nonlab — โปรดประกาศใน js/script_nonlab_n.js');
+                }
+            })();
+        })();
+ 
+        // โฟกัสปุ่มในโมดัล
+        document.addEventListener('shown.bs.modal', function (e) {
+            if (e.target.id === 'saveConfirmModal') {
+                document.getElementById('confirmSaveFirst')?.focus();
+            }
+        });
+    </script>
+ 
+    <script>
+        // ===== Progress tracker =====
+        const REQUIRED_IDS = ['cvsex', 'age', 'cvsmk', 'sbp1', 'sbp2', 'weight', 'height_cm', 'province'];
+ 
+        function getFieldValue(id) {
+            const el = document.getElementById(id);
+            if (!el) return '';
+            return (el.value ?? '').toString().trim();
+        }
+ 
+        function updateFormProgress() {
+            const total = REQUIRED_IDS.length;
+            let filled = 0;
+ 
+            for (const id of REQUIRED_IDS) {
+                const val = getFieldValue(id);
+                if (val !== '') filled++;
+            }
+ 
+            const pct = Math.round((filled / total) * 100);
+            const bar = document.getElementById('formProgress');
+            const lbl = document.getElementById('progressLabel');
+ 
+            if (!bar || !lbl) return;
+ 
+            bar.style.width = pct + '%';
+            bar.setAttribute('aria-valuenow', String(pct));
+            lbl.textContent = pct + '%';
+ 
+            bar.classList.remove('bg-danger', 'bg-warning', 'bg-success');
+            if (pct < 40) bar.classList.add('bg-danger');
+            else if (pct < 80) bar.classList.add('bg-warning');
+            else bar.classList.add('bg-success');
+        }
+ 
+        function bindProgressListeners() {
+            const ids = [...REQUIRED_IDS, 'country', 'provinceTH', 'modeSwitcher'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const ev = (el.tagName === 'SELECT' || el.type === 'checkbox') ? 'change' : 'input';
+                el.addEventListener(ev, updateFormProgress);
+            });
+        }
+ 
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                bindProgressListeners();
+                updateFormProgress();
+            });
+        } else {
+            bindProgressListeners();
+            updateFormProgress();
+        }
+ 
+        window.refreshFormProgress = updateFormProgress;
+    </script>
+</body>
+ 
+</html>
