@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>การประเมินความเสี่ยงโรคหัวใจและหลอดเลือด (Non-Lab)</title>
+    <title>การประเมินความเสี่ยงโรคหัวใจและหลอดเลือด (Lab)</title>
  
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -782,7 +782,34 @@
                     <span class="icon-wrap"><i class="bi bi-heart-pulse"></i></span>
                     ตัวชี้วัดสุขภาพ
                 </h3>
+
+               <div class="form-row">
+                    <div class="form-group">
+                        <label for="sbp1">
+                            คลอเลสเตอรอลรวม <span class="text-muted small">(Total cholesterol)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" id="tc" class="form-control" placeholder="เช่น 190" required />
+                            <span class="input-group-text">mg/dL</span>
+                        </div>
+                        <div class="invalid-feedback">กรอกค่า Total cholesterol</div>
+                    </div>
  
+                    <div class="form-group">
+                        <label for="cvdm">
+                            โรคเบาหวาน <span class="text-muted small">(Diabetes)</span>
+                            <span class="req">*</span>
+                        </label>
+                        <select id="cvdm" class="form-select" required>
+                            <option value="">— โปรดระบุ —</option>
+                            <option value="1">เป็น (Yes)</option>
+                            <option value="0">ไม่เป็น (No)</option>
+                        </select>
+                        <div class="invalid-feedback">โปรดระบุเพศ</div>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="sbp1">
@@ -836,33 +863,7 @@
                     </div>
                 </div>
  
-                <div class="form-row" style="margin-top: 16px;">
-                    <div class="form-group">
-                        <label for="weight">
-                            น้ำหนัก <span class="text-muted small">(Weight)</span>
-                            <span class="req">*</span>
-                        </label>
-                        <div class="input-group">
-                            <input type="number" id="weight" name="weight" min="1" class="form-control"
-                                placeholder="เช่น 65" required />
-                            <span class="input-group-text">kg</span>
-                        </div>
-                        <div class="invalid-feedback">โปรดกรอกน้ำหนัก</div>
-                    </div>
- 
-                    <div class="form-group">
-                        <label for="height_cm">
-                            ส่วนสูง <span class="text-muted small">(Height)</span>
-                            <span class="req">*</span>
-                        </label>
-                        <div class="input-group">
-                            <input type="number" id="height_cm" name="height_cm" min="1" class="form-control"
-                                placeholder="เช่น 170" required />
-                            <span class="input-group-text">cm</span>
-                        </div>
-                        <div class="invalid-feedback">โปรดกรอกส่วนสูง</div>
-                    </div>
-                </div>
+                
             </div>
  
             <!-- ===== Location ===== -->
