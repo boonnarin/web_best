@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVD Hero Section</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+:root {
+    --brand: #0b6bcb;
+    --brand-dark: #0a5aa8;
+    --brand-light: #3b8ad9;
+    --accent: #10b981;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+    --ink: #0f172a;
+    --ink-soft: #1e293b;
+    --muted: #64748b;
+    --paper: #f8fafc;
+    --gold: #fbbf24;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   HERO V1 — Glassmorphism + Floating Stats
+   ============================================ */
+.hero-v1 {
+    position: relative;
+    background: linear-gradient(135deg, #0a5aa8 0%, #0b6bcb 45%, #1e88e5 100%);
+    color: white;
+    padding: 80px 32px 100px;
+    overflow: hidden;
+    border-radius: 0 0 32px 32px;
+    margin-bottom: 60px;
+}
+.hero-v1::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(251,191,36,.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+.hero-v1::after {
+    content: '';
+    position: absolute;
+    top: 50%; right: -120px;
+    transform: translateY(-50%);
+    width: 500px; height: 500px;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Ccircle cx='250' cy='250' r='200' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.1'/%3E%3Ccircle cx='250' cy='250' r='150' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.15'/%3E%3Ccircle cx='250' cy='250' r='100' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.2'/%3E%3Cpath d='M50 250 Q 80 200, 110 250 T 170 250 T 230 250 T 290 250 T 350 250 T 410 250 T 470 250' fill='none' stroke='%23fbbf24' stroke-width='2' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: .5;
+    pointer-events: none;
+}
+.hero-v1-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+.hero-v1-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 28px;
+    letter-spacing: .02em;
+    box-shadow: 0 4px 16px rgba(0,0,0,.08);
+}
+.hero-v1-badge .badge-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(251,191,36,.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .7; transform: scale(1.2); }
+}
+.hero-v1 h1 {
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    max-width: 780px;
+}
+.hero-v1 h1 .accent {
+    color: var(--gold);
+    position: relative;
+    display: inline-block;
+}
+.hero-v1 h1 .accent::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 2px;
+    height: 4px;
+    background: rgba(251,191,36,.3);
+    border-radius: 2px;
+    z-index: -1;
+}
+.hero-v1-subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,.9);
+    max-width: 640px;
+    margin-bottom: 8px;
+    font-weight: 400;
+    line-height: 1.55;
+}
+.hero-v1-reference {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,.7);
+    margin-top: 8px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,.08);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+}
+.hero-v1-reference i { font-size: 14px; color: var(--gold); }
+.hero-v1-meta {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,.15);
+}
+.hero-v1-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.hero-v1-meta-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 20px;
+    backdrop-filter: blur(8px);
+}
+.hero-v1-meta-text .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: rgba(255,255,255,.65);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.hero-v1-meta-text .value {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+}
+
+/* ============================================
+   HERO V2 — Split with Heart Visual
+   ============================================ */
+.hero-v2 {
+    background: white;
+    padding: 60px 32px 70px;
+    border-radius: 24px;
+    margin: 0 32px 60px;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 24px rgba(11,107,203,.06);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(11,107,203,.08);
+}
+.hero-v2::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
+    background: linear-gradient(180deg, var(--brand) 0%, var(--accent) 100%);
+}
+.hero-v2-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+.hero-v2-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(11,107,203,.08), rgba(16,185,129,.08));
+    border: 1px solid rgba(11,107,203,.15);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--brand);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+.hero-v2-badge i {
+    font-size: 14px;
+    color: var(--accent);
+}
+.hero-v2 h1 {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 16px;
+}
+.hero-v2 h1 .gradient-text {
+    background: linear-gradient(90deg, var(--brand) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.hero-v2-subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.6;
+    max-width: 540px;
+}
+.hero-v2-reference {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 8px 14px;
+    background: var(--paper);
+    border-radius: 8px;
+    font-weight: 500;
+}
+.hero-v2-reference strong {
+    color: var(--brand);
+    font-weight: 700;
+}
+.hero-v2-visual {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 320px;
+    margin-left: auto;
+}
+.hero-v2-visual-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(11,107,203,.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero-v2-heart {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 140px;
+    color: var(--brand);
+    animation: heartbeat 2s ease-in-out infinite;
+}
+@keyframes heartbeat {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    14% { transform: translate(-50%, -50%) scale(1.08); }
+    28% { transform: translate(-50%, -50%) scale(1); }
+    42% { transform: translate(-50%, -50%) scale(1.08); }
+    70% { transform: translate(-50%, -50%) scale(1); }
+}
+.hero-v2-orbit {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 100%; height: 100%;
+    transform: translate(-50%, -50%);
+    border: 1px dashed rgba(11,107,203,.2);
+    border-radius: 50%;
+    animation: rotate 20s linear infinite;
+}
+.hero-v2-orbit-2 {
+    width: 75%; height: 75%;
+    border-color: rgba(16,185,129,.2);
+    animation-direction: reverse;
+    animation-duration: 15s;
+}
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.hero-v2-orbit-icon {
+    position: absolute;
+    width: 40px; height: 40px;
+    background: white;
+    border: 2px solid var(--brand);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand);
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(11,107,203,.2);
+}
+.hero-v2-orbit-icon-1 { top: -20px; left: 50%; transform: translateX(-50%); }
+.hero-v2-orbit-icon-2 { bottom: 10%; left: -20px; }
+.hero-v2-orbit-icon-3 { bottom: 10%; right: -20px; color: var(--accent); border-color: var(--accent); }
+
+/* ============================================
+   HERO V3 — Medical Card Style (แนะนำสำหรับ medical app)
+   ============================================ */
+.hero-v3 {
+    background: linear-gradient(135deg, #0b6bcb 0%, #0a5aa8 100%);
+    color: white;
+    padding: 56px 40px 64px;
+    border-radius: 24px;
+    margin: 24px 24px 48px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 50px -10px rgba(11,107,203,.35);
+}
+.hero-v3::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 600px; height: 600px;
+    background:
+        radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+.hero-v3::after {
+    content: '';
+    position: absolute;
+    top: 30px; right: 40px;
+    width: 240px; height: 240px;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Cpath d='M120 60 C 90 30, 40 50, 40 100 C 40 140, 80 180, 120 200 C 160 180, 200 140, 200 100 C 200 50, 150 30, 120 60 Z' fill='%23ffffff' opacity='0.05'/%3E%3Cpath d='M30 130 L70 130 L80 100 L95 145 L110 90 L125 145 L140 130 L210 130' fill='none' stroke='%23fbbf24' stroke-width='2' opacity='0.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+.hero-v3-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+}
+.hero-v3-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+}
+.hero-v3-eyebrow .dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(251,191,36,.3);
+}
+.hero-v3 h1 {
+    font-size: clamp(1.8rem, 3.8vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+}
+.hero-v3-subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,.88);
+    margin-bottom: 8px;
+    line-height: 1.55;
+    font-weight: 400;
+    max-width: 580px;
+}
+.hero-v3-source {
+    font-size: 13px;
+    color: rgba(255,255,255,.7);
+    font-style: italic;
+    padding-left: 12px;
+    border-left: 2px solid var(--gold);
+    margin-top: 12px;
+    display: inline-block;
+}
+
+.hero-v3-features {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,.15);
+}
+.hero-v3-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.hero-v3-feature i {
+    width: 36px; height: 36px;
+    background: rgba(251,191,36,.2);
+    border: 1px solid rgba(251,191,36,.35);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 16px;
+    flex-shrink: 0;
+}
+.hero-v3-feature span {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,.95);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .hero-v1, .hero-v2, .hero-v3 { padding: 48px 20px 56px; margin: 16px 12px 32px; }
+    .hero-v2-inner { grid-template-columns: 1fr; gap: 32px; }
+    .hero-v2-visual { max-width: 220px; margin: 0 auto; }
+    .hero-v2-heart { font-size: 100px; }
+    .hero-v1-meta { gap: 16px; }
+    .hero-v1-meta-item { flex: 1 1 calc(50% - 8px); }
+    .hero-v3-features { gap: 16px; }
+    .hero-v3-feature { flex: 1 1 calc(50% - 8px); }
+    .hero-v3::after { width: 160px; height: 160px; opacity: .5; }
+}
+
+/* Spacing demo */
+.demo-wrap { padding-top: 24px; }
+.demo-label {
+    max-width: 1200px;
+    margin: 0 auto 12px;
+    padding: 0 32px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--muted);
+}
+.demo-label span {
+    color: var(--brand);
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="demo-wrap">
+
+    <!-- ===== VERSION 1: Glassmorphism + Meta ===== -->
+    <div class="demo-label">Version 1 — <span>Glassmorphism + Meta Info</span></div>
+    <section class="hero-v1">
+        <div class="hero-v1-inner">
+            <span class="hero-v1-badge">
+                <span class="badge-dot"></span>
+                Non-Laboratory Based Assessment
+            </span>
+            <h1>การประเมินความเสี่ยง<br><span class="accent">โรคหัวใจและหลอดเลือด</span></h1>
+            <p class="hero-v1-subtitle">
+                ประเมินโอกาสเกิดโรคหัวใจและหลอดเลือดในระยะ 10 ปีข้างหน้า
+                โดยไม่ต้องใช้ผลการตรวจเลือด
+            </p>
+            <div class="hero-v1-reference">
+                <i class="bi bi-bookmark-star-fill"></i>
+                The 2019 WHO CVD Risk Charts — Southeast Asia
+            </div>
+
+            <div class="hero-v1-meta">
+                <div class="hero-v1-meta-item">
+                    <div class="hero-v1-meta-icon"><i class="bi bi-clock-history"></i></div>
+                    <div class="hero-v1-meta-text">
+                        <div class="label">ใช้เวลา</div>
+                        <div class="value">5 นาที</div>
+                    </div>
+                </div>
+                <div class="hero-v1-meta-item">
+                    <div class="hero-v1-meta-icon"><i class="bi bi-shield-lock"></i></div>
+                    <div class="hero-v1-meta-text">
+                        <div class="label">ความปลอดภัย</div>
+                        <div class="value">ข้อมูลไม่ถูกเก็บ</div>
+                    </div>
+                </div>
+                <div class="hero-v1-meta-item">
+                    <div class="hero-v1-meta-icon"><i class="bi bi-check2-circle"></i></div>
+                    <div class="hero-v1-meta-text">
+                        <div class="label">มาตรฐาน</div>
+                        <div class="value">WHO 2019</div>
+                    </div>
+                </div>
+                <div class="hero-v1-meta-item">
+                    <div class="hero-v1-meta-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                    <div class="hero-v1-meta-text">
+                        <div class="label">รายงาน</div>
+                        <div class="value">PDF ดาวน์โหลดได้</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== VERSION 2: Split with Heart Animation ===== -->
+    <div class="demo-label">Version 2 — <span>Split Layout + Heartbeat Animation</span></div>
+    <section class="hero-v2">
+        <div class="hero-v2-inner">
+            <div>
+                <span class="hero-v2-badge">
+                    <i class="bi bi-shield-check-fill"></i>
+                    Non-Laboratory Based Assessment
+                </span>
+                <h1>การประเมินความเสี่ยง<br><span class="gradient-text">โรคหัวใจและหลอดเลือด</span></h1>
+                <p class="hero-v2-subtitle">
+                    Non-laboratory-based predicted 10-year CVD Risk
+                    เครื่องมือประเมินที่ใช้ข้อมูลพื้นฐานเท่านั้น ไม่ต้องเจาะเลือด
+                </p>
+                <span class="hero-v2-reference">
+                    <i class="bi bi-bookmark-star"></i>
+                    อ้างอิง: <strong>The 2019 WHO CVD Risk Charts — Southeast Asia</strong>
+                </span>
+            </div>
+
+            <div class="hero-v2-visual">
+                <div class="hero-v2-visual-bg"></div>
+                <div class="hero-v2-orbit">
+                    <div class="hero-v2-orbit-icon hero-v2-orbit-icon-1"><i class="bi bi-activity"></i></div>
+                </div>
+                <div class="hero-v2-orbit hero-v2-orbit-2">
+                    <div class="hero-v2-orbit-icon hero-v2-orbit-icon-2"><i class="bi bi-droplet-half"></i></div>
+                    <div class="hero-v2-orbit-icon hero-v2-orbit-icon-3"><i class="bi bi-heart-pulse"></i></div>
+                </div>
+                <i class="bi bi-heart-fill hero-v2-heart"></i>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== VERSION 3: Medical Card (แนะนำ) ===== -->
+    <div class="demo-label">Version 3 — <span>Medical Card (แนะนำ ★)</span></div>
+    <section class="hero-v3">
+        <div class="hero-v3-inner">
+            <span class="hero-v3-eyebrow">
+                <span class="dot"></span>
+                Non-Laboratory Based Assessment
+            </span>
+            <h1>การประเมินความเสี่ยงโรคหัวใจและหลอดเลือด</h1>
+            <p class="hero-v3-subtitle">
+                Non-laboratory-based predicted 10-year CVD Risk
+                ประเมินความเสี่ยงในระยะ 10 ปีข้างหน้า โดยไม่ต้องใช้ผลตรวจเลือด
+            </p>
+            <span class="hero-v3-source">
+                อ้างอิง: The 2019 WHO CVD Risk Charts — Southeast Asia
+            </span>
+
+            <div class="hero-v3-features">
+                <div class="hero-v3-feature">
+                    <i class="bi bi-clock"></i>
+                    <span>ใช้เวลา 5 นาที</span>
+                </div>
+                <div class="hero-v3-feature">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>ข้อมูลปลอดภัย</span>
+                </div>
+                <div class="hero-v3-feature">
+                    <i class="bi bi-award-fill"></i>
+                    <span>มาตรฐาน WHO 2019</span>
+                </div>
+                <div class="hero-v3-feature">
+                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                    <span>รายงาน PDF</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>
