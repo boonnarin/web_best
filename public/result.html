@@ -414,11 +414,87 @@
 
                 <button type="button" class="btn btn-success" id="make-pdf" onclick="makepdf()"
                     style="margin-top: 10px;">PDF</button>
+
+                <button type="button" id="saveBtn" class="btn btn-success" onclick="saveFormData()"
+                    style="margin-top: 10px;">บันทึก</button>
             </form>
 
         </div>
     </main>
 
+    <script>
+
+        // อ่าน cookie
+        function getCookie(name) {
+
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+
+            if (parts.length === 2) {
+                return parts.pop().split(';').shift();
+            }
+
+            return null;
+        }
+
+
+        // ====== รวมข้อมูล + บันทึก ======
+        async function saveFormData() {
+
+            // รวมข้อมูลจาก cookie
+            const formData = {
+
+                name: getCookie('name'),
+                lastname: getCookie('lastname'),
+
+                cvsex: getCookie('cvsex'),
+                cvdm: getCookie('cvdm'),
+                cvsmk: getCookie('cvsmk'),
+
+                cvsbp: getCookie('cvsbp'),
+                cvtc: getCookie('cvtc'),
+
+                age: getCookie('age'),
+                cvage: getCookie('cvage'),
+
+                stataCode: getCookie('stataCode'),
+                statas: getCookie('statas'),
+
+                sbp: getCookie('sbp'),
+                tc: getCookie('tc')
+            };
+
+            console.log('ข้อมูลที่ส่ง:', formData);
+
+            try {
+
+                // ส่งข้อมูลไป API
+                const response = await fetch('/api/save-formlab-admin', {
+
+                    method: 'POST',
+
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+
+                    body: JSON.stringify(formData)
+
+                });
+
+                // รอผลลัพธ์จาก server
+                const result = await response.json();
+
+                alert(result.message);
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert('บันทึกข้อมูลไม่สำเร็จ');
+            }
+        }
+
+    </script>
 
 
     <footer class="container my-4">
