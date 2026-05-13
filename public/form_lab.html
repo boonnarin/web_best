@@ -158,8 +158,8 @@
                     </div>
                     <div class="form-group">
                         <label for="age">อายุ (Age) <span class="text-danger">*</span></label>
-                        <input type="number" id="age" min="10" class="form-control" placeholder="ปี" required />
-                        <div class="invalid-feedback">อายุต้องไม่น้อยกว่า 39 ปี</div>
+                        <input type="number" id="age" min="1" class="form-control" placeholder="ปี" required />
+                        <div class="invalid-feedback">อายุต้องไม่น้อยกว่า 1 ปี</div>
                     </div>
                 </div>
 
@@ -388,8 +388,17 @@
             const region = $('#province').val();
             if (!region) throw new Error('โปรดระบุ จังหวัด (โหมดไทย) หรือ ประเทศ (โหมดต่างประเทศ)');
             return {
-                sex: $('#cvsex').val(), age: $('#age').val(), smoking_status: $('#cvsmk').val(), diabetes_status: $('#cvdm').val(),
-                province: region, sbp1: s1, sbp2: s2, sbptotal: sbpAvg, total_cholesterol: $('#tc').val()
+                name: $('#name').val(),
+                lastname: $('#lastname').val(),
+                sex: $('#cvsex').val(),
+                age: $('#age').val(),
+                smoking_status: $('#cvsmk').val(),
+                diabetes_status: $('#cvdm').val(),
+                province: region,
+                sbp1: s1,
+                sbp2: s2,
+                sbptotal: sbpAvg,
+                total_cholesterol: $('#tc').val()
             };
         }
 
