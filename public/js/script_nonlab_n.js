@@ -33,13 +33,13 @@ function nonlab() {
     var bmi = (weight / (height * height)).toFixed(2);
     var bmi2 = bmi;
 
-    //หยุดการทำงานหากข้อมูลไม่ครบ
-    if (!cvsex || !cvsmk || !weight || !height || !sbp1 || !sbp2 || !age) {
-        alert("โปรดกรอกข้อมูลให้ครบทุกช่อง");
-        return; // หยุดการทำงานที่นี่
-        window.location.reload(); // รีโหลดหน้าเว็บ
+    // //หยุดการทำงานหากข้อมูลไม่ครบ
+    // if (!cvsex || !cvsmk || !weight || !height || !sbp1 || !sbp2 || !age) {
+    //     alert("โปรดกรอกข้อมูลให้ครบทุกช่อง");
+    //     return; // หยุดการทำงานที่นี่
+    //     window.location.reload(); // รีโหลดหน้าเว็บ
 
-    }
+    // }
     // //กำหนดอายุ
     // if (age < 18) {
     //     alert("โปรดกรอกอายุให้อยู่ใครช่วงที่กำหนด");
