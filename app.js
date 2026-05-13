@@ -166,7 +166,7 @@ app.get('/test-db', async (req, res) => {
 // ดาวน์โหลด Form Lab
 app.get('/download/formlab', async (req, res) => {
     try {
-        const sql = 'SELECT sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province FROM form_lab';
+        const sql = 'SELECT name, lastname, sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province FROM form_lab';
         connection.query(sql, async (err, results) => {
             if (err) {
                 console.error('❌ Error fetching form_lab data:', err);
@@ -178,6 +178,8 @@ app.get('/download/formlab', async (req, res) => {
 
             // ตั้งหัวตาราง
             sheet.columns = [
+                { header: 'ชื่อ', key: 'name', width: 30 },
+                { header: 'นามสกุล', key: 'lastname', width: 30 },
                 { header: 'เพศ', key: 'sex', width: 10 },
                 { header: 'อายุ', key: 'age', width: 10 },
                 { header: 'สถานะการสูบบุหรี่', key: 'smoking_status', width: 15 },
@@ -192,6 +194,8 @@ app.get('/download/formlab', async (req, res) => {
             // เพิ่มข้อมูล
             results.forEach(row => {
                 sheet.addRow({
+                    name: row.name,
+                    lastname: row.lastname,
                     sex: row.sex == 1 ? 'ชาย' : 'หญิง',
                     age: row.age,
                     smoking_status: row.smoking_status == 1 ? 'สูบบุหรี่' : 'ไม่สูบบุหรี่',
@@ -226,7 +230,7 @@ app.get('/download/formlab', async (req, res) => {
 // ดาวน์โหลด Form NonLab
 app.get('/download/formnonlab', async (req, res) => {
     try {
-        const sql = 'SELECT sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province FROM form_nonlab';
+        const sql = 'SELECT name, lastname, sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province FROM form_nonlab';
         connection.query(sql, async (err, results) => {
             if (err) {
                 console.error('❌ Error fetching form_nonlab data:', err);
@@ -237,6 +241,8 @@ app.get('/download/formnonlab', async (req, res) => {
             const sheet = workbook.addWorksheet('Form NonLab');
 
             sheet.columns = [
+                { header: 'ชื่อ', key: 'name', width: 30 },
+                { header: 'นามสกุล', key: 'lastname', width: 30 },
                 { header: 'เพศ', key: 'sex', width: 10 },
                 { header: 'อายุ', key: 'age', width: 10 },
                 { header: 'สถานะการสูบบุหรี่', key: 'smoking_status', width: 15 },
@@ -250,6 +256,8 @@ app.get('/download/formnonlab', async (req, res) => {
 
             results.forEach(row => {
                 sheet.addRow({
+                    name: row.name,
+                    lastname: row.lastname,
                     sex: row.sex == 1 ? 'ชาย' : 'หญิง',
                     age: row.age,
                     smoking_status: row.smoking_status == 1 ? 'สูบบุหรี่' : 'ไม่สูบบุหรี่',
