@@ -92,7 +92,7 @@ app.get('/api/country', (req, res) => {
 });
 
 
-// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม
+// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม  เพิ่ม name,lastname, ที่sql เพิ่ม ? ?   name,lastname,
 app.post('/api/save-form', (req, res) => {
     const { sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province } = req.body;
 
@@ -107,7 +107,7 @@ app.post('/api/save-form', (req, res) => {
 });
 
 
-// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม
+// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม  เพิ่ม name,lastname, ที่sql เพิ่ม ? ?   name,lastname,
 app.post('/api/save-formnonlab', (req, res) => {
     const { sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province } = req.body;
 
@@ -120,7 +120,7 @@ app.post('/api/save-formnonlab', (req, res) => {
         res.send({ result: 'Data saved successfully' });
     });
 });
-// API สำหรับดึงข้อมูล form_lab
+// API สำหรับดึงข้อมูล form_lab เพิ่ม name,lastname, ที่sql เพิ่ม ? ?   name,lastname,
 app.get('/api/getFormLabData', (req, res) => {
     const sql = 'SELECT sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province FROM form_lab';
 
@@ -134,7 +134,7 @@ app.get('/api/getFormLabData', (req, res) => {
 });
 
 
-// API สำหรับดึงข้อมูล form_nonlab
+// API สำหรับดึงข้อมูล form_nonlab เพิ่ม name,lastname, ที่sql เพิ่ม ? ?   name,lastname,
 app.get('/api/getFormNonLabData', (req, res) => {
     const sql = 'SELECT sex, age, smoking_status, sbp1, sbp2, sbptotal, weight, height, province FROM form_nonlab';
 
