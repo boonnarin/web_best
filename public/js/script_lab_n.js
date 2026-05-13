@@ -57,12 +57,12 @@ function generateStataCode() {
     // });
 
     //หยุดการทำงานหากข้อมูลไม่ครบ
-    if (!cvsex || !cvsmk || !cvdm || !tc || !sbp1 || !sbp2 || !age) {
-        alert("โปรดกรอกข้อมูลให้ครบทุกช่อง");
-        return; // หยุดการทำงานที่นี่
-        window.location.reload(); // รีโหลดหน้าเว็บ
+    // if (!cvsex || !cvsmk || !cvdm || !tc || !sbp1 || !sbp2 || !age) {
+    //     alert("โปรดกรอกข้อมูลให้ครบทุกช่อง");
+    //     return; // หยุดการทำงานที่นี่
+    //     window.location.reload(); // รีโหลดหน้าเว็บ
 
-    }
+    // }
     //กำหนดอายุ
     // if (age < 40) {
     //     alert("โปรดกรอกอายุให้อยู่ใครช่วงที่กำหนด");
