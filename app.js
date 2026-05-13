@@ -92,12 +92,12 @@ app.get('/api/country', (req, res) => {
 });
 
 
-// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม  เพิ่ม name,lastname, ที่sql เพิ่ม ? ?   name,lastname,
+// เส้นทาง API สำหรับเก็บข้อมูลจากฟอร์ม
 app.post('/api/save-form', (req, res) => {
-    const { sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province } = req.body;
+    const { name, lastname, sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province } = req.body;
 
-    const sql = `INSERT INTO form_lab (sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(sql, [sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province], (err, result) => {
+    const sql = `INSERT INTO form_lab (name, lastname, sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(sql, [name, lastname, sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province], (err, result) => {
         if (err) {
             console.error('❌ Error inserting data into DB:', err);
             return res.status(500).send('Error saving data');
