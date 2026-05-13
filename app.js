@@ -120,6 +120,69 @@ app.post('/api/save-formnonlab', (req, res) => {
         res.send({ result: 'Data saved successfully' });
     });
 });
+
+
+// ===== API บันทึกข้อมูลหน้าเเสดงผลของlab =====
+app.post('/api/save-formlab-admin', (req, res) => {
+
+    const {
+        name, lastname, cvsex, cvdm, cvsmk, cvsbp, cvtc, age, cvage, sbp, tc, stataCode, statas
+    } = req.body;
+
+    const sql = `
+        INSERT INTO form_lab_foradmin (name,lastname,cvsex,cvdm,cvsmk,cvsbp,cvtc,age,cvage,sbp, tc, stataCode, statas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    connection.query(sql, [name, lastname, cvsex, cvdm, cvsmk, cvsbp, cvtc, age, cvage, sbp, tc, stataCode, statas], (err, result) => {
+
+        if (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                message: 'เกิดข้อผิดพลาด',
+                error: err
+            });
+        }
+
+        res.json({
+            message: 'บันทึกข้อมูลสำเร็จ'
+        });
+
+    });
+
+});
+
+
+// ===== API บันทึกข้อมูลหน้าเเสดงผลของnonlab =====
+app.post('/api/save-formnonlab-admin', (req, res) => {
+
+    const {
+        name, lastname, cvsex, cvsmk, cvsbp, cvbmi, age, cvage, sbp, bmi2, stataCodea, statasNon
+    } = req.body;
+
+    const sql = `
+        INSERT INTO form_nonlab_foradmin (name,lastname,cvsex,cvsmk,cvsbp,cvbmi,age,cvage,sbp, bmi2, stataCodea, statasNon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    connection.query(sql, [name, lastname, cvsex, cvsmk, cvsbp, cvbmi, age, cvage, sbp, bmi2, stataCodea, statasNon], (err, result) => {
+
+        if (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                message: 'เกิดข้อผิดพลาด',
+                error: err
+            });
+        }
+
+        res.json({
+            message: 'บันทึกข้อมูลสำเร็จ'
+        });
+
+    });
+
+});
+
 // API สำหรับดึงข้อมูล form_lab เพิ่ม name,lastname, ที่sql เพิ่ม ? ?   name,lastname,
 app.get('/api/getFormLabData', (req, res) => {
     const sql = 'SELECT sex, age, smoking_status, diabetes_status, sbp1, sbp2, sbptotal, total_cholesterol, province FROM form_lab';
