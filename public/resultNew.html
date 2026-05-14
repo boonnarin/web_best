@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/bmi-indicator.css">
+<link rel="stylesheet" href="css/spb-indicator.css">
+<title>Results — CVD Risk Assessment</title>
+
+<style>
+/* ─────────────────────────────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────────────────────────────── */
+:root {
+  --ff-body:    'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+  --ff-display: 'Sarabun', sans-serif;
+
+  /* Brand */
+  --c-teal-50:  #E6F7F5;
+  --c-teal-100: #B3EAE4;
+  --c-teal-500: #0E9B8A;
+  --c-teal-600: #0A7A6D;
+  --c-teal-700: #075E54;
+
+  /* Neutrals */
+  --c-slate-50:  #F8FAFC;
+  --c-slate-100: #F1F5F9;
+  --c-slate-200: #E2E8F0;
+  --c-slate-300: #CBD5E1;
+  --c-slate-400: #94A3B8;
+  --c-slate-500: #64748B;
+  --c-slate-600: #475569;
+  --c-slate-700: #334155;
+  --c-slate-800: #1E293B;
+  --c-slate-900: #0F172A;
+
+  /* Semantic */
+  --c-risk-low:    #16A34A;
+  --c-risk-low-bg: #F0FDF4;
+  --c-risk-warn:   #D97706;
+  --c-risk-warn-bg:#FFFBEB;
+  --c-risk-med:    #EA580C;
+  --c-risk-med-bg: #FFF7ED;
+  --c-risk-high:   #DC2626;
+  --c-risk-high-bg:#FEF2F2;
+  --c-risk-crit:   #9F1239;
+  --c-risk-crit-bg:#FFF1F2;
+
+  /* Layout */
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.07), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,.08);
+
+  --page-bg:    #F4F7FB;
+  --card-bg:    #FFFFFF;
+  --border:     #E8EDF4;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--ff-body);
+  background: var(--page-bg);
+  color: var(--c-slate-800);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   HEADER
+───────────────────────────────────────────────────────────────── */
+.app-header {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04);
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.header-brand img {
+  height: 36px;
+  width: auto;
+}
+
+.header-brand-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+}
+
+.header-brand-text h1 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-slate-800);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.header-brand-text p {
+  font-size: 11px;
+  color: var(--c-slate-500);
+  line-height: 1.3;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link-item {
+  font-size: 13px;
+  color: var(--c-slate-600);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  transition: background .15s, color .15s;
+  font-weight: 500;
+}
+.nav-link-item:hover { background: var(--c-slate-100); color: var(--c-slate-900); }
+
+.btn-signin {
+  background: var(--c-teal-500);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--ff-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 18px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background .15s;
+}
+.btn-signin:hover { background: var(--c-teal-600); color: #fff; }
+
+/* ─────────────────────────────────────────────────────────────────
+   PAGE LAYOUT
+───────────────────────────────────────────────────────────────── */
+.page-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   PAGE TITLE BAR
+───────────────────────────────────────────────────────────────── */
+.page-title-bar {
+  margin-bottom: 28px;
+}
+
+.page-title-bar h2 {
+  font-family: var(--ff-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--c-slate-900);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.page-title-bar p {
+  font-size: 14px;
+  color: var(--c-slate-500);
+  margin-top: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   CARDS
+───────────────────────────────────────────────────────────────── */
+.card-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-section + .card-section { }
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--c-teal-600);
+  margin-bottom: 16px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   PATIENT INFO GRID
+───────────────────────────────────────────────────────────────── */
+.patient-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.info-chip {
+  background: var(--c-slate-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+}
+
+.info-chip .chip-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--c-slate-400);
+  margin-bottom: 4px;
+}
+
+.info-chip .chip-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-slate-800);
+  line-height: 1.3;
+}
+
+.info-chip .chip-unit {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--c-slate-500);
+  margin-left: 3px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   RISK SCORE HERO
+───────────────────────────────────────────────────────────────── */
+.risk-hero {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.risk-gauge-wrap {
+  flex-shrink: 0;
+}
+
+.risk-gauge {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 5px solid var(--gauge-color, #E5E7EB);
+  background: var(--gauge-bg, #F9FAFB);
+}
+
+.risk-gauge .gauge-pct {
+  font-family: var(--ff-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--gauge-color, var(--c-slate-700));
+  line-height: 1;
+}
+
+.risk-gauge .gauge-sub {
+  font-size: 11px;
+  color: var(--c-slate-500);
+  margin-top: 2px;
+}
+
+.risk-info { flex: 1; min-width: 200px; }
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  border: 1.5px solid;
+}
+
+.risk-description {
+  font-size: 14px;
+  color: var(--c-slate-600);
+  line-height: 1.6;
+}
+
+.risk-description strong {
+  color: var(--c-slate-800);
+  font-weight: 600;
+}
+
+/* Risk colour themes */
+.risk-very-low  { --gauge-color:#16A34A; --gauge-bg:#F0FDF4; }
+.risk-low       { --gauge-color:#65A30D; --gauge-bg:#F7FEE7; }
+.risk-moderate  { --gauge-color:#D97706; --gauge-bg:#FFFBEB; }
+.risk-high      { --gauge-color:#DC2626; --gauge-bg:#FEF2F2; }
+.risk-very-high { --gauge-color:#9F1239; --gauge-bg:#FFF1F2; }
+.risk-na        { --gauge-color:#94A3B8; --gauge-bg:#F8FAFC; }
+
+.badge-very-low  { background:#F0FDF4; color:#166534; border-color:#BBF7D0; }
+.badge-low       { background:#F7FEE7; color:#3F6212; border-color:#D9F99D; }
+.badge-moderate  { background:#FFFBEB; color:#92400E; border-color:#FDE68A; }
+.badge-high      { background:#FEF2F2; color:#991B1B; border-color:#FECACA; }
+.badge-very-high { background:#FFF1F2; color:#9F1239; border-color:#FECDD3; }
+
+/* ─────────────────────────────────────────────────────────────────
+   METRIC BAR (BMI / SBP)
+───────────────────────────────────────────────────────────────── */
+.metric-bar-wrap {
+  margin: 4px 0 16px;
+}
+
+.metric-bar-track {
+  display: flex;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.metric-bar-seg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(0,0,0,.45);
+  text-align: center;
+  line-height: 1.2;
+  padding: 0 2px;
+  transition: filter .2s;
+  position: relative;
+  white-space: nowrap;
+  letter-spacing: -.01em;
+}
+
+.metric-bar-seg.active {
+  color: #fff;
+  filter: brightness(1);
+  z-index: 1;
+}
+
+.metric-bar-seg.active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.12);
+}
+
+.metric-bar-seg.active::after {
+  content: '▲';
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: inherit;
+  color: var(--c-slate-500);
+}
+
+.metric-bar-val {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--c-slate-600);
+  text-align: center;
+}
+
+/* BMI segment colors */
+.seg-underweight  { background: #60A5FA; }
+.seg-normal       { background: #34D399; }
+.seg-overweight   { background: #FBBF24; }
+.seg-obese        { background: #FB923C; }
+.seg-obese2       { background: #F87171; }
+
+/* SBP segment colors */
+.seg-optimal      { background: #34D399; }
+.seg-spb-normal   { background: #6EE7B7; }
+.seg-high-normal  { background: #FCD34D; }
+.seg-htn1         { background: #FB923C; }
+.seg-htn2         { background: #F87171; }
+.seg-crisis       { background: #E11D48; }
+
+/* ─────────────────────────────────────────────────────────────────
+   ALERT / RECOMMENDATION BLOCK
+───────────────────────────────────────────────────────────────── */
+.alert-block {
+  display: flex;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border-left: 4px solid;
+  margin-bottom: 10px;
+  background: var(--ab-bg);
+  border-color: var(--ab-border);
+}
+
+.alert-block .ab-icon {
+  font-size: 18px;
+  line-height: 1.7;
+  flex-shrink: 0;
+}
+
+.alert-block .ab-body {
+  font-size: 14px;
+  color: var(--c-slate-700);
+  line-height: 1.65;
+}
+
+.alert-block .ab-body strong {
+  color: var(--ab-text, var(--c-slate-900));
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.ab-info    { --ab-bg:#EFF6FF; --ab-border:#93C5FD; --ab-text:#1D4ED8; }
+.ab-warn    { --ab-bg:#FFFBEB; --ab-border:#FCD34D; --ab-text:#92400E; }
+.ab-danger  { --ab-bg:#FEF2F2; --ab-border:#FCA5A5; --ab-text:#991B1B; }
+.ab-success { --ab-bg:#F0FDF4; --ab-border:#86EFAC; --ab-text:#166534; }
+.ab-neutral { --ab-bg:var(--c-slate-50); --ab-border:var(--c-slate-300); --ab-text:var(--c-slate-700); }
+
+/* ─────────────────────────────────────────────────────────────────
+   GENERAL RECOMMENDATIONS LIST
+───────────────────────────────────────────────────────────────── */
+.rec-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rec-list li {
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--c-slate-700);
+  line-height: 1.6;
+}
+
+.rec-list li .rec-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--c-teal-50);
+  border: 1.5px solid var(--c-teal-100);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.rec-list li .rec-dot svg {
+  width: 10px;
+  height: 10px;
+  stroke: var(--c-teal-600);
+  stroke-width: 2.5;
+  fill: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ACTION TOOLBAR
+───────────────────────────────────────────────────────────────── */
+.action-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 20px 0 0;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all .15s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--c-teal-500);
+  color: #fff;
+  border-color: var(--c-teal-500);
+}
+.btn-primary:hover { background: var(--c-teal-600); border-color: var(--c-teal-600); }
+
+.btn-outline {
+  background: #fff;
+  color: var(--c-slate-700);
+  border-color: var(--border);
+}
+.btn-outline:hover { background: var(--c-slate-50); border-color: var(--c-slate-300); color: var(--c-slate-900); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--c-slate-500);
+  border-color: transparent;
+}
+.btn-ghost:hover { background: var(--c-slate-100); color: var(--c-slate-700); }
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────────────────────────── */
+.app-footer {
+  background: #fff;
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
+  margin-top: 48px;
+}
+
+.footer-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.footer-inner p {
+  font-size: 12px;
+  color: var(--c-slate-400);
+  line-height: 1.7;
+}
+
+.footer-inner a {
+  color: var(--c-teal-600);
+  text-decoration: none;
+}
+.footer-inner a:hover { text-decoration: underline; }
+
+/* ─────────────────────────────────────────────────────────────────
+   DIVIDER
+───────────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header-inner { padding: 0 16px; }
+  .header-brand-text { display: none; }
+  .page-wrapper { padding: 20px 16px 48px; }
+  .card-section { padding: 20px 18px; }
+  .page-title-bar h2 { font-size: 21px; }
+  .risk-hero { gap: 20px; }
+  .risk-gauge { width: 96px; height: 96px; }
+  .risk-gauge .gauge-pct { font-size: 26px; }
+  .patient-grid { grid-template-columns: 1fr 1fr; }
+  .action-toolbar { gap: 8px; }
+  .btn-action { padding: 9px 14px; font-size: 13px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   OVERRIDE old indicator styles — keep functionality
+───────────────────────────────────────────────────────────────── */
+.bmi-bar, .sbp-bar { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="app-header">
+  <div class="header-inner">
+    <a class="header-brand" href="/">
+      <img src="images/logo.png" alt="Logo">
+      <img src="images/Logo_su.png" alt="Silpakorn" style="height:32px;width:auto;">
+      <div class="header-brand-sep"></div>
+      <div class="header-brand-text">
+        <h1>CVD Risk Assessment</h1>
+        <p>Phramongkutklao &amp; Silpakorn University</p>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="/" class="nav-link-item">หน้าหลัก</a>
+      <a href="aboutMe.html" class="nav-link-item">About</a>
+      <a href="/login" class="btn-signin">Sign In</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main class="page-wrapper">
+
+  <div class="page-title-bar">
+    <h2>ผลการประเมินความเสี่ยงโรคหัวใจและหลอดเลือด</h2>
+    <p>Cardiovascular Disease Risk Assessment Result</p>
+  </div>
+
+  <!-- ── PATIENT INFO ─────────────────────────────── -->
+  <div class="card-section">
+    <div class="section-label">ข้อมูลผู้รับการประเมิน</div>
+    <div class="patient-grid" id="patient-grid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- ── CVD RISK SCORE ───────────────────────────── -->
+  <div class="card-section" id="risk-card">
+    <div class="section-label">ความเสี่ยงโรคหัวใจและหลอดเลือด 10 ปี</div>
+    <div class="risk-hero" id="risk-hero">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- ── PERSONAL RECOMMENDATIONS ────────────────── -->
+  <div class="card-section" id="personal-rec-card">
+    <div class="section-label">คำแนะนำเฉพาะบุคคล</div>
+    <div id="personal-recs"></div>
+  </div>
+
+  <!-- ── BMI ──────────────────────────────────────── -->
+  <div class="card-section">
+    <div class="section-label">ดัชนีมวลกาย (BMI)</div>
+    <div id="bmi-section"></div>
+  </div>
+
+  <!-- ── SBP ──────────────────────────────────────── -->
+  <div class="card-section">
+    <div class="section-label">ระดับความดันโลหิตค่าบน (Systolic BP)</div>
+    <div id="sbp-section"></div>
+  </div>
+
+  <!-- ── GENERAL RECOMMENDATIONS ─────────────────── -->
+  <div class="card-section">
+    <div class="section-label">คำแนะนำทั่วไป</div>
+    <ul class="rec-list">
+      <li>
+        <span class="rec-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>
+        <span>ออกกำลังกายอย่างสม่ำเสมอ อย่างน้อย <strong>สัปดาห์ละ 3 วัน วันละ 20–30 นาที</strong> หากมีโรคประจำตัวควรปรึกษาบุคลากรทางการแพทย์ก่อน</span>
+      </li>
+      <li>
+        <span class="rec-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>
+        <span>หากดื่มสุรา ควรลดหรือเลิก — สายด่วนเลิกสุรา <strong>1413</strong> หากไม่ได้ดื่มอยู่แล้วไม่แนะนำให้เริ่ม</span>
+      </li>
+      <li>
+        <span class="rec-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>
+        <span>ตรวจสุขภาพเพื่อประเมินความเสี่ยงโรคหัวใจและหลอดเลือด <strong>อย่างน้อยปีละ 1 ครั้ง</strong></span>
+      </li>
+      <li>
+        <span class="rec-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>
+        <span>ผลการประเมินนี้เป็นเพียงการคัดกรองเบื้องต้น ควรเข้ารับการตรวจและคำปรึกษาจากแพทย์เพื่อผลการวินิจฉัยที่แม่นยำ</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ── ACTION TOOLBAR ───────────────────────────── -->
+  <div class="action-toolbar">
+    <button class="btn-action btn-outline" onclick="window.history.back()">
+      <svg class="btn-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      ย้อนกลับ
+    </button>
+    <button class="btn-action btn-primary" id="make-pdf" onclick="makepdf()">
+      <svg class="btn-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      ดาวน์โหลด PDF
+    </button>
+    <button class="btn-action btn-outline" id="saveBtn" onclick="saveData()">
+      <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      บันทึกข้อมูล
+    </button>
+  </div>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="app-footer">
+  <div class="footer-inner">
+    <p>
+      ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือดในระยะ 10 ปีข้างหน้า
+      สำหรับผู้ที่ไม่เคยมีประวัติโรคหัวใจและหลอดเลือดหรือโรคเส้นเลือดสมองตีบ
+      โดยประเมินตาม <em>2019 WHO Cardiovascular Disease Risk Charts for Southeast Asia Countries</em><sup>1</sup>
+    </p>
+    <p style="margin-top:8px">
+      <sup>1</sup> WHO CVD Risk Chart Working Group (2019). The Lancet Global Health, 7(10), e1332–e1345.
+      <a href="https://doi.org/10.1016/S2214-109X(19)30318-3" target="_blank" rel="noopener">doi:10.1016/S2214-109X(19)30318-3</a>
+    </p>
+  </div>
+</footer>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script src="js/scriptpdfNon.js"></script>
+<script src="js/loginscrip.js"></script>
+
+<script>
+/* ─── Cookie helper ───────────────────────────────────────────── */
+function getCookie(name) {
+  const v = `; ${document.cookie}`;
+  const p = v.split(`; ${name}=`);
+  if (p.length === 2) return decodeURIComponent(p.pop().split(';').shift());
+  return '';
+}
+
+/* ─── Read cookies ────────────────────────────────────────────── */
+const name      = getCookie('name')      || 'ไม่ระบุชื่อ';
+const lastname  = getCookie('lastname')  || '';
+const cvsex     = getCookie('cvsex');
+const cvsmk     = getCookie('cvsmk');
+const age       = getCookie('age');
+const stataCodea= parseFloat(getCookie('stataCodea')) || 0;
+const sbp       = parseFloat(getCookie('sbp'))        || 0;
+const bmi2      = parseFloat(getCookie('bmi2'))       || 0;
+
+/* ─── Derived labels ──────────────────────────────────────────── */
+const sexLabel  = cvsex === '1' ? 'ชาย' : cvsex === '0' ? 'หญิง' : '–';
+const smkLabel  = cvsmk === '1' ? 'สูบบุหรี่' : cvsmk === '0' ? 'ไม่สูบบุหรี่' : '–';
+
+/* ─── 1. Patient grid ─────────────────────────────────────────── */
+const patientGrid = document.getElementById('patient-grid');
+const chips = [
+  { label:'ชื่อ – นามสกุล', value:`${name} ${lastname}`.trim() },
+  { label:'เพศ',             value: sexLabel },
+  { label:'อายุ',            value: age || '–',     unit:'ปี' },
+  { label:'การสูบบุหรี่',    value: smkLabel },
+  { label:'BMI',             value: bmi2 ? bmi2.toFixed(1) : '–', unit:'kg/m²' },
+  { label:'ความดันโลหิต (SBP)', value: sbp || '–', unit:'mmHg' },
+];
+patientGrid.innerHTML = chips.map(c => `
+  <div class="info-chip">
+    <div class="chip-label">${c.label}</div>
+    <div class="chip-value">${c.value}${c.unit ? `<span class="chip-unit">${c.unit}</span>` : ''}</div>
+  </div>`).join('');
+
+/* ─── 2. Risk hero ────────────────────────────────────────────── */
+function getRiskConfig(score) {
+  if (isNaN(score) || score < 0) return {
+    cls:'risk-na', badge:'', badgeCls:'',
+    label:'ไม่สามารถประเมินได้',
+    desc:'การประเมินความเสี่ยงโรคหัวใจและหลอดเลือดใช้สำหรับผู้ที่มีอายุ 40–74 ปีเท่านั้น',
+    dot:'⚪'
+  };
+  if (score < 5)  return { cls:'risk-very-low',  badge:'เสี่ยงน้อยมาก',  badgeCls:'badge-very-low',  label:'เสี่ยงน้อยมาก',  desc:`ความเสี่ยงต่อการป่วยหรือเสียชีวิตจากโรคหัวใจและหลอดเลือดในระยะ 10 ปีข้างหน้าอยู่ในระดับ <strong>น้อยมาก</strong> แนะนำให้รักษาพฤติกรรมสุขภาพที่ดีและตรวจสุขภาพตามระยะ`, dot:'🟢' };
+  if (score < 10) return { cls:'risk-low',       badge:'เสี่ยงน้อย',     badgeCls:'badge-low',       label:'เสี่ยงน้อย',     desc:`ความเสี่ยงอยู่ในระดับ <strong>น้อย</strong> แนะนำให้ควบคุมปัจจัยเสี่ยงและตรวจสุขภาพประจำปี`, dot:'🟡' };
+  if (score < 20) return { cls:'risk-moderate',  badge:'เสี่ยงปานกลาง', badgeCls:'badge-moderate',  label:'เสี่ยงปานกลาง', desc:`ความเสี่ยงอยู่ในระดับ <strong>ปานกลาง</strong> ควรปรับพฤติกรรมสุขภาพและพบแพทย์เพื่อประเมินเพิ่มเติม`, dot:'🟠' };
+  if (score < 30) return { cls:'risk-high',      badge:'เสี่ยงสูง',      badgeCls:'badge-high',      label:'เสี่ยงสูง',      desc:`ความเสี่ยงอยู่ในระดับ <strong>สูง</strong> แนะนำให้พบแพทย์เพื่อวางแผนการรักษาและลดปัจจัยเสี่ยงอย่างจริงจัง`, dot:'🔴' };
+  return { cls:'risk-very-high', badge:'เสี่ยงสูงมาก', badgeCls:'badge-very-high', label:'เสี่ยงสูงมาก', desc:`ความเสี่ยงอยู่ในระดับ <strong>สูงมาก</strong> ควรรีบพบแพทย์เพื่อตรวจและรับการรักษาโดยทันที`, dot:'🔴' };
+}
+
+const rc = getRiskConfig(stataCodea);
+document.getElementById('risk-hero').innerHTML = `
+  <div class="risk-gauge-wrap">
+    <div class="risk-gauge ${rc.cls}">
+      <span class="gauge-pct">${isNaN(stataCodea) ? '–' : stataCodea}%</span>
+      <span class="gauge-sub">10-yr risk</span>
+    </div>
+  </div>
+  <div class="risk-info">
+    <div class="risk-badge ${rc.badgeCls}">${rc.dot} ${rc.badge}</div>
+    <p class="risk-description">${rc.desc}</p>
+  </div>`;
+
+/* ─── 3. Personal recommendations ────────────────────────────── */
+const recs = [];
+
+// Smoking
+if (cvsmk === '1') {
+  recs.push({ cls:'ab-danger', icon:'🚬', title:'เลิกบุหรี่',
+    body:'การสูบบุหรี่เพิ่มความเสี่ยงโรคหัวใจอย่างมีนัยสำคัญ ติดต่อขอคำแนะนำได้ที่ <strong>สายด่วนเลิกบุหรี่ โทร 1600</strong>' });
+}
+
+// BMI
+if (bmi2 > 0) {
+  if (bmi2 < 18.5)       recs.push({ cls:'ab-info',    icon:'⚖️', title:'น้ำหนักต่ำกว่าเกณฑ์ (BMI ' + bmi2.toFixed(1) + ')', body:'ควรเพิ่มปริมาณอาหารที่มีคุณค่าทางโภชนาการและพบแพทย์หรือนักโภชนาการเพื่อรับคำแนะนำ' });
+  else if (bmi2 < 23)    recs.push({ cls:'ab-success', icon:'✅', title:'น้ำหนักอยู่ในเกณฑ์ปกติ (BMI ' + bmi2.toFixed(1) + ')', body:'รักษาน้ำหนักและพฤติกรรมสุขภาพที่ดีต่อไป' });
+  else if (bmi2 < 25)    recs.push({ cls:'ab-warn',    icon:'⚖️', title:'น้ำหนักเกินเล็กน้อย (BMI ' + bmi2.toFixed(1) + ')', body:'ลดการบริโภคน้ำตาลและไขมัน รับประทานผักผลไม้ และออกกำลังกายสม่ำเสมอ' });
+  else if (bmi2 < 30)    recs.push({ cls:'ab-warn',    icon:'⚖️', title:'อ้วนระดับที่ 1 – Obesity I (BMI ' + bmi2.toFixed(1) + ')', body:'ควรลดน้ำหนักโดยปรับพฤติกรรมการบริโภคและออกกำลังกาย ปรึกษาแพทย์หรือนักโภชนาการ' });
+  else                    recs.push({ cls:'ab-danger',  icon:'⚠️', title:'อ้วนอันตราย – Obesity II (BMI ' + bmi2.toFixed(1) + ')', body:'ความเสี่ยงสูง ควรปรึกษาแพทย์เพื่อรับการรักษาที่เหมาะสมโดยทันที' });
+}
+
+// SBP
+if (sbp > 0) {
+  let sbpEntry;
+  if (sbp < 120)       sbpEntry = { cls:'ab-success', icon:'💚', title:'ความดันโลหิตอยู่ในระดับเหมาะสม (SBP ' + sbp + ' mmHg)', body:'รักษาพฤติกรรมสุขภาพที่ดีต่อไป' };
+  else if (sbp < 130)  sbpEntry = { cls:'ab-success', icon:'💛', title:'ความดันโลหิตระดับปกติ (SBP ' + sbp + ' mmHg)', body:'ติดตามระดับความดันโลหิตอย่างสม่ำเสมอ' };
+  else if (sbp <= 140) sbpEntry = { cls:'ab-warn',    icon:'🔶', title:'ความดันโลหิตเริ่มสูงเล็กน้อย – High Normal (SBP ' + sbp + ' mmHg)', body:'ลดการรับประทานอาหารเค็ม เช่น เกลือ น้ำปลา ปลาร้า อาหารหมักดอง อาหารแปรรูป รับประทานผักผลไม้เป็นประจำ' };
+  else if (sbp < 160)  sbpEntry = { cls:'ab-warn',    icon:'🔴', title:'ความดันโลหิตสูง ระดับที่ 1 – Grade 1 (SBP ' + sbp + ' mmHg)', body:'หากวินิจฉัยแล้ว รับประทานยาและไปติดตามการรักษาตามนัด หากยังไม่ได้รับการรักษาให้พบแพทย์ ลดอาหารเค็มและรับประทานผักผลไม้เป็นประจำ' };
+  else if (sbp < 180)  sbpEntry = { cls:'ab-danger',  icon:'🔴', title:'ความดันโลหิตสูง ระดับที่ 2 – Grade 2 (SBP ' + sbp + ' mmHg)', body:'ติดต่อแพทย์เพื่อปรับการรักษาและลดการรับประทานอาหารเค็ม' };
+  else                  sbpEntry = { cls:'ab-danger',  icon:'🚨', title:'ความดันโลหิตสูงระดับวิกฤต – Hypertensive Crisis (SBP ' + sbp + ' mmHg)', body:'นั่งพักในที่สงบ 5 นาที วัดซ้ำ หากยังสูงกว่า 180 mmHg ให้รีบพบแพทย์ทันที' };
+  recs.push(sbpEntry);
+}
+
+const recContainer = document.getElementById('personal-recs');
+if (recs.length === 0) {
+  recContainer.innerHTML = '<p style="font-size:14px;color:var(--c-slate-500)">ไม่มีคำแนะนำเฉพาะบุคคลเพิ่มเติม</p>';
+} else {
+  recContainer.innerHTML = recs.map(r => `
+    <div class="alert-block ${r.cls}" style="margin-bottom:10px">
+      <span class="ab-icon">${r.icon}</span>
+      <div class="ab-body"><strong>${r.title}</strong>${r.body}</div>
+    </div>`).join('');
+}
+
+/* ─── 4. BMI Bar ──────────────────────────────────────────────── */
+const bmiSegs = [
+  { cls:'seg-underweight', label:'ต่ำกว่าเกณฑ์',  sub:'< 18.5',  max:18.5 },
+  { cls:'seg-normal',      label:'ปกติ',           sub:'18.5–23', max:23   },
+  { cls:'seg-overweight',  label:'น้ำหนักเกิน',    sub:'23–25',   max:25   },
+  { cls:'seg-obese',       label:'อ้วน I',         sub:'25–30',   max:30   },
+  { cls:'seg-obese2',      label:'อ้วน II',        sub:'≥ 30',    max:Infinity },
+];
+let bmiActive = bmiSegs.findIndex(s => bmi2 < s.max);
+if (bmiActive < 0) bmiActive = 4;
+
+document.getElementById('bmi-section').innerHTML = `
+  <div class="metric-bar-wrap">
+    <div class="metric-bar-track">
+      ${bmiSegs.map((s, i) => `<div class="metric-bar-seg ${s.cls}${i === bmiActive ? ' active' : ''}" title="${s.label} (${s.sub})">${s.label}<br><span style="font-size:9px;opacity:.8">${s.sub}</span></div>`).join('')}
+    </div>
+    <div class="metric-bar-val">BMI ของท่าน: <strong>${bmi2 ? bmi2.toFixed(1) : '–'} kg/m²</strong></div>
+  </div>`;
+
+/* ─── 5. SBP Bar ──────────────────────────────────────────────── */
+const sbpSegs = [
+  { cls:'seg-optimal',    label:'เหมาะสม',        sub:'< 120',   max:120 },
+  { cls:'seg-spb-normal', label:'ปกติ',            sub:'120–129', max:130 },
+  { cls:'seg-high-normal',label:'เริ่มสูง',        sub:'130–140', max:140 },
+  { cls:'seg-htn1',       label:'สูง ระดับ 1',     sub:'140–159', max:160 },
+  { cls:'seg-htn2',       label:'สูง ระดับ 2',     sub:'160–179', max:180 },
+  { cls:'seg-crisis',     label:'วิกฤต',           sub:'≥ 180',   max:Infinity },
+];
+let sbpActive = sbpSegs.findIndex(s => sbp < s.max);
+if (sbpActive < 0) sbpActive = 5;
+
+document.getElementById('sbp-section').innerHTML = `
+  <div class="metric-bar-wrap">
+    <div class="metric-bar-track">
+      ${sbpSegs.map((s, i) => `<div class="metric-bar-seg ${s.cls}${i === sbpActive ? ' active' : ''}" title="${s.label} (${s.sub})">${s.label}<br><span style="font-size:9px;opacity:.8">${s.sub}</span></div>`).join('')}
+    </div>
+    <div class="metric-bar-val">SBP ของท่าน: <strong>${sbp || '–'} mmHg</strong></div>
+  </div>`;
+
+/* ─── Save data ───────────────────────────────────────────────── */
+async function saveData() {
+  const data = {
+    name: getCookie('name'), lastname: getCookie('lastname'),
+    cvsex: getCookie('cvsex'), cvsmk: getCookie('cvsmk'),
+    cvsbp: getCookie('cvsbp'), cvbmi: getCookie('cvbmi'),
+    age: getCookie('age'), cvage: getCookie('cvage'),
+    sbp: getCookie('sbp'), bmi2: getCookie('bmi2'),
+    stataCodea: getCookie('stataCodea'), statasNon: getCookie('statasNon')
+  };
+  try {
+    const res    = await fetch('/api/save-formnonlab-admin', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    const result = await res.json();
+    alert(result.message);
+  } catch(err) {
+    console.error(err);
+    alert('บันทึกไม่สำเร็จ');
+  }
+}
+
+if (typeof makepdf === 'undefined') { window.makepdf = function(){ alert('PDF function not loaded'); }; }
+</script>
+</body>
+</html>
